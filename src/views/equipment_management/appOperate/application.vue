@@ -300,7 +300,6 @@
   const Base64 = require('js-base64').Base64
   import { queryRole, putRole, delRole } from '@/api/Role'
   export default {
-    inject: ['reload'],
     data() {
       const validatorUrl = (rule, value, callback) => {
         var regStr = /^(((ht|f)tps?):\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/

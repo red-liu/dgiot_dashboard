@@ -3,7 +3,7 @@
     <el-card class="el-card--self tabs-card">
       <el-row>
         <el-col class="card-subtitle" :span="12">
-          {{ $t('clients.currentSubs') }}
+          {{ this.$t('clients.currentSubs') }}
         </el-col>
 
         <el-col class="oper-btn-group" :span="12">

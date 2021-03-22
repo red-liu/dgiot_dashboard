@@ -106,7 +106,25 @@ export function paramObj(url) {
       '"}'
   )
 }
+/**
+ * @param duration (ms)
+ * @return dd:hh:mm:ss
+ */
+export function getDateDiff(duration) {
+  // get total seconds value (s)
+  const dateDiff = Math.floor(duration / 1000)
+  const days = Math.floor(dateDiff / (3600 * 24))
 
+  const daysRemainder = dateDiff % (3600 * 24)
+  const hours = Math.floor(daysRemainder / 3600)
+
+  const minutes = Math.floor((dateDiff % 3600) / 60)
+  const seconds = dateDiff % 60
+
+  return [days, hours, minutes, seconds]
+    .map((n) => (n > 10 ? n : `0${n}`))
+    .join(':')
+}
 /**
  * @description 父子关系的数组转换成树形结构数据
  * @param data
@@ -270,7 +288,12 @@ export function shuffle(array) {
   }
   return array
 }
-
+export const intercept = (text, len) => {
+  if (text && text.length > len) {
+    return `${text.substring(0, len)}...`
+  }
+  return text
+}
 /**
  * Created by jiachenpan on 16/11/18.
  */

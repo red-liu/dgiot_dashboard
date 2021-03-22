@@ -1,5 +1,47 @@
 export default {
   vabI18n: {
+    // listeners
+    listeners: {
+      protocol: '协议',
+      listenOn: '监听地址',
+      maxConnections: '最大连接数',
+      currentConnections: '当前连接数',
+    },
+    // leftbar
+    leftbar: {
+      // MONITORING
+      monitor: '监控',
+      overview: '控制台',
+      clients: '客户端',
+      connections: '连接',
+      sessions: '会话',
+      topics: '主题',
+      subscriptions: '订阅',
+      // RULES
+      rule_engine: '规则',
+      // MANAGEMENT
+      management: '管理',
+      plugins: '插件',
+      modules: '模块',
+      listeners: '监听器',
+      instances: '服务',
+      // TOOLS
+      tools: '工具',
+      websocket: 'Websocket',
+      api: 'HTTP接口',
+      // APPLICATIONS
+      applications: '应用',
+      // ADMIN
+      admin: '系统',
+      users: '用户',
+      settings: '设置',
+      help: '帮助',
+      general: '通用',
+      // Analysis
+      analysis: '统计分析',
+      topicMetrics: '主题监控',
+      alarms: '告警',
+    },
     // websocket
     websocket: {
       // Connect

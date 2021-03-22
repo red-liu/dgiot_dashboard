@@ -1,33 +1,99 @@
-<!-- 组件说明 -->
 <template>
-  <div class="listeners">{{ pageTitle }}</div>
+  <div class="listeners-view">
+    <div class="page-title">
+      {{ $translateTitle('leftbar.listeners') }}
+      <el-select
+        v-model="nodeName"
+        class="select-radius"
+        :placeholder="$translateTitle('select.placeholder')"
+        :disabled="$store.state.loading"
+        @change="loadListeners"
+      >
+        <el-option
+          v-for="node in nodes"
+          :key="node.node"
+          :label="node.node"
+          :value="node.node"
+        />
+      </el-select>
+    </div>
+    <el-table v-loading="$store.state.loading" border :data="listeners">
+      <el-table-column
+        prop="protocol"
+        width="240"
+        :label="$translateTitle('listeners.protocol')"
+      />
+      <el-table-column
+        prop="listen_on"
+        min-width="240"
+        :label="$translateTitle('listeners.listenOn')"
+      />
+      <el-table-column
+        prop="max_conns"
+        min-width="180"
+        :label="$translateTitle('listeners.maxConnections')"
+      />
+      <el-table-column
+        prop="current_conns"
+        min-width="120"
+        :label="$translateTitle('listeners.currentConnections')"
+      />
+    </el-table>
+  </div>
 </template>
-
+<!--eslint-disable-->
 <script>
-  // import x from ''
+  import { mapActions } from 'vuex'
+  import { Select, Option, Table, TableColumn } from 'element-ui'
   export default {
-    name: 'Listeners',
-    components: {},
+    name: 'ListenersView',
+    components: {
+      'el-select': Select,
+      'el-option': Option,
+      'el-table': Table,
+      'el-table-column': TableColumn,
+    },
     data() {
       return {
-        pageTitle: 'listeners',
+        nodeName: '',
+        nodes: [],
+        listeners: [],
       }
     },
-    computed: {},
-    mounted() {},
-    beforeCreate() {}, //生命周期 - 创建之前
-    beforeMount() {}, //生命周期 - 挂载之前
-    beforeUpdate() {}, //生命周期 - 更新之前
-    updated() {}, //生命周期 - 更新之后
-    beforeDestroy() {}, //生命周期 - 销毁之前
-    destroyed() {}, //生命周期 - 销毁完成
-    activated() {},
-    methods: {}, //如果页面有keep-alive缓存功能，这个函数会触发
+    methods: {
+      ...mapActions(['CURRENT_NODE']),
+      loadData() {
+        this.$httpGet('/nodes')
+          .then((response) => {
+            this.nodeName = this.$store.state.nodeName || response.data[0].node
+            this.nodes = response.data
+            this.loadListeners()
+          })
+          .catch((error) => {
+            this.$message.error(error || this.$translateTitle('error.networkError'))
+          })
+      },
+      loadListeners() {
+        this.CURRENT_NODE(this.nodeName)
+        this.$httpGet(`/nodes/${this.nodeName}/listeners`)
+          .then((response) => {
+            this.listeners = response.data
+          })
+          .catch((error) => {
+            this.$message.error(error || this.$translateTitle('error.networkError'))
+          })
+      },
+    },
+    created() {
+      this.loadData()
+    },
   }
 </script>
 
-<style lang="scss" scoped>
-  /* @import url() */
-  .listeners {
+<style lang="scss">
+  .listeners-view {
+    .el-table {
+      margin-top: 24px;
+    }
   }
 </style>

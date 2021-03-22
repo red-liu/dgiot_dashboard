@@ -3,6 +3,47 @@ export default {
     title: {
       acquisitioncentersystem: 'Acquisition system',
     },
+    // listeners
+    listeners: {
+      protocol: 'Protocol',
+      listenOn: 'Listen On',
+      maxConnections: 'Max Connections',
+      currentConnections: 'Current Connections',
+    },
+    // leftbar
+    leftbar: {
+      // MONITORING
+      monitor: 'Monitor',
+      overview: 'Overview',
+      clients: 'Clients',
+      connections: 'Connections',
+      sessions: 'Sessions',
+      topics: 'Topics',
+      subscriptions: 'Subscriptions',
+      // RULES
+      rule_engine: 'Rule',
+      // MANAGEMENT
+      management: 'Management',
+      plugins: 'Plugins',
+      modules: 'Modules',
+      listeners: 'Listeners',
+      instances: 'Instances',
+      // TOOLS
+      tools: 'Tools',
+      websocket: 'Websocket',
+      api: 'HTTP API',
+      applications: 'Applications',
+      // ADMIN
+      admin: 'Admin',
+      users: 'Users',
+      settings: 'Settings',
+      help: 'Help',
+      general: 'General',
+      // Analysis
+      analysis: 'Analysis',
+      topicMetrics: 'Topic metrics',
+      alarms: 'Alarms',
+    },
     // websocket
     websocket: {
       // Connect

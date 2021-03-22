@@ -1,6 +1,5 @@
 <template>
   <div class="websocket-view">
-    <div class="page-title">{{ $translateTitle('leftbar.websocket') }}</div>
     <el-card class="el-card--self" @keyup.enter.native="mqttConnect">
       <div slot="header">
         <span>{{ $translateTitle('websocket.connect') }}</span>

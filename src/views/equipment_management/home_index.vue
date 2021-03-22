@@ -550,14 +550,26 @@
   import { Promise } from 'q'
   import Cookies from 'js-cookie'
   import { getProduct } from '@/api/Product/index'
-  // import { BmlMarkerClusterer } from 'vue-baidu-map'
+  import {
+    BmNavigation,
+    BaiduMap,
+    BmLocalSearch,
+    BmGeolocation,
+    BmCityList,
+  } from 'vue-baidu-map'
   import { utc2beijing } from '@/utils'
   import { returnLogin } from '@/utils/return'
 
   var language
   var pcdata
   export default {
-    components: {},
+    components: {
+      BaiduMap,
+      BmLocalSearch,
+      BmNavigation,
+      BmGeolocation,
+      BmCityList,
+    },
     data() {
       const CheckDevaddr = function (rule, value, callback) {
         var reg = /[0-9A-Za-z]$/

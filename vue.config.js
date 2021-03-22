@@ -115,7 +115,7 @@ module.exports = {
         XLSX: 'xlsx',
         FileSaver: 'file-saver',
         'js-cookie': 'Cookies',
-        'vue-baidu-map': 'BaiduMap',
+        'vue-baidu-map': 'VueBaiduMap',
         echarts: 'echarts',
         screenfull: 'screenfull',
         qs: 'qs',

@@ -707,14 +707,26 @@
   import { Promise } from 'q'
   import { Batchdelete } from '@/api/Batch'
   import { queryRole } from '@/api/Role'
-  // import { BmlMarkerClusterer } from 'vue-baidu-map'
+  import {
+    BmNavigation,
+    BaiduMap,
+    BmLocalSearch,
+    BmGeolocation,
+    BmCityList,
+  } from 'vue-baidu-map'
   import { utc2beijing } from '@/utils'
   import { returnLogin } from '@/utils/return'
   import { getBatchNumer } from '@/api/Dict'
   var language
   var pcdata
   export default {
-    components: {},
+    components: {
+      BmNavigation,
+      BaiduMap,
+      BmLocalSearch,
+      BmGeolocation,
+      BmCityList,
+    },
     data() {
       const CheckDevaddr = function (rule, value, callback) {
         var reg = /[0-9A-Za-z]$/

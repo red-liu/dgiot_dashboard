@@ -26,7 +26,7 @@ const mutations = {
    * @param {*} objectId
    */
   setObejectId(state, objectId) {
-    state.token = objectId
+    state.objectId = objectId
     setToken('objectId', objectId, storage)
   },
   /**

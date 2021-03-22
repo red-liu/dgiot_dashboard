@@ -1,5 +1,5 @@
 <template>
-  <ul v-if="theme.showThemeSetting" class="vab-theme-setting">
+  <ul v-if="showThemeSetting" class="vab-theme-setting">
     <li @click="handleOpenTheme">
       <a>
         <vab-icon icon="brush-2-line" />
@@ -30,7 +30,7 @@
     name: 'VabThemeSetting',
     computed: {
       ...mapGetters({
-        theme: 'settings/theme',
+        showThemeSetting: 'settings/showThemeSetting',
       }),
     },
     methods: {

@@ -52,6 +52,7 @@ const getLocalStorage = (key) => {
 const { collapse } = getLocalStorage('collapse')
 const { language } = getLocalStorage('language')
 const state = () => ({
+  showThemeSetting: showThemeSetting,
   logo: getToken('logo', storage),
   title: getToken('title', 'sessionStorage') || '物联网开发平台',
   device: 'desktop',
@@ -61,6 +62,7 @@ const state = () => ({
   extra: { first: '', transferRouteName: '' },
 })
 const getters = {
+  showThemeSetting: (state) => state.showThemeSetting,
   logo: (state) => state.logo,
   title: (state) => state.title,
   device: (state) => state.device,
@@ -70,6 +72,9 @@ const getters = {
   extra: (state) => state.extra,
 }
 const mutations = {
+  setshowThemeSetting(state, type) {
+    state.showThemeSetting = type
+  },
   setTitle(state, title) {
     state.title = title
     setToken('title', title, 'sessionStorage')
@@ -107,6 +112,9 @@ const mutations = {
   },
 }
 const actions = {
+  setshowThemeSetting({ commit }, type) {
+    commit('setshowThemeSetting', type)
+  },
   setLogo({ commit }, logo) {
     commit('setLogo', logo)
   },

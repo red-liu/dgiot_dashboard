@@ -174,6 +174,7 @@ const actions = {
     if (logo) commit('setAvatar', logo)
 
     const res = { copyright, dashboard, logo, objectId, title }
+    if (copyright) dispatch('acl/setCopyright', copyright, { root: true })
     if (Default) dispatch('acl/setDefault', res, { root: true })
   },
   /**

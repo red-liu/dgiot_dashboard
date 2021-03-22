@@ -22,7 +22,7 @@ module.exports = {
     // 175
     toppanDocx: 'http://124.156.217.175:8085/',
     PrometheusUrl: 'http://101.32.100.234:9090/',
-    server: 'http://132.232.121.164/',
+    server: 'http://118.31.59.148',
     imgurl: 'http://101.32.100.234:3000/',
   },
 }

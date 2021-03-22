@@ -83,6 +83,7 @@ export default {
       notSupport: "Your browser doesn't support WebSocket",
     },
     route: {
+      'DG-IOT': 'DG-IOT',
       websocket: 'Websocket',
       设备管理: 'Devicemanage',
       集中器: 'Concentrator',

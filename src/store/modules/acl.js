@@ -11,11 +11,13 @@ import { storage } from '@/config'
 const state = () => ({
   admin: false,
   role: [],
+  copyright: getToken('copyright', storage),
   license: getToken('license', storage),
   Default: getToken('Default', 'sessionStorage'),
   logo: getToken('logo', storage),
 })
 const getters = {
+  copyright: (state) => state.copyright,
   admin: (state) => state.admin,
   role: (state) => state.role,
   ability: (state) => state.ability,
@@ -24,6 +26,10 @@ const getters = {
   logo: (state) => state.logo,
 }
 const mutations = {
+  setCopyright(state, copyright) {
+    state.copyright = copyright
+    setToken('copyright', copyright, storage)
+  },
   setLogo(state, logo) {
     state.logo = logo
     setToken('logo', logo, storage)
@@ -48,6 +54,9 @@ const mutations = {
   },
 }
 const actions = {
+  setCopyright({ commit }, copyright) {
+    commit('setCopyright', copyright)
+  },
   setLogo({ commit }, logo) {
     commit('setLogo', logo)
   },

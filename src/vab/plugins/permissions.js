@@ -71,6 +71,6 @@ router.beforeEach(async (to, from, next) => {
   }
 })
 router.afterEach((to) => {
-  document.title = getPageTitle(`${to.meta.title}`)
+  if (to.meta.title) document.title = getPageTitle(`${to.meta.title}`)
   if (VabProgress.status) VabProgress.done()
 })

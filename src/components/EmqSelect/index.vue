@@ -24,7 +24,6 @@
     name: 'EmqSelect',
     components: {},
     props: {
-      value: {},
       field: {
         type: Object,
         required: true,

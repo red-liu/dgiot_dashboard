@@ -80,6 +80,7 @@ export default {
       notSupport: '你的浏览器暂不支持WebSocket',
     },
     title: {
+      'DG-IOT': 'DG-IOT',
       acquisitioncentersystem: '采集中心系统',
     },
     route: {},

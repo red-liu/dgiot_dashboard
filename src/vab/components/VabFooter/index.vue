@@ -1,7 +1,7 @@
 <template>
   <footer class="vab-footer">
     <vab-icon icon="copyright-line" />
-    {{ Default.copyright }}
+    {{ copyright }}
   </footer>
 </template>
 
@@ -18,7 +18,7 @@
     },
     computed: {
       ...mapGetters({
-        Default: 'acl/Default',
+        copyright: 'acl/copyright',
       }),
     },
   }

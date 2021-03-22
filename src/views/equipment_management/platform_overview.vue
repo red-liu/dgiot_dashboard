@@ -16,7 +16,7 @@
               <vab-icon icon="projector-2-fill" />
             </el-col>
             <el-col :span="12" class="card-right">
-              <p>项目合计</p>
+              <p>项目总数</p>
               <p>{{ project_count }}</p>
             </el-col>
           </el-card>
@@ -27,7 +27,7 @@
               <vab-icon icon="projector-fill" />
             </el-col>
             <el-col :span="12" class="card-right">
-              <p>产品合计</p>
+              <p>产品总数</p>
               <p>{{ product_count }}</p>
             </el-col>
           </el-card>
@@ -38,7 +38,7 @@
               <vab-icon icon="apps-fill" />
             </el-col>
             <el-col :span="12" class="card-right">
-              <p>应用合计</p>
+              <p>应用总数</p>
               <p>{{ app_count }}</p>
             </el-col>
           </el-card>
@@ -49,19 +49,8 @@
               <vab-icon icon="device-recover-fill" />
             </el-col>
             <el-col :span="12" class="card-right">
-              <p>设备数量</p>
+              <p>激活设备</p>
               <p>{{ dev_count }}</p>
-            </el-col>
-          </el-card>
-        </el-col>
-        <el-col :xs="24" :sm="24" :md="8" :lg="6" :xl="4">
-          <el-card class="box-card">
-            <el-col :span="12">
-              <vab-icon icon="device-fill" />
-            </el-col>
-            <el-col :span="12" class="card-right">
-              <p>注册数量</p>
-              <p>{{ dev_active_count }}</p>
             </el-col>
           </el-card>
         </el-col>
@@ -71,7 +60,7 @@
               <vab-icon icon="bar-chart-2-line" />
             </el-col>
             <el-col :span="12" class="card-right">
-              <p>在线数量</p>
+              <p>在线设备</p>
               <p>{{ dev_online_count }}</p>
             </el-col>
           </el-card>

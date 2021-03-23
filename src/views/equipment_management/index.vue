@@ -889,16 +889,12 @@
         )
       },
       goEdit(row) {
-        // console.log(row);
-        // #topoUrl
-        // window.open(
-        //   `${window.location.origin}/spa/#/equipment?devaddr=${row.devaddr}&productid=${row.productid}`,
-        //   '_blank'
-        // )
-        if (this.$globalConfig.serverURL.substr(0, 1) == '/') {
-          var topoUrl = window.location.origin + '/spa'
+        var topoUrl = window.location.origin + '/spa'
+        const { NODE_ENV } = process.env
+        if (NODE_ENV == 'development') {
+          topoUrl = this.$globalConfig.localTopoUrl
         } else {
-          var topoUrl = this.$globalConfig.localTopoUrl
+          topoUrl = window.location.origin + '/spa'
         }
         var url = `${topoUrl}/#?devaddr=${row.devaddr}&proudctid=${row.productid}`
         window.open(url, '__blank')

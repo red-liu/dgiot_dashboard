@@ -56,7 +56,7 @@
               </el-table-column>
               <el-table-column
                 :label="$translateTitle('product.nodetype')"
-                width="120px"
+                width="200"
               >
                 <template slot-scope="scope">
                   <span v-if="scope.row.nodeType == 1">
@@ -67,15 +67,18 @@
                   </span>
                 </template>
               </el-table-column>
+              <!--              <el-table-column-->
+              <!--                :label="$translateTitle('product.classification')"-->
+              <!--                width="200"-->
+              <!--              >-->
+              <!--                <template slot-scope="scope">-->
+              <!--                  <span>{{ scope.row.CategoryKey }}</span>-->
+              <!--                </template>-->
+              <!--              </el-table-column>-->
               <el-table-column
-                :label="$translateTitle('product.classification')"
+                :label="$translateTitle('product.addingtime')"
                 width="200"
               >
-                <template slot-scope="scope">
-                  <span>{{ scope.row.CategoryKey }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column :label="$translateTitle('product.addingtime')">
                 <template slot-scope="scope">
                   <span>{{ utc2beijing(scope.row.createdAt) }}</span>
                 </template>

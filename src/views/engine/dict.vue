@@ -427,22 +427,22 @@
           style="width: 100%"
         >
           <el-table-column label="索引" type="index" width="50" />
-          <el-table-column label="词典模板编号">
+          <el-table-column label="词典模板编号" width="200">
             <template v-if="scope.row.objectId" slot-scope="scope">
               {{ scope.row.objectId }}
             </template>
           </el-table-column>
-          <el-table-column label="词典模板名称">
+          <el-table-column label="词典模板名称" width="200">
             <template slot-scope="scope">
               {{ scope.row.data.name }}
             </template>
           </el-table-column>
-          <el-table-column label="词典模板类型">
+          <el-table-column label="词典模板类型" width="200">
             <template slot-scope="scope">
               {{ scope.row.data.cType }}
             </template>
           </el-table-column>
-          <el-table-column label="词典模板状态">
+          <el-table-column label="词典模板状态" width="200">
             <template slot-scope="scope">
               <el-tag v-if="scope.row.data.enable == '1'" type="success">
                 启用
@@ -455,7 +455,7 @@
               {{ scope.row.data.description }}
             </template>
           </el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作" width="500">
             <template v-if="scope.row.objectId" slot-scope="scope">
               <el-button
                 size="mini"
@@ -574,7 +574,7 @@
               {{ scope.row.data.description }}
             </template>
           </el-table-column>
-          <el-table-column label="指令操作">
+          <el-table-column label="指令操作" width="400">
             <template slot-scope="scope">
               <el-button
                 size="mini"

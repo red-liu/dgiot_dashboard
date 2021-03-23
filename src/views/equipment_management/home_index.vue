@@ -176,20 +176,9 @@
           <el-table-column
             :label="$translateTitle('equipment.state')"
             align="center"
+            width="200"
           >
             <template slot-scope="scope">
-              <!-- <span  :class="scope.row.status" v-if="scope.row.status=='ACTIVE'">{{ $translateTitle('product.active')}}</span><el-tooltip content="设备已注册" placement="top" v-if="scope.row.status=='ACTIVE'">
-                    <i class="el-icon-question"></i>
-                  </el-tooltip>
-                  <span class="ACTIVE">已注册</span>
-                  <el-tooltip content="设备已注册" placement="top">
-                    <i class="el-icon-question"></i>
-                  </el-tooltip>
-
-                   <span  :class="scope.row.status" v-if="scope.row.status=='UNACTIVE'">{{ $translateTitle('product.unactive')}}</span><el-tooltip content="设备未注册" placement="top" v-if="scope.row.status=='UNACTIVE'">
-                  <i class="el-icon-question"></i>
-                </el-tooltip>
-                  -->
               <span
                 v-if="scope.row.status == 'ONLINE'"
                 :class="scope.row.status"
@@ -227,29 +216,40 @@
               </span>
             </template>
           </el-table-column>
-
           <el-table-column
             :label="$translateTitle('equipment.product')"
             align="center"
+            width="200"
           >
             <template slot-scope="scope">
               <span>{{ scope.row.product.name }}</span>
             </template>
           </el-table-column>
 
-          <el-table-column
-            :label="$translateTitle('equipment.nodetype')"
-            align="center"
-          >
+          <!--          <el-table-column-->
+          <!--            :label="$translateTitle('equipment.nodetype')"-->
+          <!--            align="center"-->
+          <!--          >-->
+          <!--            <template slot-scope="scope">-->
+          <!--              <vab-icon-->
+          <!--                :icon="-->
+          <!--                  scope.row.nodeType == 0 ? 'hotel-bed-fill' : 'hotel-fill'-->
+          <!--                "-->
+          <!--                style="width: 2rem; height: 2rem"-->
+          <!--              />-->
+          <!--              &lt;!&ndash; <el-tag type="success" >设备</el-tag>-->
+          <!--                  <el-tag type="success" v-else>网关</el-tag>&ndash;&gt;-->
+          <!--            </template>-->
+          <!--          </el-table-column>-->
+          <el-table-column label="授权码" align="center" width="200">
             <template slot-scope="scope">
-              <vab-icon
-                :icon="
-                  scope.row.nodeType == 0 ? 'hotel-bed-fill' : 'hotel-fill'
-                "
-                style="width: 2rem; height: 2rem"
-              />
-              <!-- <el-tag type="success" >设备</el-tag>
-                  <el-tag type="success" v-else>网关</el-tag>-->
+              <span>
+                {{
+                  scope.row.basedata && scope.row.basedata.auth
+                    ? scope.row.basedata.auth
+                    : ''
+                }}
+              </span>
             </template>
           </el-table-column>
           <el-table-column
@@ -259,18 +259,9 @@
               $translateTitle('developer.prohibit')
             "
             align="center"
+            width="200"
           >
             <template slot-scope="scope">
-              <!-- <span
-                    style="display:inline-block;width:5px;height:5px;border-radius:50%;background:#cccccc;vertical-align:middle"
-                    v-if="scope.row.isEnable==false"
-                  ></span>
-                  <span v-if="scope.row.isEnable==false">已禁用</span>
-                  <span
-                    style="display:inline-block;width:5px;height:5px;border-radius:50%;background:#5eb058;vertical-align:middle"
-                    v-if="scope.row.isEnable==true"
-                  ></span>
-                  <span v-if="scope.row.isEnable==true">已启用</span>-->
               <el-switch
                 v-model="scope.row.isEnable"
                 active-color="#5eb058"
@@ -279,16 +270,18 @@
               />
             </template>
           </el-table-column>
-
-          <!-- <el-table-column :label=" $translateTitle('equipment.lastonlinetime')" align="center">
-                <template slot-scope="scope">
-                  <span
-                    v-if="scope.row.lastOnlineTime"
-                  >{{timestampToTime(scope.row.lastOnlineTime)}}</span>
-                  <span v-else>—</span>
-                </template>
-              </el-table-column>-->
-          <el-table-column label="创建时间">
+          <!--          <el-table-column-->
+          <!--            :label="$translateTitle('equipment.lastonlinetime')"-->
+          <!--            align="center"-->
+          <!--          >-->
+          <!--            <template slot-scope="scope">-->
+          <!--              <span v-if="scope.row.lastOnlineTime">-->
+          <!--                {{ timestampToTime(scope.row.lastOnlineTime) }}-->
+          <!--              </span>-->
+          <!--              <span v-else>—</span>-->
+          <!--            </template>-->
+          <!--          </el-table-column>-->
+          <el-table-column label="创建时间" width="200">
             <template slot-scope="scope">
               <span>{{ utc2beijing(scope.row.createdAt) }}</span>
             </template>
@@ -305,6 +298,14 @@
                 @click="deviceToDetail(scope.row)"
               >
                 {{ $translateTitle('equipment.see') }}
+              </el-link>
+              <el-link
+                :underline="false"
+                type="primary"
+                icon="el-icon-edit"
+                @click="editorDevice(scope.row)"
+              >
+                编辑
               </el-link>
               <el-popover
                 :ref="`popover-${scope.$index}`"
@@ -347,15 +348,7 @@
               >
                 {{ $translateTitle('equipment.subdevice') }}
               </el-link>
-              <el-link
-                :underline="false"
-                type="primary"
-                icon="el-icon-edit"
-                @click="editorDevice(scope.row)"
-              >
-                编辑
-              </el-link>
-              <el-link type="primary" @click="goEdit(scope.row)">视图</el-link>
+              <!--              <el-link type="primary" @click="goEdit(scope.row)">视图</el-link>-->
             </template>
           </el-table-column>
         </el-table>
@@ -439,7 +432,6 @@
               <el-input v-model="deviceform.auth" />
             </el-form-item>
             <el-form-item v-if="deviceform.yysId" label="应用商">
-              <!--              <el-input v-model="deviceform.basedata.yysId" />-->
               <el-select v-model="deviceform.yysId" placeholder="应用商">
                 <el-option
                   v-for="(item, index) in yysSelect"
@@ -539,12 +531,7 @@
   </div>
 </template>
 <script>
-  import {
-    query_object,
-    get_object,
-    del_object,
-    update_object,
-  } from '@/api/shuwa_parse'
+  import { get_object } from '@/api/shuwa_parse'
   import { queryDict } from '@/api/Direct/index.js'
   import { Batchdelete } from '@/api/Batch'
   import { Promise } from 'q'
@@ -557,7 +544,6 @@
     BmGeolocation,
     BmCityList,
   } from 'vue-baidu-map'
-  import { utc2beijing } from '@/utils'
   import { returnLogin } from '@/utils/return'
 
   var language
@@ -620,7 +606,7 @@
           isEnable: '',
           brand: '',
           auth: 12345678,
-          yysId: '',
+          yysId: '09',
         },
         yysSelect: [],
         rules: {
@@ -702,6 +688,7 @@
     mounted() {
       this.searchProduct()
       this.getDevices(0)
+      this.queryYysId()
       language = Cookies.get('language')
       // this.$store.dispatch('getUserId', '111')
       if (this.$route.query.productid) {
@@ -718,7 +705,6 @@
             type: 'b83b5d9fc0',
           },
         }
-        // const { results } = await queryDict(parsms);
         queryDict(parsms).then((res) => {
           this.yysSelect = [{ name: '空', key: '' }]
           res.results.map((item) => {
@@ -887,7 +873,7 @@
           this.equvalue = this.$route.query.productid
           this.productenable = false
         }
-        this.getDevices()
+        // this.getDevices()
       },
       async getDevices(start) {
         this.tableData = []
@@ -912,20 +898,16 @@
         if (this.equvalue != 0) {
           params.where.product = this.equvalue
         }
-
         if (start == 0) {
           this.devicestart = 0
         }
         const res = await this.$queryDevice(params)
         this.tableData = res.results
-
         this.devicetotal = res.count
-
         // 查询激活设备
-        this.getActiveDevices()
-
+        // this.getActiveDevices()
         // 查询在线设备
-        this.getOnlineDevices()
+        // this.getOnlineDevices()
       },
 
       // 状态设备编辑

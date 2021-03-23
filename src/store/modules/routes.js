@@ -130,7 +130,7 @@ const actions = {
           component: 'Layout',
           redirect: '/index',
           meta: {
-            title: '首页',
+            title: '总控台',
             icon: 'home-2-line',
           },
           children: [
@@ -139,7 +139,7 @@ const actions = {
               name: 'Index',
               component: '@/views/equipment_management/platform_overview',
               meta: {
-                title: '首页',
+                title: '总控台',
                 icon: 'home-2-line',
                 noClosable: true,
               },

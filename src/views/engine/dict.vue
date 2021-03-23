@@ -861,7 +861,7 @@
         const { results = [] } = await Roletree()
         this.allApps = results
         const res = await resourceTypes()
-        this.channelregion = res.resultes
+        this.channelregion = res
       },
       handleNodeClick(data) {
         this.showTree = !this.showTree

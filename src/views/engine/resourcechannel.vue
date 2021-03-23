@@ -606,8 +606,8 @@
       async dialogType() {
         const { results = [] } = await Roletree()
         this.allApps = results
-        const res = await resourceTypes
-        this.channelregion = res.resultes
+        const res = await resourceTypes()
+        this.channelregion = res
       },
       // 更新状态
       qyChannel(row, action) {

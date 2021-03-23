@@ -38,15 +38,13 @@ export function getToken(tokenName, storage) {
  * @returns {void|*}
  */
 export function setToken(tokenName, token, storage) {
-  const millisecond = new Date().getTime()
-  const expiresTime = new Date(millisecond + 60 * 1000 * 60)
   if (storage) {
     if ('localStorage' === storage) {
       return localStorage.setItem(tokenName, token)
     } else if ('sessionStorage' === storage) {
       return sessionStorage.setItem(tokenName, token)
     } else if ('cookie' === storage) {
-      return cookie.set(tokenName, token, { expires: expiresTime })
+      return cookie.set(tokenName, token, { expires: 1 })
     } else {
       return localStorage.setItem(tokenName, token)
     }

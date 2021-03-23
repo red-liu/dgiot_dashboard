@@ -303,7 +303,7 @@
         }
         const { results } = await putExproto(data)
         if (results) {
-          editor2.setValue(Base64.decode(res.results))
+          editor2.setValue(Base64.decode(results))
           this.$message({
             showClose: true,
             message: '调测api成功',
@@ -459,7 +459,7 @@
           version: 'debug',
         })
         if (results) {
-          this.AllDict = res.results
+          this.AllDict = results
           console.log(this.AllDict)
           this.handleCurrentChange(res.results[0])
         }

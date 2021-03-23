@@ -326,8 +326,10 @@
           order: 'updatedAt', // -updatedAt  updatedAt
         }
         const { reults } = await queryProduct(params)
-        if (reults) this.AllDict = results
-        this.handleCurrentChange(results[0])
+        if (reults) {
+          this.AllDict = results
+          this.handleCurrentChange(results[0])
+        }
       },
       async Industry() {
         this.option = []

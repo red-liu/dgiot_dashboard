@@ -37,6 +37,7 @@
           <vab-full-screen />
           <vab-language />
           <vab-theme />
+          <vab-setting />
           <vab-refresh />
           <vab-avatar />
         </div>

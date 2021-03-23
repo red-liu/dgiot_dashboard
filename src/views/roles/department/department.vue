@@ -89,11 +89,12 @@
                 :default-checked-keys="roleMenuList"
                 :expand-on-click-node="false"
                 show-checkbox
-                node-key="label"
+                node-key="objectId"
                 accordion
               >
-                <span slot-scope="{ node }" class="custom-tree-node">
-                  <span>{{ node.label }}</span>
+                <!-- eslint-disable-next-line -->
+                <span slot-scope="{ node, data }" class="custom-tree-node">
+                  {{ data.title ? data.title : node.label }}
                 </span>
               </el-tree>
             </div>
@@ -275,6 +276,8 @@
       },
       menuTreeData() {
         return this.dataMenus.filter((father) => {
+          father.title =
+            father.meta && father.meta.title ? father.meta.title : ''
           const branchArr = this.dataMenus.filter(
             (child) => father.objectId == child.parentId
           )
@@ -314,6 +317,7 @@
           results.map((items) => {
             var obj = {}
             obj.label = items.name
+            obj.meta = items.meta
             obj.objectId = items.objectId
             obj.parentId = items.parent.objectId
             obj.createtime = new Date(items.createdAt).toLocaleDateString()

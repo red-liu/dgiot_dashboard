@@ -80,6 +80,7 @@
       },
       handleIcon(item) {
         this.icon = item
+        this.queryForm.title = item
         this.$emit('handle-icon', item)
       },
     },

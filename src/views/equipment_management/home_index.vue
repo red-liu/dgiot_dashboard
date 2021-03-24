@@ -716,10 +716,12 @@
         const { results } = await this.$get_object('Product', val)
       },
       goEdit(row) {
-        if (this.$globalConfig.serverURL.substr(0, 1) == '/') {
-          var topoUrl = window.location.origin + '/spa'
+        var topoUrl = window.location.origin + '/spa'
+        const { NODE_ENV } = process.env
+        if (NODE_ENV == 'development') {
+          topoUrl = this.$globalConfig.localTopoUrl
         } else {
-          var topoUrl = this.$globalConfig.localTopoUrl
+          topoUrl = window.location.origin + '/spa'
         }
         var url = `${topoUrl}/#?devaddr=${row.devaddr}&proudctid=${row.productid}`
         window.open(url, '__blank')

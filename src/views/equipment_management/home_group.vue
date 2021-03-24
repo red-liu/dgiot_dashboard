@@ -1027,13 +1027,13 @@
       },
       // 编辑组态
       proudctEdit(row) {
-        // #topoUrl
-        // if (this.$globalConfig.serverURL.substr(0, 1) == '/') {
-        //   var topoUrl = window.location.origin + '/spa'
-        // } else {
-        //   var topoUrl = this.$globalConfig.localTopoUrl
-        // }
         var topoUrl = window.location.origin + '/spa'
+        const { NODE_ENV } = process.env
+        if (NODE_ENV == 'development') {
+          topoUrl = this.$globalConfig.localTopoUrl
+        } else {
+          topoUrl = window.location.origin + '/spa'
+        }
         // 为了兼容性,暂时传两个相同的值
         var url = `${topoUrl}/#?drawProudctid=${row.objectId}&proudctid=${row.objectId}`
         localStorage.setItem('rowId', row.objectId)
@@ -1041,14 +1041,13 @@
       },
       // 运行组态
       proudctView(row) {
-        // 判断是线上环境还是线下环境
-        // if (this.$globalConfig.serverURL.substr(0, 1) == '/') {
-        //   var topoUrl = window.location.origin + '/spa'
-        // } else {
-        //   // eslint-disable-next-line no-redeclare
-        //   var topoUrl = this.$globalConfig.localTopoUrl
-        // }
         var topoUrl = window.location.origin + '/spa'
+        const { NODE_ENV } = process.env
+        if (NODE_ENV == 'development') {
+          topoUrl = this.$globalConfig.localTopoUrl
+        } else {
+          topoUrl = window.location.origin + '/spa'
+        }
         var url = `${topoUrl}/#/views/${row.objectId}`
         window.open(url, '__blank')
       },

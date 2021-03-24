@@ -1,5 +1,6 @@
 import i18n from '@/i18n'
 import { getToken, setToken, removeToken } from './vuex'
+import globalConfig from './globalConfig'
 import {
   query_object,
   get_object,
@@ -105,6 +106,7 @@ export function translateTitle(title) {
 
 export default {
   install(Vue, options) {
+    Vue.prototype.$globalConfig = globalConfig
     Vue.prototype.$getToken = getToken
     Vue.prototype.$setToken = setToken
     Vue.prototype.$removeToken = removeToken

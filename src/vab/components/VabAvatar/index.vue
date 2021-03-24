@@ -45,8 +45,7 @@
       }),
     },
     mounted() {
-      document.getElementsByTagName('link')[0].href =
-        this.avatar || 'https://www.iotn2n.com/favicon.ico?1558342112'
+      document.getElementsByTagName('link')[0].href = this.avatar
     },
     methods: {
       ...mapActions({

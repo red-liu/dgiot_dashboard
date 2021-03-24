@@ -1,33 +1,63 @@
-<!-- 组件说明 -->
 <template>
-  <div class="index">{{ pageTitle }}</div>
+  <div className="topo-editor">
+    <WresizePanel3 class="full-height">
+      <template #left>
+        <TopoToolbox ref="topoToolbox" class="topo-toolbox" />
+      </template>
+
+      <template #center>
+        <TopoMain ref="topoMain" class="topo-main" />
+      </template>
+
+      <template #right>
+        <TopoProperties ref="topoProperties" class="topo-properties" />
+      </template>
+    </WresizePanel3>
+  </div>
 </template>
 
 <script>
-  // import x from ''
+  import WresizePanel3 from '@/components/panel/WresizePanel3'
+  import TopoToolbox from '@/components/Topo/TopoToolbox'
+  import TopoMain from '@/components/Topo/TopoMain'
+  import TopoProperties from '@/components/Topo/TopoProperties'
+
   export default {
-    name: 'Index',
-    components: {},
-    data() {
-      return {
-        pageTitle: 'index',
-      }
+    name: 'TopoEditor',
+    components: {
+      WresizePanel3,
+      TopoToolbox,
+      TopoMain,
+      TopoProperties,
     },
-    computed: {},
-    mounted() {},
-    beforeCreate() {}, //生命周期 - 创建之前
-    beforeMount() {}, //生命周期 - 挂载之前
-    beforeUpdate() {}, //生命周期 - 更新之前
-    updated() {}, //生命周期 - 更新之后
-    beforeDestroy() {}, //生命周期 - 销毁之前
-    destroyed() {}, //生命周期 - 销毁完成
-    activated() {},
-    methods: {}, //如果页面有keep-alive缓存功能，这个函数会触发
+    data() {
+      return {}
+    },
+    methods: {},
   }
 </script>
 
-<style lang="scss" scoped>
-  /* @import url() */
-  .index {
+<style lang="scss">
+  .topo-editor {
+    padding: 10px;
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 0px);
+    background-color: #eee;
+
+    .topo-toolbox {
+      width: 100%;
+      height: 100%;
+    }
+
+    .topo-main {
+      width: 100%;
+      height: 100%;
+    }
+
+    .topo-properties {
+      width: 100%;
+      height: 100%;
+    }
   }
 </style>

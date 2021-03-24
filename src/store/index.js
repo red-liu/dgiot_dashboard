@@ -19,6 +19,7 @@ files.keys().forEach((key) => {
 Object.keys(modules).forEach((key) => {
   modules[key]['namespaced'] = true
 })
+console.log(modules)
 const store = new Vuex.Store({
   modules,
 })

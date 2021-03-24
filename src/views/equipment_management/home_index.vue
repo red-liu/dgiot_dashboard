@@ -604,7 +604,7 @@
           status: '',
           isEnable: '',
           brand: '',
-          auth: 12345678,
+          auth: '12345678',
           yysId: '09',
         },
         yysSelect: [],
@@ -1136,7 +1136,7 @@
           status: '',
           isEnable: '',
           brand: '',
-          auth: 12345678,
+          auth: '12345678',
           yysId: '',
         }
         this.$refs['deviceform'].resetFields()

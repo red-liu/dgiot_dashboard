@@ -491,14 +491,14 @@
               >
                 删除
               </el-button>
-              <el-button
-                size="mini"
-                type="info"
-                plain
-                @click="detailsTemp(scope.row)"
-              >
-                详情
-              </el-button>
+              <!--              <el-button-->
+              <!--                size="mini"-->
+              <!--                type="info"-->
+              <!--                plain-->
+              <!--                @click="detailsTemp(scope.row)"-->
+              <!--              >-->
+              <!--                详情-->
+              <!--              </el-button>-->
             </template>
           </el-table-column>
         </el-table>

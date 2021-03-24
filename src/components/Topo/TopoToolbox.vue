@@ -1,6 +1,6 @@
 <template>
   <div class="topo-toolbox">
-    <q-list highlight separator class="full-height">
+    <el-list highlight separator class="full-height">
       <template v-for="(group, index1) in toolbox">
         <q-expansion-item :key="index1" :icon="group.icon" :label="group.title">
           <div class="toolbox-group">
@@ -14,7 +14,7 @@
                 <!-- 判断是不是字体图标 -->
                 <template v-if="value.isFontIcon === true">
                   <div class="toolbox-item-icon">
-                    <q-icon :name="value.icon" size="30px" />
+                    <i :class="value.icon"></i>
                   </div>
                   <div class="toolbox-item-text">{{ value.text }}</div>
                 </template>
@@ -40,7 +40,7 @@
           </div>
         </q-expansion-item>
       </template>
-    </q-list>
+    </el-list>
   </div>
 </template>
 

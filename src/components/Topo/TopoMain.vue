@@ -150,7 +150,7 @@
         <div style="line-height: 40px; height: 40px">
           已选组件个数：{{ selectedComponents.length }}
         </div>
-        <q-btn
+        <el-button
           label="预览"
           color="primary"
           size="xs"
@@ -158,7 +158,7 @@
           @click="fullScreen"
         />
 
-        <q-btn
+        <el-button
           label="当前数据"
           color="primary"
           size="xs"
@@ -170,7 +170,7 @@
         <div style="line-height: 40px; height: 40px; padding: 0px 5px">
           缩放
         </div>
-        <q-slider
+        <el-slider
           v-model="selectedValue"
           :min="30"
           :max="200"

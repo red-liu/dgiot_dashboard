@@ -1,7 +1,6 @@
 import { uid } from 'quasar'
 import { deepCopy } from '@/assets/libs/utils'
 import jsonData from '@/assets/data/topo-data.json'
-import Vue from '_vue@2.6.12@vue'
 const state = () => ({
   topoData: {
     name: '--',

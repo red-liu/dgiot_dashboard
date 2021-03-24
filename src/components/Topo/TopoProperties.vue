@@ -1,12 +1,12 @@
 <template>
   <div class="topo-properties">
     <div class="topo-properties-nav">
-      <!-- <q-select v-model="curComponent" :options="componentOptions" @input="changeComponent" style="margin-right:0px;height:43px;border:none;" /> -->
+      <!-- <el-select v-model="curComponent" :options="componentOptions" @input="changeComponent" style="margin-right:0px;height:43px;border:none;" /> -->
       <template v-if="isLayer">
-        <q-input v-model="topoData.name" />
+        <el-input v-model="topoData.name" />
       </template>
       <template v-if="configObject != null && isLayer == false">
-        <q-input v-model="configObject.name" />
+        <el-input v-model="configObject.name" />
       </template>
     </div>
     <template v-if="configObject != null && isLayer == false">
@@ -45,13 +45,13 @@
               </td>
             </tr>
           </table>
-          <q-list separator no-border>
+          <el-list separator no-border>
             <q-expansion-item label="Position" default-opened>
               <table>
                 <tr>
                   <td width="50%">X</td>
                   <td width="50%">
-                    <q-input
+                    <el-input
                       v-model.number.lazy="configObject.style.position.x"
                       type="number"
                       suffix="px"
@@ -62,7 +62,7 @@
                 <tr>
                   <td>Y</td>
                   <td>
-                    <q-input
+                    <el-input
                       v-model.number.lazy="configObject.style.position.y"
                       type="number"
                       suffix="px"
@@ -73,7 +73,7 @@
                 <tr>
                   <td>W</td>
                   <td>
-                    <q-input
+                    <el-input
                       v-model.number.lazy="configObject.style.position.w"
                       type="number"
                       suffix="px"
@@ -84,7 +84,7 @@
                 <tr>
                   <td>H</td>
                   <td>
-                    <q-input
+                    <el-input
                       v-model.number.lazy="configObject.style.position.h"
                       type="number"
                       suffix="px"
@@ -100,7 +100,7 @@
                 <tr>
                   <td width="50%">BorderWidth</td>
                   <td width="50%">
-                    <q-input
+                    <el-input
                       v-model.number.lazy="configObject.style.borderWidth"
                       type="number"
                       suffix="px"
@@ -111,7 +111,7 @@
                 <tr>
                   <td>BorderStyle</td>
                   <td>
-                    <q-select
+                    <el-select
                       v-model="configObject.style.borderStyle"
                       :options="borderStyleOptions"
                     />
@@ -120,7 +120,7 @@
                 <tr>
                   <td>BorderColor</td>
                   <td>
-                    <q-input
+                    <el-input
                       v-model="configObject.style.borderColor"
                       filled
                       class="my-input"
@@ -135,7 +135,7 @@
                           </q-popup-proxy>
                         </q-icon>
                       </template>
-                    </q-input>
+                    </el-input>
                   </td>
                 </tr>
               </table>
@@ -146,7 +146,7 @@
                 <tr>
                   <td width="50%">Visible</td>
                   <td width="50%">
-                    <q-select
+                    <el-select
                       v-model="configObject.style.visible"
                       :options="[
                         { label: 'Visible', value: true },
@@ -158,7 +158,7 @@
                 <tr>
                   <td>z-index</td>
                   <td>
-                    <q-input
+                    <el-input
                       v-model.number.lazy="configObject.style.zIndex"
                       type="number"
                     />
@@ -167,7 +167,7 @@
                 <tr>
                   <td>Rolate</td>
                   <td>
-                    <q-input
+                    <el-input
                       v-model.number.lazy="configObject.style.transform"
                       type="number"
                       suffix="deg"
@@ -178,7 +178,7 @@
                 <tr>
                   <td>BackColor</td>
                   <td>
-                    <q-input
+                    <el-input
                       v-model="configObject.style.backColor"
                       filled
                       class="my-input"
@@ -193,7 +193,7 @@
                           </q-popup-proxy>
                         </q-icon>
                       </template>
-                    </q-input>
+                    </el-input>
                   </td>
                 </tr>
                 <tr
@@ -204,19 +204,19 @@
                 >
                   <td>URL</td>
                   <td>
-                    <q-input v-model.lazy="configObject.style.url" />
+                    <el-input v-model.lazy="configObject.style.url" />
                   </td>
                 </tr>
                 <tr v-if="configObject.style.text != undefined">
                   <td>Text</td>
                   <td>
-                    <q-input v-model.lazy="configObject.style.text" />
+                    <el-input v-model.lazy="configObject.style.text" />
                   </td>
                 </tr>
                 <tr v-if="configObject.style.textAlign != undefined">
                   <td>TextAlign</td>
                   <td>
-                    <q-select
+                    <el-select
                       v-model="configObject.style.textAlign"
                       :options="textAlignOptions"
                     />
@@ -225,7 +225,7 @@
                 <tr>
                   <td>ForeColor</td>
                   <td>
-                    <q-input
+                    <el-input
                       v-model="configObject.style.foreColor"
                       filled
                       class="my-input"
@@ -240,13 +240,13 @@
                           </q-popup-proxy>
                         </q-icon>
                       </template>
-                    </q-input>
+                    </el-input>
                   </td>
                 </tr>
                 <tr v-if="configObject.style.fontFamily != undefined">
                   <td>Font Family</td>
                   <td>
-                    <q-select
+                    <el-select
                       v-model="configObject.style.fontFamily"
                       :options="fontFamilyOptions"
                     />
@@ -255,7 +255,7 @@
                 <tr v-if="configObject.style.fontSize != undefined">
                   <td>Font Size</td>
                   <td>
-                    <q-input
+                    <el-input
                       v-model.number.lazy="configObject.style.fontSize"
                       type="number"
                       suffix="px"
@@ -266,7 +266,7 @@
                 <tr v-if="configObject.style.radius != undefined">
                   <td>Radius</td>
                   <td>
-                    <q-input
+                    <el-input
                       v-model.lazy="configObject.style.radius"
                       type="number"
                     />
@@ -275,7 +275,7 @@
                 <tr v-if="configObject.style.lineWidth != undefined">
                   <td>LineWidth</td>
                   <td>
-                    <q-input
+                    <el-input
                       v-model.number.lazy="configObject.style.lineWidth"
                       type="number"
                       suffix="px"
@@ -286,7 +286,7 @@
                 <tr v-if="configObject.style.setLineDash != undefined">
                   <td>LineDash</td>
                   <td>
-                    <q-input
+                    <el-input
                       v-model.lazy="configObject.style.setLineDash"
                       type="text"
                     />
@@ -304,7 +304,7 @@
                 <tr>
                   <td>Direction</td>
                   <td>
-                    <q-select
+                    <el-select
                       v-model="configObject.style.animations"
                       clearable
                       :options="animations"
@@ -315,7 +315,7 @@
                   <tr>
                     <td>DotSpace</td>
                     <td>
-                      <q-input
+                      <el-input
                         v-model.number.lazy="configObject.style.dotSpace"
                         type="number"
                         suffix="px"
@@ -326,7 +326,7 @@
                   <tr>
                     <td>DotWidth</td>
                     <td>
-                      <q-input
+                      <el-input
                         v-model.number.lazy="configObject.style.dotWidth"
                         type="number"
                         suffix="px"
@@ -337,7 +337,7 @@
                 </template>
               </table>
             </q-expansion-item>
-          </q-list>
+          </el-list>
         </div>
         <div v-show="tabIndex == 1">
           <div class="not-surpport">根据实际系统设计</div>
@@ -366,7 +366,7 @@
                   <tr>
                     <td width="50%">事件</td>
                     <td width="50%">
-                      <q-select
+                      <el-select
                         v-model="event.type"
                         emit-value
                         map-options
@@ -394,7 +394,7 @@
                   <tr>
                     <td>动作</td>
                     <td>
-                      <q-select
+                      <el-select
                         v-model="event.action"
                         emit-value
                         map-options
@@ -427,7 +427,7 @@
                   <tr v-if="event.action == 'visible'">
                     <td>点击出现</td>
                     <td>
-                      <q-select
+                      <el-select
                         v-model="event.showItems"
                         filled
                         emit-value
@@ -442,7 +442,7 @@
                   <tr v-if="event.action == 'visible'">
                     <td>点击隐藏</td>
                     <td>
-                      <q-select
+                      <el-select
                         v-model="event.hideItems"
                         filled
                         emit-value
@@ -458,7 +458,7 @@
               </div>
             </template>
             <div style="width: 100%; padding: 10px 10px 10px 10px">
-              <q-btn
+              <el-button
                 label="Add"
                 outline
                 style="width: 100%"
@@ -474,31 +474,31 @@
         <tr>
           <td width="40%">BackColor</td>
           <td>
-            <q-input v-model.lazy="topoData.layer.backColor" />
+            <el-input v-model.lazy="topoData.layer.backColor" />
           </td>
         </tr>
         <tr>
           <td>BackImage</td>
           <td>
-            <q-input v-model.lazy="topoData.layer.backgroundImage" />
+            <el-input v-model.lazy="topoData.layer.backgroundImage" />
           </td>
         </tr>
         <tr>
           <td>分辨率</td>
           <td>
-            <q-select v-model="layerWH" :options="whOptions" />
+            <el-select v-model="layerWH" :options="whOptions" />
           </td>
         </tr>
         <tr v-if="layerWH == 'custom'">
           <td>W</td>
           <td>
-            <q-input v-model.number.lazy="topoData.layer.width" />
+            <el-input v-model.number.lazy="topoData.layer.width" />
           </td>
         </tr>
         <tr v-if="layerWH == 'custom'">
           <td>H</td>
           <td>
-            <q-input v-model.number.lazy="topoData.layer.height" />
+            <el-input v-model.number.lazy="topoData.layer.height" />
           </td>
         </tr>
       </table>
@@ -687,7 +687,7 @@
           border: #ccc solid 1px;
         }
 
-        .q-input {
+        .el-input {
           border: none;
         }
 

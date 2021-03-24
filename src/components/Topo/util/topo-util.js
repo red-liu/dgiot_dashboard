@@ -18,11 +18,11 @@ topoUtil.viewRegisterMap = {
 //优先匹配map，否则将自动匹配
 topoUtil.parseViewName = function (component) {
   var viewName = topoUtil.viewRegisterMap[component.type]
-  console.log('viewName :', viewName, component.type)
+  // console.log('viewName :', viewName, component.type)
   if (viewName == undefined) {
-    console.info(
-      `没有手动配置组件映射，将根据数据的type自动匹配，当前组件类型=${component.type}`
-    )
+    // console.info(
+    //   `没有手动配置组件映射，将根据数据的type自动匹配，当前组件类型=${component.type}`
+    // )
     viewName = 'view-' + component.type
   }
   return viewName

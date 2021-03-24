@@ -10,12 +10,12 @@
           @drop.prevent
         />
       </template>
-      <q-icon
-        v-else
-        name="photo_size_select_actual"
-        size="120px"
-        color="light"
-      />
+      <!--      <q-icon-->
+      <!--        v-else-->
+      <!--        name="photo_size_select_actual"-->
+      <!--        size="120px"-->
+      <!--        color="light"-->
+      <!--      />-->
     </template>
     <template v-else>
       <img

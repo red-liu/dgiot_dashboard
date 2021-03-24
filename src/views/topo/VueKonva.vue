@@ -1,57 +1,89 @@
 <template>
-  <div>
-    <v-stage ref="stage" :config="stageSize">
-      <v-layer>
-        <v-text :config="{ text: 'Some text on canvas', fontSize: 15 }" />
-        <v-rect
-          :config="{
-            x: 20,
-            y: 50,
-            width: 100,
-            height: 100,
-            fill: 'red',
-            shadowBlur: 10,
-          }"
-        />
-        <v-circle
-          :config="{
-            x: 200,
-            y: 100,
-            radius: 50,
-            fill: 'green',
-          }"
-        />
-        <v-line
-          :config="{
-            x: 20,
-            y: 200,
-            points: [0, 0, 100, 0, 100, 100],
-            tension: 0.5,
-            closed: true,
-            stroke: 'black',
-            fillLinearGradientStartPoint: { x: -50, y: -50 },
-            fillLinearGradientEndPoint: { x: 50, y: 50 },
-            fillLinearGradientColorStops: [0, 'red', 1, 'yellow'],
-          }"
-        />
-      </v-layer>
-      <v-layer ref="dragLayer" />
-    </v-stage>
+  <div class="app-container">
+    <div><h1>旋转动画</h1></div>
+    <div id="container" ref="container" class="container" @click="printNode" />
   </div>
 </template>
 
 <script>
-  const width = window.innerWidth
-  const height = window.innerHeight
-  let vm = {}
+  import { konva } from '@/mixins'
+  import Konva from 'konva'
+
   export default {
+    name: 'TweenFilter',
+    mixins: [konva],
     data() {
-      return {
-        stageSize: {
-          width: width,
-          height: height,
-        },
-      }
+      return {}
+    },
+    created() {
+      // 因为第一个图层是10ms后创建的,避免图层未创建问题
+      setTimeout(() => {
+        this.addElem()
+      }, 20)
+    },
+    methods: {
+      printNode() {
+        console.log(this.$refs.container)
+      },
+      /**
+       * 按钮--创建图形 yyshu 20201101
+       */
+      addElem() {
+        const layer = this.pageLayer[0].layer
+        const blueHex = new Konva.RegularPolygon({
+          x: 50,
+          y: 200,
+          sides: 6,
+          radius: 40,
+          fill: '#00D2FF',
+          stroke: 'black',
+          strokeWidth: 4,
+          draggable: true,
+        })
+
+        const yellowHex = new Konva.RegularPolygon({
+          x: 150,
+          y: 200,
+          sides: 6,
+          radius: 50,
+          fill: 'yellow',
+          stroke: 'black',
+          strokeWidth: 4,
+          draggable: true,
+        })
+
+        const redHex = new Konva.RegularPolygon({
+          x: 300,
+          y: 200,
+          sides: 6,
+          radius: 50,
+          fill: 'red',
+          stroke: 'black',
+          strokeWidth: 4,
+          offset: {
+            x: 50,
+            y: 0,
+          },
+          draggable: true,
+        })
+
+        layer.add(blueHex)
+        layer.add(yellowHex)
+        layer.add(redHex)
+
+        const period = 2000
+
+        const anim = new Konva.Animation(function (frame) {
+          const scale = Math.sin((frame.time * 2 * Math.PI) / period) + 0.001
+          // scale x and y
+          blueHex.scale({ x: scale, y: scale })
+          // scale only y
+          yellowHex.scaleY(scale)
+          // scale only x
+          redHex.scaleX(scale)
+        }, layer)
+        anim.start()
+      },
     },
   }
 </script>

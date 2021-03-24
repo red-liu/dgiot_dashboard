@@ -140,47 +140,38 @@
     </vue-ruler-tool>
     <div
       style="
-        height: 40px;
+        height: 20px;
+        line-height: 20px;
         border-top: #ccc solid 1px;
         position: relative;
         background-color: white;
       "
     >
-      <div style="position: absolute; left: 0px; top: 0px" class="row">
-        <div style="line-height: 40px; height: 40px">
-          已选组件个数：{{ selectedComponents.length }}
-        </div>
-        <el-button
-          label="预览"
-          color="primary"
-          size="xs"
-          style="margin-left: 100px; height: 30px; margin-top: 5px"
-          @click="fullScreen"
-        />
-
-        <el-button
-          label="当前数据"
-          color="primary"
-          size="xs"
-          style="margin-left: 100px; height: 30px; margin-top: 5px"
-          @click="printData"
-        />
-      </div>
-      <div style="position: absolute; right: 10px; top: 0px" class="row">
-        <div style="line-height: 40px; height: 40px; padding: 0px 5px">
-          缩放
-        </div>
-        <el-slider
-          v-model="selectedValue"
-          :min="30"
-          :max="200"
-          :step="1"
-          label
-          :label-value="`${selectedValue}%`"
-          snap
-          style="width: 200px"
-        />
-      </div>
+      <el-row :gutter="10">
+        <el-col :xs="8" :push="1" :sm="8" :md="8" :lg="8" :xl="8">
+          <el-button type="primary" disabled @click="fullScreen">
+            预览
+          </el-button>
+          <el-button type="primary" @click="printData">当前数据</el-button>
+        </el-col>
+        <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
+          <p style="height: 20px; line-height: 20px; font-size: 18px">
+            已选组件个数：{{ selectedComponents.length }}
+          </p>
+        </el-col>
+        <el-col :xs="8" :pull="1" :sm="8" :md="8" :lg="8" :xl="8">
+          <el-slider
+            v-model="selectedValue"
+            :min="30"
+            :max="200"
+            :step="1"
+            label
+            :label-value="`${selectedValue}%`"
+            snap
+            style="width: 200px; float: right"
+          />
+        </el-col>
+      </el-row>
     </div>
   </div>
 </template>

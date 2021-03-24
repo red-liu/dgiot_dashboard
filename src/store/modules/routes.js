@@ -2,11 +2,11 @@
  * @description 路由拦截状态管理，目前两种模式：all模式与intelligence模式，其中partialRoutes是菜单暂未使用
  */
 import { asyncRoutes, constantRoutes, resetRouter } from '@/router'
+import { indexRoutes, errorRoutes } from '@/config/router.config'
 import { getRouterList } from '@/api/User'
 import { convertRouter, filterRoutes } from '@/utils/routes'
 import { authentication, rolesControl } from '@/config'
 import { isArray } from '@/utils/validate'
-import { json } from 'body-parser'
 
 const state = () => ({
   routes: [],
@@ -123,30 +123,8 @@ const actions = {
           false,
           'vab-hey-message-error'
         )
-      if (data[data.length - 1].path !== '*')
-        data.unshift({
-          path: '/',
-          name: 'Root',
-          component: 'Layout',
-          redirect: '/index',
-          meta: {
-            title: '总控台',
-            icon: 'home-2-line',
-          },
-          children: [
-            {
-              path: 'index',
-              name: 'Index',
-              component: '@/views/equipment_management/platform_overview',
-              meta: {
-                title: '总控台',
-                icon: 'home-2-line',
-                noClosable: true,
-              },
-            },
-          ],
-        })
-      data.push({ path: '*', redirect: '/404', hidden: true })
+      if (data[data.length - 1].path !== '*') data.unshift(indexRoutes)
+      data.push(errorRoutes)
       routes = convertRouter(data)
       console.log(routes)
     }

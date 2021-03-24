@@ -45,8 +45,8 @@
               </td>
             </tr>
           </table>
-          <el-list separator no-border>
-            <q-expansion-item label="Position" default-opened>
+          <div separator no-border>
+            <div label="Position" default-opened>
               <table>
                 <tr>
                   <td width="50%">X</td>
@@ -93,9 +93,9 @@
                   </td>
                 </tr>
               </table>
-            </q-expansion-item>
+            </div>
 
-            <q-expansion-item label="Border" default-opened>
+            <div label="Border" default-opened>
               <table>
                 <tr>
                   <td width="50%">BorderWidth</td>
@@ -126,22 +126,22 @@
                       class="my-input"
                     >
                       <template #append>
-                        <q-icon name="colorize" class="cursor-pointer">
-                          <q-popup-proxy
-                            transition-show="scale"
-                            transition-hide="scale"
-                          >
-                            <q-color v-model="configObject.style.borderColor" />
-                          </q-popup-proxy>
-                        </q-icon>
+                        <!--                        <q-icon name="colorize" class="cursor-pointer">-->
+                        <!--                          <q-popup-proxy-->
+                        <!--                            transition-show="scale"-->
+                        <!--                            transition-hide="scale"-->
+                        <!--                          >-->
+                        <!--                            <q-color v-model="configObject.style.borderColor" />-->
+                        <!--                          </q-popup-proxy>-->
+                        <!--                        </q-icon>-->
                       </template>
                     </el-input>
                   </td>
                 </tr>
               </table>
-            </q-expansion-item>
+            </div>
 
-            <q-expansion-item label="Base" default-opened>
+            <div label="Base" default-opened>
               <table>
                 <tr>
                   <td width="50%">Visible</td>
@@ -184,14 +184,14 @@
                       class="my-input"
                     >
                       <template #append>
-                        <q-icon name="colorize" class="cursor-pointer">
-                          <q-popup-proxy
-                            transition-show="scale"
-                            transition-hide="scale"
-                          >
-                            <q-color v-model="configObject.style.backColor" />
-                          </q-popup-proxy>
-                        </q-icon>
+                        <!--                        <q-icon name="colorize" class="cursor-pointer">-->
+                        <!--                          <q-popup-proxy-->
+                        <!--                            transition-show="scale"-->
+                        <!--                            transition-hide="scale"-->
+                        <!--                          >-->
+                        <!--                            <q-color v-model="configObject.style.backColor" />-->
+                        <!--                          </q-popup-proxy>-->
+                        <!--                        </q-icon>-->
                       </template>
                     </el-input>
                   </td>
@@ -231,14 +231,14 @@
                       class="my-input"
                     >
                       <template #append>
-                        <q-icon name="colorize" class="cursor-pointer">
-                          <q-popup-proxy
-                            transition-show="scale"
-                            transition-hide="scale"
-                          >
-                            <q-color v-model="configObject.style.foreColor" />
-                          </q-popup-proxy>
-                        </q-icon>
+                        <!--                        <q-icon name="colorize" class="cursor-pointer">-->
+                        <!--                          <q-popup-proxy-->
+                        <!--                            transition-show="scale"-->
+                        <!--                            transition-hide="scale"-->
+                        <!--                          >-->
+                        <!--                            <q-color v-model="configObject.style.foreColor" />-->
+                        <!--                          </q-popup-proxy>-->
+                        <!--                        </q-icon>-->
                       </template>
                     </el-input>
                   </td>
@@ -293,9 +293,9 @@
                   </td>
                 </tr>
               </table>
-            </q-expansion-item>
+            </div>
             <!-- 目前只有虚线有动画 -->
-            <q-expansion-item
+            <div
               v-if="configObject.type == 'dashed'"
               label="动画"
               default-opened
@@ -336,8 +336,8 @@
                   </tr>
                 </template>
               </table>
-            </q-expansion-item>
-          </el-list>
+            </div>
+          </div>
         </div>
         <div v-show="tabIndex == 1">
           <div class="not-surpport">根据实际系统设计</div>
@@ -349,18 +349,18 @@
                 <div
                   style="
                     padding: 5px;
-                    border-left: #ccc solid 1px;
-                    border-right: #ccc solid 1px;
                     border-top: #ccc solid 1px;
+                    border-right: #ccc solid 1px;
+                    border-left: #ccc solid 1px;
                   "
                 >
                   交互-{{ index + 1 }}
-                  <q-icon
-                    name="delete"
-                    color="negative"
-                    style="float: right; cursor: pointer"
-                    @click.native="removeAction(index)"
-                  />
+                  <!--                  <q-icon-->
+                  <!--                    name="delete"-->
+                  <!--                    color="negative"-->
+                  <!--                    style="float: right; cursor: pointer"-->
+                  <!--                    @click.native="removeAction(index)"-->
+                  <!--                  />-->
                 </div>
                 <table>
                   <tr>
@@ -639,22 +639,22 @@
 
 <style lang="scss">
   .topo-properties {
-    border: #ccc solid 1px;
-    background-color: white;
     height: 100%;
+    background-color: white;
+    border: #ccc solid 1px;
 
     .topo-properties-tabs {
-      height: 35px;
       display: flex;
-      border-bottom: #ccc solid 1px;
+      height: 35px;
       background-color: white;
+      border-bottom: #ccc solid 1px;
 
       .topo-properties-tab {
-        height: 35px;
-        text-align: center;
-        line-height: 35px;
         flex: 1;
+        height: 35px;
+        line-height: 35px;
         color: #666;
+        text-align: center;
       }
 
       .topo-properties-tab + .topo-properties-tab {
@@ -666,24 +666,24 @@
       }
 
       .topo-properties-tab-active {
+        font-weight: bold;
         color: #000;
         border-bottom: #3388ff solid 2px;
-        font-weight: bold;
       }
     }
 
     .topo-properties-table {
+      height: calc(100% - 92px);
       overflow-x: hidden;
       overflow-y: auto;
-      height: calc(100% - 92px);
 
       table {
         width: 100%;
         border-collapse: collapse;
 
         td {
-          text-align: center;
           padding: 0px;
+          text-align: center;
           border: #ccc solid 1px;
         }
 
@@ -692,8 +692,8 @@
         }
 
         .q-select {
-          border: none;
           margin-right: 0px;
+          border: none;
         }
       }
     }

@@ -1,8 +1,8 @@
 <template>
   <div class="topo-toolbox">
-    <el-list highlight separator class="full-height">
+    <div highlight separator class="full-height">
       <template v-for="(group, index1) in toolbox">
-        <q-expansion-item :key="index1" :icon="group.icon" :label="group.title">
+        <div :key="index1" :icon="group.icon" :label="group.title">
           <div class="toolbox-group">
             <template v-for="(value, index) in group.items">
               <div
@@ -38,9 +38,9 @@
               </div>
             </template>
           </div>
-        </q-expansion-item>
+        </div>
       </template>
-    </el-list>
+    </div>
   </div>
 </template>
 
@@ -77,21 +77,21 @@
 
 <style lang="scss">
   .topo-toolbox {
-    border: #ccc solid 1px;
-    background-color: white;
-    overflow-y: auto;
     overflow-x: hidden;
+    overflow-y: auto;
+    background-color: white;
+    border: #ccc solid 1px;
 
     .toolbox-group {
       display: flex;
       flex-wrap: wrap;
-      justify-content: flex-start;
       align-content: space-between;
+      justify-content: flex-start;
 
       .toolbox-item {
         width: 70px;
-        margin: 10px 5px;
         padding: 5px;
+        margin: 10px 5px;
         color: #777;
         border: transparent solid 1px;
         &.base {
@@ -108,11 +108,11 @@
       }
 
       .toolbox-item:hover {
-        border: #ccc solid 1px;
-        background: #ccc;
         color: #3388ff;
-        border-radius: 6px;
         cursor: pointer;
+        background: #ccc;
+        border: #ccc solid 1px;
+        border-radius: 6px;
       }
     }
   }
@@ -121,8 +121,8 @@
   .item-icon {
     height: 30px;
     .iconfont {
-      font-size: 30px;
       margin-left: 14px;
+      font-size: 30px;
     }
   }
 </style>

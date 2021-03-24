@@ -19,7 +19,7 @@
         >
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item label="词典类型" prop="templateId">
+              <el-form-item label="字典类型" prop="templateId">
                 <el-select
                   v-model="addDictForm.templateId"
                   :disabled="editDictId == '' ? false : true"
@@ -144,7 +144,7 @@
             <el-col :span="8">
               <el-form-item
                 :label-width="formLabelWidth"
-                label="词典模板名称"
+                label="字典模板名称"
                 prop="name"
               >
                 <el-input v-model="dictTempForm.name" autocomplete="off" />
@@ -153,7 +153,7 @@
             <el-col :span="8">
               <el-form-item
                 :label-width="formLabelWidth"
-                label="词典模板类型"
+                label="字典模板类型"
                 prop="cType"
               >
                 <el-input v-model="dictTempForm.cType" autocomplete="off" />
@@ -162,7 +162,7 @@
             <el-col :span="8">
               <el-form-item
                 :label-width="formLabelWidth"
-                label="词典模板状态"
+                label="字典模板状态"
                 prop="enable"
               >
                 <el-radio v-model="dictTempForm.enable" label="1" border>
@@ -175,7 +175,7 @@
             </el-col>
           </el-row>
 
-          <el-form-item :label-width="formLabelWidth" label="词典模板数据">
+          <el-form-item :label-width="formLabelWidth" label="字典模板数据">
             <el-tabs v-model="elactiveName">
               <el-tab-pane label="Table" name="Table">
                 <el-button
@@ -394,10 +394,10 @@
       </el-dialog>
     </div>
     <el-tabs v-model="activeName">
-      <el-tab-pane label="词典模板管理" name="词典模板管理">
+      <el-tab-pane label="字典模板管理" name="字典模板管理">
         <el-input
           v-model="search_dict"
-          placeholder="请输入词典模板名称"
+          placeholder="请输入字典模板名称"
           style="width: 200px"
           size="mini"
           clearable
@@ -417,7 +417,7 @@
           icon="el-icon-plus"
           @click="createDictTemp"
         >
-          创建词典模板
+          创建字典模板
         </el-button>
         <el-table
           :header-cell-style="{ 'text-align': 'center' }"
@@ -427,22 +427,22 @@
           style="width: 100%"
         >
           <el-table-column label="索引" type="index" width="50" />
-          <el-table-column label="词典模板编号" width="200">
+          <el-table-column label="字典模板编号" width="200">
             <template v-if="scope.row.objectId" slot-scope="scope">
               {{ scope.row.objectId }}
             </template>
           </el-table-column>
-          <el-table-column label="词典模板名称" width="200">
+          <el-table-column label="字典模板名称" width="200">
             <template slot-scope="scope">
               {{ scope.row.data.name }}
             </template>
           </el-table-column>
-          <el-table-column label="词典模板类型" width="200">
+          <el-table-column label="字典模板类型" width="200">
             <template slot-scope="scope">
               {{ scope.row.data.cType }}
             </template>
           </el-table-column>
-          <el-table-column label="词典模板状态" width="200">
+          <el-table-column label="字典模板状态" width="200">
             <template slot-scope="scope">
               <el-tag v-if="scope.row.data.enable == '1'" type="success">
                 启用
@@ -487,7 +487,7 @@
                 size="mini"
                 type="danger"
                 plain
-                @click="deleteDict(scope.row, '词典模板')"
+                @click="deleteDict(scope.row, '字典模板')"
               >
                 删除
               </el-button>
@@ -513,7 +513,7 @@
           />
         </div>
       </el-tab-pane>
-      <el-tab-pane label="词典管理" name="词典管理">
+      <el-tab-pane label="字典管理" name="字典管理">
         <el-select
           v-model="dictType"
           style="width: 200px"
@@ -534,7 +534,7 @@
           icon="el-icon-plus"
           @click="showDictDialog"
         >
-          创建词典
+          创建字典
         </el-button>
         <el-table
           v-show="isALL"
@@ -551,12 +551,12 @@
           stripe
         >
           <el-table-column label="索引" type="index" width="50" />
-          <el-table-column prop="type" label="词典编号">
+          <el-table-column prop="type" label="字典编号">
             <template slot-scope="scope">
               {{ scope.row.objectId }}
             </template>
           </el-table-column>
-          <el-table-column prop="type" label="词典类型">
+          <el-table-column prop="type" label="字典类型">
             <template slot-scope="scope">
               {{ scope.row.data.templateName }}
             </template>
@@ -606,7 +606,7 @@
                 size="mini"
                 type="danger"
                 plain
-                @click="deleteDict(scope.row, '词典')"
+                @click="deleteDict(scope.row, '字典')"
               >
                 删除
               </el-button>
@@ -628,7 +628,7 @@
           style="width: 100%"
           border
         >
-          <el-table-column label="词典类型" width="150" prop="templateName" />
+          <el-table-column label="字典类型" width="150" prop="templateName" />
           <template v-for="(item, index) in dialogtempconfig">
             <el-table-column
               v-if="item.type == 'Boolean'"
@@ -680,7 +680,7 @@
                 size="mini"
                 type="danger"
                 plain
-                @click="deleteDict(scope.row, '词典')"
+                @click="deleteDict(scope.row, '字典')"
               >
                 删除
               </el-button>
@@ -745,10 +745,10 @@
         editDictTempId: '',
         infoData: new Date(),
         elactiveName: 'Table',
-        activeName: '词典模板管理',
-        title_dict_edit_dialog: '新增词典数据',
-        title_temp_dialog: '新增词典模板',
-        title_dict_dialog: '新增词典',
+        activeName: '字典模板管理',
+        title_dict_edit_dialog: '新增字典数据',
+        title_temp_dialog: '新增字典模板',
+        title_dict_dialog: '新增字典',
         search_dict: '',
         add_dict_dialog: false,
         dict_temp_dialog: false,
@@ -873,14 +873,14 @@
         this.addDictForm = row.data
         this.addDictForm.type = row.type
         this.add_dict_dialog = true
-        this.title_dict_dialog = '编辑词典'
+        this.title_dict_dialog = '编辑字典'
       },
       editDict(row) {
         this.editDictId = row.objectId
         this.selectChange(row.templateId)
         this.addDictForm = row
         this.add_dict_dialog = true
-        this.title_dict_dialog = '编辑词典'
+        this.title_dict_dialog = '编辑字典'
       },
       tempTypeChange(value) {
         if (value == 'Boolean') {
@@ -898,7 +898,7 @@
           this.arrlist = res.data.params
           var obj1 = {
             templateId: [
-              { required: true, message: '请选择词典类型', trigger: 'blur' },
+              { required: true, message: '请选择字典类型', trigger: 'blur' },
             ],
             rolesObj: [
               { required: true, message: '请选择所属应用', trigger: 'change' },
@@ -952,7 +952,7 @@
       },
       addRow(tabs) {
         this.editIndexId = undefined
-        this.title_dict_edit_dialog = '新增词典数据'
+        this.title_dict_edit_dialog = '新增字典数据'
         this.edit_dict_temp_dialog = true
         this.tempparams = {
           name: '',
@@ -976,7 +976,7 @@
       },
       editRow(row, index, params) {
         this.editIndexId = index
-        this.title_dict_edit_dialog = '修改词典数据'
+        this.title_dict_edit_dialog = '修改字典数据'
         this.edit_dict_temp_dialog = true
         this.tempparams = row
       },
@@ -1024,7 +1024,7 @@
       createDictTemp() {
         this.dict_temp_dialog = true
         this.editDictTempId = ''
-        this.title_temp_dialog = '创建词典模板'
+        this.title_temp_dialog = '创建字典模板'
         this.dictTempForm = {
           name: '',
           cType: '',
@@ -1034,10 +1034,10 @@
         }
         this.rules = {
           name: [
-            { required: true, message: '请输入词典模板名称', trigger: 'blur' },
+            { required: true, message: '请输入字典模板名称', trigger: 'blur' },
           ],
           cType: [
-            { required: true, message: '请输入词典模板类型', trigger: 'blur' },
+            { required: true, message: '请输入字典模板类型', trigger: 'blur' },
           ],
           enable: [
             { required: true, message: '请选择状态', trigger: 'change' },
@@ -1049,13 +1049,13 @@
       },
       showDictDialog() {
         this.add_dict_dialog = true
-        this.title_dict_dialog = '新增词典'
+        this.title_dict_dialog = '新增字典'
         this.editDictId = ''
         this.addDictForm = {}
         this.arrlist = []
         this.rules1 = {
           templateId: [
-            { required: true, message: '请选择词典类型', trigger: 'blur' },
+            { required: true, message: '请选择字典类型', trigger: 'blur' },
           ],
           rolesObj: [
             { required: true, message: '请选择所属应用', trigger: 'change' },
@@ -1099,7 +1099,7 @@
           this.dict_temp_dialog = false
           this.getDictData()
         } else if (res.code == 137) {
-          this.$message('词典名称重复')
+          this.$message('字典名称重复')
         } else {
           this.$message('创建失败')
         }
@@ -1136,7 +1136,7 @@
         const { params = {} } = row.data
         this.dictTempForm.params = params
         this.dict_temp_dialog = true
-        this.title_temp_dialog = '编辑词典模板'
+        this.title_temp_dialog = '编辑字典模板'
       },
       async put_Dict_temp(editDictId, row) {
         const params = {
@@ -1147,9 +1147,9 @@
         if (updatedAt != undefined) {
           this.getDictData()
           this.dict_temp_dialog = false
-          this.$message('词典数据更新成功')
+          this.$message('字典数据更新成功')
         } else {
-          this.$message('词典数据更新失败')
+          this.$message('字典数据更新失败')
         }
       },
       async put_Dict(editDictId, row) {
@@ -1165,9 +1165,9 @@
           this.dictType = row.templateName
           this.selectDictChange(row.templateId)
           this.add_dict_dialog = false
-          this.$message('词典数据更新成功')
+          this.$message('字典数据更新成功')
         } else {
-          this.$message('词典数据更新失败')
+          this.$message('字典数据更新失败')
         }
       },
       async disabledDict(row, type) {
@@ -1177,9 +1177,9 @@
         }
         const { updatedAt } = await putDict(row.objectId, params)
         if (updatedAt) {
-          this.$message('词典状态设置成功')
+          this.$message('字典状态设置成功')
         } else {
-          this.$message('词典状态设置失败')
+          this.$message('字典状态设置失败')
         }
       },
       async disabledAllDict(row, type) {
@@ -1189,15 +1189,15 @@
         }
         const { updatedAt } = await putDict(row.objectId, params)
         if (updatedAt) {
-          this.$message('词典状态设置成功')
+          this.$message('字典状态设置成功')
         } else {
-          this.$message('词典状态设置失败')
+          this.$message('字典状态设置失败')
         }
       },
       async deleteDict(row, type) {
         const res = await this.$del_object('Dict', row.objectId)
         if (res) {
-          if (type == '词典') {
+          if (type == '字典') {
             this.selectDictChange(row.templateId)
             this.getDictRecord()
           } else {

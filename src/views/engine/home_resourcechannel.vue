@@ -554,7 +554,6 @@
         const { results } = await queryChannel(params)
         this.total = results.length
         this.tableData = results
-        console.log('results Get_Re_Channel', results)
       },
 
       async getApplication() {
@@ -574,9 +573,7 @@
         const { results = [] } = await Roletree()
         this.allApps = results
         const res = await resourceTypes()
-        console.log('res', res)
         this.channelregion = res
-        console.log('this.channelregion ', this.channelregion)
       },
       // 更新状态
       qyChannel(row, action) {
@@ -596,7 +593,6 @@
       },
       // 编辑设备
       updateChannel(row) {
-        console.log(row)
         this.dialogVisible = true
         this.resourceid = row.objectId
         this.detailchannel = row.config
@@ -619,7 +615,6 @@
               delete obj.type
               delete obj.isEnable
               delete obj.name
-              console.log('addchannelForm', this.addchannel)
               const aclKey = 'role' + ':' + this.addchannel.applicationtText
               const aclObj = {}
               aclObj[aclKey] = { read: true, write: true }
@@ -631,6 +626,7 @@
                 desc: this.addchannel.desc,
                 isEnable: false,
                 status: 'OFFLINE',
+                type: this.addchannel.type.toString(),
               }
               this.addchannelaxios(data)
             } else {
@@ -703,6 +699,7 @@
           })
       },
       addchanneltype() {
+        this.arrlist = []
         this.channelForm = true
         this.channelupdated = '新增'
       },
@@ -764,7 +761,6 @@
         this.removeauto(item)
       },
       removeauto(val) {
-        console.log('this.addchannel.region', this.addchannel.region)
         var obj = {}
         var obj1 = {
           roles: [
@@ -782,7 +778,6 @@
             if (item.cType == val) {
               this.$forceUpdate()
               this.selectregion = item
-              console.log(this.selectregion)
               this.arrlist = this.orderObject(this.selectregion.params)
               this.arrlist.map((item) => {
                 if (item.default) {
@@ -811,7 +806,6 @@
           this.channelregion.map((item) => {
             if (item.cType == val) {
               this.selectregion = item
-              console.log(this.selectregion)
               this.$forceUpdate()
               this.arrlist = this.orderObject(this.selectregion.params)
               this.arrlist.map((item) => {
@@ -835,21 +829,20 @@
                   obj.name = this.channelrow.name
                   obj.type = this.selectregion.type
                   obj.isEnable = this.channelrow.isEnable
+                  // obj.applicationtText =
                 }
               })
             }
           })
         }
         // 读取acl列表,获取所属应用名称
-        console.log('this.channelrow', this.channelrow)
-        if (this.channelrow.length > 0) {
-          for (var key in this.channelrow.ACL.permissionsById) {
+        if (this.channelrow) {
+          for (var key in this.channelrow.ACL) {
             obj.applicationtText = key ? key.substr(5) : ''
           }
         }
         this.addchannel = obj
         this.addchannel.region = val
-        console.log('this.addchannel.region', this.addchannel.region)
         this.addrules = obj1
       },
       editorChannel(row) {
@@ -921,8 +914,6 @@
         var text0 = JSON.stringify({ action: 'start_logger' })
         Websocket.subscribe(info, function (res) {
           if (res.result) {
-            console.log(info)
-            console.log('订阅成功')
             var sendInfo = {
               topic: 'channel/' + row.objectId,
               text: text0,

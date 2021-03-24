@@ -75,10 +75,7 @@
               <!--                  <span>{{ scope.row.CategoryKey }}</span>-->
               <!--                </template>-->
               <!--              </el-table-column>-->
-              <el-table-column
-                :label="$translateTitle('product.addingtime')"
-                width="200"
-              >
+              <el-table-column :label="$translateTitle('product.addingtime')">
                 <template slot-scope="scope">
                   <span>{{ utc2beijing(scope.row.createdAt) }}</span>
                 </template>
@@ -141,22 +138,22 @@
                   >
                     修改
                   </el-link>
-                  <el-link
-                    :underline="false"
-                    icon="el-icon-s-promotion"
-                    type="primary"
-                    @click="proudctView(scope.row)"
-                  >
-                    运行组态
-                  </el-link>
-                  <el-link
-                    :underline="false"
-                    icon="el-icon-link"
-                    type="primary"
-                    @click="proudctEdit(scope.row)"
-                  >
-                    编辑组态
-                  </el-link>
+                  <!--                  <el-link-->
+                  <!--                    :underline="false"-->
+                  <!--                    icon="el-icon-s-promotion"-->
+                  <!--                    type="primary"-->
+                  <!--                    @click="proudctView(scope.row)"-->
+                  <!--                  >-->
+                  <!--                    运行组态-->
+                  <!--                  </el-link>-->
+                  <!--                  <el-link-->
+                  <!--                    :underline="false"-->
+                  <!--                    icon="el-icon-link"-->
+                  <!--                    type="primary"-->
+                  <!--                    @click="proudctEdit(scope.row)"-->
+                  <!--                  >-->
+                  <!--                    编辑组态-->
+                  <!--                  </el-link>-->
                   <!-- <el-link
                     :disabled="scope.row.config.config.cloneState == true"
                     :underline="false"
@@ -829,7 +826,7 @@
         })
       },
       handleUploadSuccess(response, file, fileList) {
-        console.log('### Success response', response)
+        // console.log('### Success response', response)
         this.$message({
           type: 'success',
           message: '产品导入成功',
@@ -868,7 +865,7 @@
           },
         }
         const Dictres = await this.$query_object('Dict', parsms)
-        console.log(Dictres, 'results category')
+        // console.log(Dictres, 'results category')
         this.allTableDate = Dictres.results
       },
       async searchProduct(start) {
@@ -988,7 +985,7 @@
         // this.searchProduct();
         this.categoryListOptions = this.treeData(this.categoryList)
 
-        console.log(results)
+        // console.log(results)
       },
       submitForm(formName) {
         var params = {}
@@ -1026,7 +1023,7 @@
               params = Object.assign(initparams, addparams)
               this.createProduct(params)
             } else {
-              console.log(this.custom_row)
+              // console.log(this.custom_row)
               var editparams = {}
               params = Object.assign(initparams, editparams)
               this.editProduct(params)
@@ -1038,7 +1035,6 @@
       },
       async createProduct(params) {
         const res = await this.$create_object('Product', params)
-        console.log(res)
         if (res.objectId) {
           this.initQuery('产品创建成功', 'success')
         } else {
@@ -1172,7 +1168,6 @@
       },
       // 克隆组态
       proudctClone(row) {
-        console.log(row)
         row.attributes.config.cloneState = true
         row.attributes.config.cloneState = true
         const config = row

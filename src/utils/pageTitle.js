@@ -15,7 +15,7 @@ import { translateTitle } from '@/utils/utilwen'
  * @returns {string}
  */
 export default function getPageTitle(pageTitle) {
-  console.log(translateTitle(`route.${pageTitle}`))
+  // console.log(translateTitle(`route.${pageTitle}`))
   pageTitle = translateTitle(`route.${pageTitle}`)
   let newTitles = []
   if (pageTitle) newTitles.push(pageTitle)

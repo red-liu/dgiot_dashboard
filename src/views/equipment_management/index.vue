@@ -87,20 +87,20 @@
             </div>
           </div>
           <div style="margin-top: 20px" class="equdevices">
-            <el-select
-              v-model="equvalue"
-              :disabled="!productenable"
-              class="selectdetail"
-              size="small"
-              @change="selectProductid"
-            >
-              <el-option
-                v-for="(item, index) in proTableData"
-                :key="index"
-                :label="item.name"
-                :value="item.id"
-              />
-            </el-select>
+            <!--            <el-select-->
+            <!--              v-model="equvalue"-->
+            <!--              :disabled="!productenable"-->
+            <!--              class="selectdetail"-->
+            <!--              size="small"-->
+            <!--              @change="selectProductid"-->
+            <!--            >-->
+            <!--              <el-option-->
+            <!--                v-for="(item, index) in proTableData"-->
+            <!--                :key="index"-->
+            <!--                :label="item.name"-->
+            <!--                :value="item.id"-->
+            <!--              />-->
+            <!--            </el-select>-->
             <el-select v-model="selectdevice" class="selectdetail" size="small">
               <el-option :value="$translateTitle('equipment.devicename')" />
               <el-option :value="$translateTitle('equipment.devicenumber')" />
@@ -182,6 +182,7 @@
               <el-table-column
                 :label="$translateTitle('equipment.state')"
                 align="center"
+                width="200"
               >
                 <template slot-scope="scope">
                   <!-- <span  :class="scope.row.status" v-if="scope.row.status=='ACTIVE'">{{ $translateTitle('product.active')}}</span><el-tooltip content="设备已注册" placement="top" v-if="scope.row.status=='ACTIVE'">
@@ -234,26 +235,40 @@
                   </span>
                 </template>
               </el-table-column>
-
               <el-table-column
                 :label="$translateTitle('equipment.product')"
-                prop="productName"
                 align="center"
-              />
-
-              <el-table-column
-                :label="$translateTitle('equipment.nodetype')"
-                align="center"
+                width="200"
               >
                 <template slot-scope="scope">
-                  <vab-icon
-                    :icon="
-                      scope.row.nodeType == 0 ? 'hotel-bed-fill' : 'hotel-fill'
-                    "
-                    style="width: 2rem; height: 2rem"
-                  />
-                  <!-- <el-tag type="success" >设备</el-tag>
-                  <el-tag type="success" v-else>网关</el-tag>-->
+                  <span>{{ scope.row.product.name }}</span>
+                </template>
+              </el-table-column>
+              <!--              <el-table-column-->
+              <!--                :label="$translateTitle('equipment.nodetype')"-->
+              <!--                align="center"-->
+              <!--                width="200"-->
+              <!--              >-->
+              <!--                <template slot-scope="scope">-->
+              <!--                  <vab-icon-->
+              <!--                    :icon="-->
+              <!--                      scope.row.nodeType == 0 ? 'hotel-bed-fill' : 'hotel-fill'-->
+              <!--                    "-->
+              <!--                    style="width: 2rem; height: 2rem"-->
+              <!--                  />-->
+              <!--                  &lt;!&ndash; <el-tag type="success" >设备</el-tag>-->
+              <!--                  <el-tag type="success" v-else>网关</el-tag>&ndash;&gt;-->
+              <!--                </template>-->
+              <!--              </el-table-column>-->
+              <el-table-column label="授权码" align="center" width="200">
+                <template slot-scope="scope">
+                  <span>
+                    {{
+                      scope.row.basedata && scope.row.basedata.auth
+                        ? scope.row.basedata.auth
+                        : ''
+                    }}
+                  </span>
                 </template>
               </el-table-column>
               <el-table-column
@@ -302,13 +317,21 @@
                 align="center"
               >
                 <template slot-scope="scope">
+                  <!--                  <el-link-->
+                  <!--                    :underline="false"-->
+                  <!--                    type="primary"-->
+                  <!--                    icon="el-icon-view"-->
+                  <!--                    @click="deviceToDetail(scope.row)"-->
+                  <!--                  >-->
+                  <!--                    {{ $translateTitle('equipment.see') }}-->
+                  <!--                  </el-link>-->
                   <el-link
                     :underline="false"
                     type="primary"
-                    icon="el-icon-view"
-                    @click="deviceToDetail(scope.row)"
+                    icon="el-icon-edit"
+                    @click="editorDevice(scope.row)"
                   >
-                    {{ $translateTitle('equipment.see') }}
+                    编辑
                   </el-link>
                   <el-popover
                     :ref="`popover-${scope.$index}`"
@@ -342,26 +365,18 @@
                       {{ $translateTitle('developer.delete') }}
                     </el-link>
                   </el-popover>
-                  <el-link
-                    v-if="scope.row.nodeType != 0"
-                    :underline="false"
-                    type="primary"
-                    icon="el-icon-s-unfold"
-                    @click="deviceToChildren(scope.row)"
-                  >
-                    {{ $translateTitle('equipment.subdevice') }}
-                  </el-link>
-                  <el-link
-                    :underline="false"
-                    type="primary"
-                    icon="el-icon-edit"
-                    @click="editorDevice(scope.row)"
-                  >
-                    编辑
-                  </el-link>
-                  <el-link type="primary" @click="goEdit(scope.row)">
-                    视图
-                  </el-link>
+                  <!--                  <el-link-->
+                  <!--                    v-if="scope.row.nodeType != 0"-->
+                  <!--                    :underline="false"-->
+                  <!--                    type="primary"-->
+                  <!--                    icon="el-icon-s-unfold"-->
+                  <!--                    @click="deviceToChildren(scope.row)"-->
+                  <!--                  >-->
+                  <!--                    {{ $translateTitle('equipment.subdevice') }}-->
+                  <!--                  </el-link>-->
+                  <!--                  <el-link type="primary" @click="goEdit(scope.row)">-->
+                  <!--                    视图-->
+                  <!--                  </el-link>-->
                 </template>
               </el-table-column>
             </el-table>
@@ -492,19 +507,7 @@
               :label="$translateTitle('product.productname')"
               prop="productName"
             >
-              <el-select
-                v-model="deviceform.productName"
-                :placeholder="$translateTitle('equipment.entername')"
-                :disabled="!productenable || !changeproduct"
-                @change="rolesSelect"
-              >
-                <el-option
-                  v-for="(item, index) in proTableData1"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.id"
-                />
-              </el-select>
+              <el-input v-model="deviceform.productName" readonly />
             </el-form-item>
             <el-form-item :label="$translateTitle('equipment.assetnumber')">
               <el-input v-model="deviceform.assetNum" />
@@ -514,6 +517,19 @@
             </el-form-item>
             <el-form-item :label="$translateTitle('equipment.equipmentbrand')">
               <el-input v-model="deviceform.brand" />
+            </el-form-item>
+            <el-form-item v-if="deviceform.auth" label="授权码">
+              <el-input v-model="deviceform.auth" />
+            </el-form-item>
+            <el-form-item v-if="deviceform.yysId" label="应用商">
+              <el-select v-model="deviceform.yysId" placeholder="应用商">
+                <el-option
+                  v-for="(item, index) in yysSelect"
+                  :key="index"
+                  :label="item.name"
+                  :value="item.key"
+                />
+              </el-select>
             </el-form-item>
             <el-form-item
               :label="$translateTitle('equipment.installationlocation')"
@@ -706,7 +722,7 @@
 <script>
   import { Promise } from 'q'
   import { Batchdelete } from '@/api/Batch'
-  import { queryRole } from '@/api/Role'
+  import { queryDict } from '@/api/Direct/index.js'
   import {
     BmNavigation,
     BaiduMap,
@@ -714,7 +730,7 @@
     BmGeolocation,
     BmCityList,
   } from 'vue-baidu-map'
-  import { utc2beijing } from '@/utils'
+  import { getProduct } from '@/api/Product/index.js'
   import { returnLogin } from '@/utils/return'
   import { getBatchNumer } from '@/api/Dict'
   var language
@@ -776,7 +792,10 @@
           status: '',
           isEnable: '',
           brand: '',
+          auth: 12345678,
+          yysId: '09',
         },
+        yysSelect: [],
         rules: {
           name: [
             { required: true, message: '请输入设备名称', trigger: 'blur' },
@@ -822,7 +841,6 @@
         pctableData: [],
         equipmentEditor: '添加',
         tableData: [],
-        options: [],
         proTableData: [],
         proTableData1: [],
         activelength: [],
@@ -857,31 +875,45 @@
       // Todo 这里拿到的还是空的
       // this.userId = this.$route.query.__ob__.dep.id; 我注释的
       // console.log(this.$route)
-      this.getRole()
-      this.searchProduct()
+      this.getDevices(0)
       this.addDeviceBatch(0)
+      this.queryYysId()
       language = Cookies.get('language')
       // this.$store.dispatch('getUserId', '111')
       if (this.$route.query.productid) {
-        this.selectProductid(this.$route.query.productid)
+        // this.selectProductid(this.$route.query.productid)
+        this.equvalue = this.$route.query.productid
+        this.searchProduct(this.equvalue)
       }
     },
     methods: {
+      async queryYysId() {
+        const parsms = {
+          order: '-createdAt',
+          limit: 100,
+          skip: 0,
+          where: {
+            type: 'b83b5d9fc0',
+          },
+        }
+        queryDict(parsms).then((res) => {
+          this.yysSelect = [{ name: '空', key: '' }]
+          res.results.map((item) => {
+            this.yysSelect.push(item.data)
+          })
+        })
+      },
       rolesSelect(val) {
         this.productroleslist = []
         this.$queryProduct({}).then(
           (response) => {
             if (response) {
-              console.log(`res=`)
-              console.log(response.results)
-
               for (var key in response.results[0].ACL) {
                 if (key.includes('role')) {
                   this.productroleslist.push(key.substr(5))
                 }
               }
             }
-            console.log(this.productroleslist)
           },
           (error) => {
             returnLogin(error)
@@ -889,12 +921,6 @@
         )
       },
       goEdit(row) {
-        // console.log(row);
-        // #topoUrl
-        // window.open(
-        //   `${window.location.origin}/spa/#/equipment?devaddr=${row.devaddr}&productid=${row.productid}`,
-        //   '_blank'
-        // )
         if (this.$globalConfig.serverURL.substr(0, 1) == '/') {
           var topoUrl = window.location.origin + '/spa'
         } else {
@@ -909,22 +935,20 @@
         // )
       },
       // 从产品处进来
-      async selectProductid(val) {
-        this.productroleslist = []
-        const parsms = {}
-        const { results } = await this.$query_object('Product', parsms)
-        const res = results.filter((i) => {
-          return i.objectId == val
-        })
-        console.log(val, results, res)
-        this.productimg = res[0].icon
-        for (var key in res[0].ACL) {
-          if (key.includes('role')) {
-            this.productroleslist.push(key.substr(5))
-            console.log(key, this.productroleslist)
-          }
-        }
-      },
+      // async selectProductid(val) {
+      //   this.productroleslist = []
+      //   const parsms = {}
+      //   const { results } = await this.$query_object('Product', parsms)
+      //   const res = results.filter((i) => {
+      //     return i.objectId == val
+      //   })
+      //   this.productimg = res[0].icon
+      //   for (var key in res[0].ACL) {
+      //     if (key.includes('role')) {
+      //       this.productroleslist.push(key.substr(5))
+      //     }
+      //   }
+      // },
       addressSure() {
         var localSearch = new BMap.LocalSearch(this.map)
         localSearch.enableAutoViewport() // 允许自动调节窗体大小
@@ -979,11 +1003,35 @@
       handleClosebmap() {
         this.bmapdialogVisible = false
       },
+      // 在线设备
+      async getOnlineDevices() {
+        var params = {
+          where: {
+            status: 'ONLINE',
+          },
+        }
+
+        if (this.deviceinput != '') {
+          if (this.selectdevice == '设备名称') {
+            params.where.name = this.deviceinput
+          } else {
+            params.where.devaddr = this.deviceinput
+          }
+        }
+        if (this.devicenumber != '') {
+          params.where.devaddr = this.devicenumber
+        }
+        if (this.equvalue != 0) {
+          params.where.product = this.equvalue
+        }
+        var devices = await this.$queryDevice(params)
+        this.onlineall = devices.results.length
+      },
       // 激活设备
       async getActiveDevices() {
         var params = {
           where: {
-            status: 'ONLINE',
+            status: 'ACTIVE',
           },
         }
         if (this.deviceinput != '') {
@@ -991,77 +1039,25 @@
             this.selectdevice == '设备名称' ||
             this.selectdevice == 'Device Name'
           ) {
-            params.where['name'] = this.deviceinput
+            params.where.name = this.deviceinput
           } else {
-            params.where['devaddr'] = this.deviceinput
+            params.where.devaddr = this.deviceinput
           }
         }
         if (this.devicenumber != '') {
-          params.where['devaddr'] = this.devicenumber
+          params.where.devaddr = this.devicenumber
         }
         if (this.equvalue != 0) {
-          params.where['product'] = this.equvalue
+          params.where.product = this.equvalue
         }
-        const { res } = await this.$queryDevice(params)
-        if (res == undefined) {
-          this.activeall = 0
-        } else {
-          this.activeall = res.results.length
-        }
-      },
-      async getOnlineDevices() {
-        var params = {
-          where: {
-            status: 'ACTIVE',
-          },
-        }
-        if (this.deviceinput != '') {
-          if (this.selectdevice == '设备名称') {
-            params.where['name'] = this.deviceinput
-          } else {
-            params.where['devaddr'] = this.deviceinput
-          }
-        }
-        if (this.devicenumber != '') {
-          params.where['devaddr'] = this.devicenumber
-        }
-        if (this.equvalue != 0) {
-          params.where['product'] = this.equvalue
-        }
-        const { res } = await this.$queryDevice(params)
-        if (res == undefined) {
-          this.onlineall = 0
-        } else {
-          this.onlineall = res.results.length
-        }
+        var devices = await this.$queryDevice(params)
+        this.activeall = devices.results.length
       },
 
       async searchProduct() {
-        this.proTableData = []
-        this.proTableData1 = []
-        var category = []
-        const parsms = {
-          order: '-updatedAt',
-          limit: 10,
-          where: {},
-        }
-        const { results } = await this.$queryProduct(parsms)
-        results.map((items) => {
-          var obj = {}
-          obj.id = items.objectId
-          obj.name = items.name
-          this.proTableData.push(obj)
-          this.proTableData1.push(obj)
+        getProduct(this.equvalue).then((res) => {
+          this.deviceform.productName = res.name
         })
-        this.proTableData.unshift({
-          name: language == 'zh' ? '全部产品' : 'All Products',
-          id: '0',
-        })
-        if (this.$route.query.productid) {
-          this.equvalue = this.$route.query.productid
-          this.productenable = false
-        }
-        this.getDevices()
       },
       // 查询设备
       async getDevices(start) {
@@ -1074,156 +1070,32 @@
           limit: this.devicelength,
           skip: this.devicestart,
           keys: 'count(*)',
-          include: 'tag,product',
-          where: {},
+          include: 'product',
+          where: {
+            product: this.$route.query.productid,
+          },
         }
         if (this.deviceinput != '') {
           if (this.selectdevice == '设备名称') {
-            parsms.where['name'] = this.deviceinput
+            params.where.name = this.deviceinput
           } else {
-            parsms.where['devaddr'] = this.deviceinput
+            params.where.devaddr = this.deviceinput
           }
         }
         if (this.devicenumber != '') {
-          parsms.where['devaddr'] = this.devicenumber
+          params.where.devaddr = this.devicenumber
         }
-        if (this.equvalue != 0) {
-          parsms.where['product'] = this.equvalue
-        }
+        // if (this.equvalue != 0) {
+        //   params.where.product = this.equvalue
+        // }
 
-        const { results } = await this.$queryDevice(parsms)
-        this.devicetotal = results.length
-
-        results.map((items) => {
-          var obj = {}
-          obj.status = this.$objGet(items, 'status')
-          obj.objectId = items.objectId
-          obj.name = items.name ? items.name : ''
-          obj.originstatus = this.$objGet(items, 'status')
-          obj.nodeType = this.$objGet(items, 'product.nodeType')
-          obj.desc =
-            this.$objGet(items, 'tag.desc') ||
-            (items.detail == undefined ? '' : items.detail.desc)
-          obj.productName = this.$objGet(items, 'product.name')
-          obj.devaddr = items.devaddr ? items.devaddr : ''
-          obj.isEnable = items.isEnable ? items.isEnable : false
-          obj.productid = items.product ? items.product.id : ''
-          obj.devModel = this.$objGet(items, 'tag.devModel')
-          obj.brand = this.$objGet(items, 'tag.brand')
-          obj.address = this.$objGet(items, 'tag.address')
-          obj.assetNum = this.$objGet(items, 'tag.assetNum')
-          obj.createdAt = items.createdAt ? items.createdAt : ''
-          obj.productid = this.$objGet(items, 'product.id')
-          if (items.tag) {
-            obj.tagid = this.$objGet(items, 'tag.id')
-            if (items.tag.location) {
-              obj.latitude = items.tag.location._latitude
-              obj.longitude = items.tag.location._longitude
-            } else {
-              obj.latitude = ''
-              obj.longitude = ''
-            }
-            if (items.tag.batchId) {
-              obj.batchid = items.tag.batchId.id
-            } else {
-              obj.batchid = ''
-            }
-          } else {
-            obj.latitude = ''
-            obj.longitude = ''
-            obj.batchid = ''
-          }
-          this.tableData.push(obj)
-        })
+        const res = await this.$queryDevice(parsms)
+        this.devicetotal = res.count
+        this.tableData = res.results
+        // 查询激活设备
         this.getActiveDevices()
+        // 查询在线设备
         this.getOnlineDevices()
-        // devices.doesNotExist('basedata')
-        // devices.count().then(
-        //   count => {
-        //     this.devicetotal = count
-        //     devices.find().then(resultes => {
-        //       if (resultes) {
-        //         resultes.map(items => {
-        //           var obj = {}
-        //           obj.id = items.id
-
-        //           obj.name = items.attributes.name ? items.attributes.name : ''
-
-        //           obj.status = _this.$objGet(items, 'attributes.status')
-        //           obj.originstatus = _this.$objGet(items, 'attributes.status')
-        //           obj.nodeType = _this.$objGet(
-        //             items,
-        //             'attributes.product.attributes.nodeType'
-        //           )
-        //           obj.desc = _this.$objGet(
-        //             items,
-        //             'attributes.tag.attributes.desc'
-        //           )
-        //           obj.productName = _this.$objGet(
-        //             items,
-        //             'attributes.product.attributes.name'
-        //           )
-
-        //           obj.devaddr = items.attributes.devaddr
-        //             ? items.attributes.devaddr
-        //             : ''
-        //           obj.isEnable = items.attributes.isEnable
-        //             ? items.attributes.isEnable
-        //             : false
-        //           obj.productid = items.attributes.product
-        //             ? items.attributes.product.id
-        //             : ''
-        //           obj.devModel = _this.$objGet(
-        //             items,
-        //             'attributes.tag.attributes.devModel'
-        //           )
-        //           obj.brand = _this.$objGet(
-        //             items,
-        //             'attributes.tag.attributes.brand'
-        //           )
-        //           obj.address = _this.$objGet(
-        //             items,
-        //             'attributes.tag.attributes.address'
-        //           )
-        //           obj.assetNum = _this.$objGet(
-        //             items,
-        //             'attributes.tag.attributes.assetNum'
-        //           )
-        //           obj.createdAt = items.createdAt ? items.createdAt : ''
-        //           obj.productid = _this.$objGet(items, 'attributes.product.id')
-
-        //           if (items.attributes.tag) {
-        //             obj.tagid = _this.$objGet(items, 'attributes.tag.id')
-        //             if (items.attributes.tag.attributes.location) {
-        //               obj.latitude =
-        //                 items.attributes.tag.attributes.location._latitude
-        //               obj.longitude =
-        //                 items.attributes.tag.attributes.location._longitude
-        //             } else {
-        //               obj.latitude = ''
-        //               obj.longitude = ''
-        //             }
-        //             if (items.attributes.tag.attributes.batchId) {
-        //               obj.batchid = items.attributes.tag.attributes.batchId.id
-        //             } else {
-        //               obj.batchid = ''
-        //             }
-        //           } else {
-        //             obj.latitude = ''
-        //             obj.longitude = ''
-        //             obj.batchid = ''
-        //           }
-        //           this.tableData.push(obj)
-        //         })
-        //         this.getActiveDevices()
-        //         this.getOnlineDevices()
-        //       }
-        //     })
-        //   },
-        //   error => {
-        //     returnLogin(error)
-        //   }
-        // )
       },
       // 状态设备编辑
       handelUpdate(event, row, index) {
@@ -1248,7 +1120,6 @@
             var params = {
               isEnable: newData2.isEnable,
             }
-            console.log(row.id)
             this.$putDevice(row.id, params).then((respone) => {
               if (!respone.error) {
                 this.initQuery('状态修改成功', 'success')
@@ -1294,20 +1165,6 @@
             ? '0' + date.getSeconds()
             : date.getSeconds()
         return Y + M + D + h + m + s
-      },
-      // 得到权限
-      async getRole() {
-        this.options = []
-        const { reslts } = await queryRole()
-        if (reslts) {
-          resultes.map((item) => {
-            var obj = {}
-            obj.objectId = item.id
-            obj.alias = item.alias
-            obj.name = item.name
-            this.options.push(obj)
-          })
-        }
       },
       utc2beijing(utc_datetime) {
         // 转为正常的时间格式 年-月-日 时:分:秒
@@ -1382,7 +1239,6 @@
       /* @pamras 选中高亮*/
       rowClass({ row, rowIndex }) {
         if (this.selectRow.includes(rowIndex)) {
-          console.log(rowIndex)
           return { 'background-color': 'rgba(185, 221, 249, 0.3)' }
         }
       },
@@ -1403,25 +1259,34 @@
       },
       /* 关闭添加设备弹窗*/
       handleClose() {
+        this.deviceid = ''
+        this.deviceform = {
+          name: '',
+          devaddr: '',
+          batchId: '',
+          desc: '',
+          nodeType: 0,
+          devType: '',
+          netType: '',
+          assetNum: '',
+          devModel: '',
+          address: '',
+          productName: '',
+          status: '',
+          isEnable: '',
+          brand: '',
+          auth: 12345678,
+          yysId: '',
+        }
+        this.$refs['deviceform'].resetFields()
         this.devicedialogVisible = false
         this.equipmentEditor = '添加'
-        this.deviceform = {}
       },
       /* 添加设备弹窗 */
       addDeviceForm() {
         this.deviceid = ''
         this.devicedialogVisible = true
         this.equipmentEditor = '添加'
-        if (this.$route.query.productid) {
-          this.deviceform.productName = this.$route.query.productid
-        } else {
-          if (this.equvalue != 0) {
-            this.changeproduct = false
-            this.deviceform.productName = this.equvalue
-          } else {
-            this.deviceform.productName = ''
-          }
-        }
       },
       /* 关闭批次弹窗*/
       handleClose1() {
@@ -1463,26 +1328,17 @@
         this.deviceform = {
           devaddr: row.devaddr,
           name: row.name,
-          assetNum: row.assetNum,
-          devModel: row.devModel,
-          desc: row.desc,
-          productid: row.productid,
-          brand: row.brand,
-          batchId: row.batchid,
+          assetNum: row.detail == undefined ? '' : row.detail.assetNum,
+          devModel: row.detail == undefined ? '' : row.detail.devModel,
+          desc: row.detail == undefined ? '' : row.detail.desc,
+          productid: row.product.objectId,
+          brand: row.detail == undefined ? '' : row.detail.brand,
+          productName: row.product.name,
           status: row.status,
           isEnable: row.isEnable,
-          address: row.address,
-        }
-        console.log(this.$route)
-        if (this.$route.query.productid) {
-          this.deviceform['productName'] = this.$route.query.productid
-        } else {
-          if (this.equvalue != 0) {
-            this.changeproduct = false
-            this.deviceform['productName'] = this.equvalue
-          } else {
-            this.deviceform['productName'] = ''
-          }
+          address: row.detail == undefined ? '' : row.detail.address,
+          auth: row.basedata.auth == undefined ? '' : row.basedata.auth,
+          yysId: row.basedata.yysId == undefined ? '' : row.basedata.yysId,
         }
         this.bmapform.address = row.address
         this.batchid = row.batchid
@@ -1547,16 +1403,14 @@
                       address: this.deviceform.address,
                       desc: this.deviceform.desc,
                     },
-
-                    // location: {
-                    //   "__type": "GeoPoint",
-                    //   "latitude": this.center.lat ? this.center.lat : 0,
-                    //   "longitude": this.center.lng ? this.center.lng : 0
-                    // },
                     product: {
                       __type: 'Pointer',
                       className: 'Product',
-                      objectId: this.deviceform.productName,
+                      objectId: this.equvalue,
+                    },
+                    basedata: {
+                      auth: this.deviceform.auth,
+                      yysId: this.deviceform.yysId,
                     },
                   }
                   params = Object.assign(initparams, editParams)
@@ -1609,6 +1463,10 @@
                       __type: 'Pointer',
                       className: 'Product',
                       objectId: this.deviceform.productName,
+                    },
+                    basedata: {
+                      auth: this.deviceform.auth,
+                      yysId: this.deviceform.yysId,
                     },
                   }
                   params = Object.assign(initparams, createParams)
@@ -1688,7 +1546,6 @@
                 type: 'batch_number',
               }
               // 更新批次
-              console.log(params)
               this.$putDict(params.objectId, params).then((res) => {
                 if (!res.error) {
                   this.initQuery('修改成功', 'success')
@@ -1719,7 +1576,6 @@
       // 删除批次
       deletebatch(id) {
         this.$deleteDict(id).then((res) => {
-          console.log(res)
           if (res.error == undefined) {
             this.$message({
               message: '删除成功',
@@ -1759,7 +1615,6 @@
       },
       async queryDict() {
         const { results } = await this.$getBatchNumer()
-        console.log('results', results)
         this.pctableData = results
       },
       // 前往子设备

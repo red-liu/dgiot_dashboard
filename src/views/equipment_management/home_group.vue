@@ -768,7 +768,6 @@
         })
       },
       handleUploadSuccess(response, file, fileList) {
-        console.log('### Success response', response)
         this.$message({
           type: 'success',
           message: '产品导入成功',
@@ -797,7 +796,6 @@
         return date // 2017-03-31 16:02:06
       },
       async getDict(resultes, category) {
-        console.log(resultes, category)
         const parsms = {
           limit: 1000,
           where: {
@@ -806,7 +804,6 @@
         }
         const { results } = await queryDict(parsms)
         // this.groupData = results
-        console.log('res', results)
       },
 
       async searchProduct(start) {
@@ -956,7 +953,6 @@
             } else {
               getProduct(scope.row.objectId)
                 .then((results) => {
-                  console.log(results)
                   delProduct(scope.row.objectId)
                     .then((response) => {
                       if (response) {
@@ -1032,7 +1028,6 @@
       // 编辑组态
       proudctEdit(row) {
         // #topoUrl
-        console.log('编辑组态 row is', row)
         // if (this.$globalConfig.serverURL.substr(0, 1) == '/') {
         //   var topoUrl = window.location.origin + '/spa'
         // } else {

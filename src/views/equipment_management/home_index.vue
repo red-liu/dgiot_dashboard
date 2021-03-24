@@ -80,7 +80,6 @@
           :disabled="!productenable"
           class="selectdetail"
           size="small"
-          @change="selectProductid(equvalue)"
         >
           <el-option
             v-for="(item, index) in proTableData"
@@ -291,14 +290,14 @@
             align="center"
           >
             <template slot-scope="scope">
-              <el-link
-                :underline="false"
-                type="primary"
-                icon="el-icon-view"
-                @click="deviceToDetail(scope.row)"
-              >
-                {{ $translateTitle('equipment.see') }}
-              </el-link>
+              <!--              <el-link-->
+              <!--                :underline="false"-->
+              <!--                type="primary"-->
+              <!--                icon="el-icon-view"-->
+              <!--                @click="deviceToDetail(scope.row)"-->
+              <!--              >-->
+              <!--                {{ $translateTitle('equipment.see') }}-->
+              <!--              </el-link>-->
               <el-link
                 :underline="false"
                 type="primary"
@@ -339,15 +338,15 @@
                   {{ $translateTitle('developer.delete') }}
                 </el-link>
               </el-popover>
-              <el-link
-                v-if="scope.row.nodeType != 0"
-                :underline="false"
-                type="primary"
-                icon="el-icon-s-unfold"
-                @click="deviceToChildren(scope.row)"
-              >
-                {{ $translateTitle('equipment.subdevice') }}
-              </el-link>
+              <!--              <el-link-->
+              <!--                v-if="scope.row.nodeType != 0"-->
+              <!--                :underline="false"-->
+              <!--                type="primary"-->
+              <!--                icon="el-icon-s-unfold"-->
+              <!--                @click="deviceToChildren(scope.row)"-->
+              <!--              >-->
+              <!--                {{ $translateTitle('equipment.subdevice') }}-->
+              <!--              </el-link>-->
               <!--              <el-link type="primary" @click="goEdit(scope.row)">视图</el-link>-->
             </template>
           </el-table-column>
@@ -691,9 +690,9 @@
       this.queryYysId()
       language = Cookies.get('language')
       // this.$store.dispatch('getUserId', '111')
-      if (this.$route.query.productid) {
-        this.selectProductid(this.$route.query.productid)
-      }
+      // if (this.$route.query.productid) {
+      //   this.selectProductid(this.$route.query.productid)
+      // }
     },
     methods: {
       async queryYysId() {
@@ -713,12 +712,10 @@
         })
       },
       async rolesSelect(val) {
-        console.log('val', val)
         this.productroleslist = []
         const { results } = await this.$get_object('Product', val)
       },
       goEdit(row) {
-        console.log(row)
         if (this.$globalConfig.serverURL.substr(0, 1) == '/') {
           var topoUrl = window.location.origin + '/spa'
         } else {
@@ -733,24 +730,24 @@
         // )
       },
       // 从产品处进来
-      async selectProductid(val) {
-        console.log('selectProductid', val)
-        console.log(this.equvalue)
-        this.productroleslist = []
-        const parsms = {}
-        const { results } = await this.$query_object('Product', parsms)
-        const res = results.filter((i) => {
-          return i.objectId == val
-        })
-
-        for (var key in res[0].ACL) {
-          if (key.includes('role')) {
-            this.productroleslist.push(key.substr(5))
-
-            console.log(key, this.productroleslist)
-          }
-        }
-      },
+      // async selectProductid(val) {
+      //   this.productroleslist = []
+      //   const parsms = {
+      //     where: {
+      //       product: val,
+      //     },
+      //   }
+      //   const { results } = await this.$query_object('Product', parsms)
+      //   const res = results.filter((i) => {
+      //     return i.objectId == val
+      //   })
+      //
+      //   for (var key in res[0].ACL) {
+      //     if (key.includes('role')) {
+      //       this.productroleslist.push(key.substr(5))
+      //     }
+      //   }
+      // },
       addressSure() {
         var localSearch = new BMap.LocalSearch(this.map)
         localSearch.enableAutoViewport() // 允许自动调节窗体大小
@@ -774,7 +771,6 @@
         this.map = map
       },
       mapClick(e) {
-        console.log(e)
         this.center.lng = e.point.lng
         this.center.lat = e.point.lat
         this.addresspointer =
@@ -905,9 +901,9 @@
         this.tableData = res.results
         this.devicetotal = res.count
         // 查询激活设备
-        // this.getActiveDevices()
+        this.getActiveDevices()
         // 查询在线设备
-        // this.getOnlineDevices()
+        this.getOnlineDevices()
       },
 
       // 状态设备编辑
@@ -1107,7 +1103,6 @@
       /* @pamras 选中高亮*/
       rowClass({ row, rowIndex }) {
         if (this.selectRow.includes(rowIndex)) {
-          console.log(rowIndex)
           return { 'background-color': 'rgba(185, 221, 249, 0.3)' }
         }
       },
@@ -1173,7 +1168,6 @@
       async makeSure(scope) {
         // 可以在这里执行删除数据的回调操作.......删除操作.....
         const res = await this.$del_object('Device', scope.row.objectId)
-        console.log(res)
         if (res.error) {
           this.$message({
             type: 'error',
@@ -1296,13 +1290,8 @@
                 if (this.deviceid != '') {
                   // 编辑
                   var devicesParmas = {
-                    status: 'OFFLINE',
-                    isEnable: false,
-                    ACL: response.ACL,
                     name: this.deviceform.name,
                     devaddr: this.deviceform.devaddr,
-                    objectId: this.deviceform.devaddr,
-                    lastOnlineTime: 0,
                     product: {
                       __type: 'Pointer',
                       className: 'Product',
@@ -1372,7 +1361,6 @@
       },
       // 设备详情
       deviceToDetail(row) {
-        console.log('设备数据', row)
         this.$router.push({
           path: '/roles/editdevices',
           query: {
@@ -1393,7 +1381,6 @@
       },
       // 前往子设备
       deviceToChildren(row) {
-        console.log('设备数据', row)
         this.$router.push({
           path: '/roles/editdevices',
           query: {

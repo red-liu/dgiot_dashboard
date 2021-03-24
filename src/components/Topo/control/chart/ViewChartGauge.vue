@@ -3,7 +3,6 @@
 </template>
 
 <script>
-  import echarts from 'echarts'
   import BaseView from '../View'
 
   export default {

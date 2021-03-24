@@ -36,7 +36,7 @@ const mutations = {
     state.copySrcItems = items
     state.copyCount = 0
   },
-  increaseCopyCountsetLayerSelected(state, selected) {
+  setLayerSelected(state, selected) {
     state.selectedIsLayer = selected
   },
   execute(state, command) {
@@ -245,8 +245,8 @@ const mutations = {
   },
 }
 const actions = {
-  loadDefaultTopoData({ commit }, topo) {
-    commit('topoData', topo)
+  loadDefaultTopoData({ state }) {
+    state.topoData = jsonData
   },
 }
 export default { state, getters, mutations, actions }

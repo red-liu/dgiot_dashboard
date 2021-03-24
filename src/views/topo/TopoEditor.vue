@@ -1,5 +1,5 @@
 <template>
-  <div className="topo-editor">
+  <div class="topo-editor">
     <WresizePanel3 class="full-height">
       <template #left>
         <TopoToolbox ref="topoToolbox" class="topo-toolbox" />
@@ -37,12 +37,12 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .topo-editor {
     padding: 10px;
     position: relative;
     width: 100%;
-    height: calc(100vh - 0px);
+    height: calc(100vh - 210px);
     background-color: #eee;
 
     .topo-toolbox {

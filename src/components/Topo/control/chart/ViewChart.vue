@@ -3,7 +3,6 @@
 </template>
 
 <script>
-  import echarts from 'echarts'
   import BaseView from '../View'
 
   export default {
@@ -67,7 +66,7 @@
           delete this.option.series[0]['step']
         }
         let view = this.$refs.chartView
-        this.echart = echarts.init(view)
+        this.echart = this.$echarts.init(view)
         this.echart.setOption(option)
       },
       onResize() {

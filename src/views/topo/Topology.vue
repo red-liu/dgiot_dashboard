@@ -12,6 +12,11 @@
 </template>
 
 <script>
+  // 导入topology-vue组件
+  import topology from 'topology-vue'
+  // 需要导入topology-vue.css
+  import 'topology-vue/topology-vue.css'
+  Vue.use(topology)
   import {
     defalutMenus,
     defalutUserMenus,
@@ -20,8 +25,8 @@
     images,
   } from './data'
   export default {
-    name: 'Topology',
-    data() {
+    name: 'Home',
+    data: function () {
       return {
         topologyConfigs: {
           license: {
@@ -80,7 +85,7 @@
         data: {},
       }
     },
-    created() {
+    created: function () {
       const data = window.topologyData
       // 存在缓存数据，预览页返回
       if (data) {

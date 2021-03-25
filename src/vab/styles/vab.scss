@@ -57,6 +57,7 @@ html {
           transition: $base-transition;
 
           > section {
+            height: calc( 100vh - 60px*3 - 25px );
             background: $base-color-white;
             transition: $base-transition;
 

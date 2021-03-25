@@ -183,7 +183,7 @@
       box() {
         if (this.isScaleRevise) {
           // 根据内容部分进行刻度修正
-          const content = document.getElementById('content')
+          const content = document.getElementById('rulerTool')
           const contentLeft = content.offsetLeft
           const contentTop = content.offsetTop
           for (let i = 0; i < contentLeft; i += 1) {

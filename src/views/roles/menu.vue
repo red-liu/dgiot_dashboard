@@ -35,6 +35,7 @@
           size="mini"
           :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
           border
+          :default-sort="{ prop: 'orderBy', order: 'ascending' }"
           :default-expand-all="isdefaultExpandAll"
           row-key="objectId"
         >
@@ -52,6 +53,12 @@
             width="220"
             prop="url"
             show-overflow-tooltip
+          />
+          <el-table-column
+            align="center"
+            label="排序"
+            sortable
+            prop="orderBy"
           />
           <el-table-column
             align="center"

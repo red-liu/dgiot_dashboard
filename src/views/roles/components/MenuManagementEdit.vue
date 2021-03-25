@@ -124,7 +124,6 @@
           name: 'Demo', //首字母大写，一定要与vue文件的name对应起来，用于noKeepAlive缓存控制（该项特别重要）
           meta: {
             title: 'title', //菜单、面包屑、多标签页显示的名称
-            roles: ['admin', '...'], //当config/settings.js中rolesControl配置开启时，用于控制角色（简写）
             roles: {
               //当config/settings.js中rolesControl配置开启时，用于控制角色（全写）
               role: ['admin', '...'],
@@ -223,10 +222,15 @@
         this.form.meta.icon = item
       },
       showEdit(row, type) {
-        this.title = type == 'addChildMenu' ? '新增子菜单' : '编辑菜单'
+        this.title =
+          type == 'addChildMenu'
+            ? '新增子菜单'
+            : type == 'one'
+            ? '新增一级菜单'
+            : '编辑菜单'
         if (type == 'addChildMenu') {
           this.form = {
-            orderBy: row.orderBy + 1,
+            orderBy: row.orderBy * 10 + 1, // 如果是新增子菜单
             name: '',
             url: row.url,
             meta: {
@@ -238,17 +242,18 @@
               hidden: false,
               alwaysShow: false,
               isCustomSvg: false,
-              noClosable: true,
+              noClosable: false,
               noKeepAlive: false,
-              tabHidden: true,
+              tabHidden: false,
             },
           }
           this.menuid = row.objectId
         } else if (type == 'editMenu') {
           this.form = row
         } else {
+          console.log('row', row)
           this.form = {
-            orderBy: 101,
+            orderBy: row.orderBy,
             name: '',
             url: '',
             meta: {
@@ -260,9 +265,9 @@
               hidden: false,
               alwaysShow: false,
               isCustomSvg: false,
-              noClosable: true,
+              noClosable: false,
               noKeepAlive: false,
-              tabHidden: true,
+              tabHidden: false,
             },
           }
         }

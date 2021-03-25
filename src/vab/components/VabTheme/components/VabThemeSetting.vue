@@ -1,39 +1,62 @@
 <template>
-  <ul v-if="showThemeSetting" class="vab-theme-setting">
-    <li @click="handleOpenTheme">
-      <a>
-        <vab-icon icon="brush-2-line" />
-        <p>{{ $translateTitle('主题配置') }}</p>
-      </a>
-    </li>
-    <li @click="randomTheme">
-      <a>
-        <vab-icon icon="apps-line" />
-        <p>{{ $translateTitle('随机换肤') }}</p>
-      </a>
-    </li>
-    <li @click="removeLocalStorage">
-      <a>
-        <vab-icon icon="delete-bin-4-line" />
-        <p>
-          {{ $translateTitle('清理缓存') }}
-        </p>
-      </a>
-    </li>
-  </ul>
+  <div>
+    <el-button
+      type="success"
+      icon="el-icon-setting"
+      size="mini"
+      circle
+      :style="{ right: rightPx + 'px' }"
+      class="setting-btn"
+      @click="changeThemeSetting(showThemeSetting)"
+    />
+    <ul v-if="showThemeSetting" class="vab-theme-setting">
+      <li @click="handleOpenTheme">
+        <a>
+          <vab-icon icon="brush-2-line" />
+          <p>{{ $translateTitle('主题配置') }}</p>
+        </a>
+      </li>
+      <li @click="randomTheme">
+        <a>
+          <vab-icon icon="apps-line" />
+          <p>{{ $translateTitle('随机换肤') }}</p>
+        </a>
+      </li>
+      <li @click="removeLocalStorage">
+        <a>
+          <vab-icon icon="delete-bin-4-line" />
+          <p>
+            {{ $translateTitle('清理缓存') }}
+          </p>
+        </a>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
 
   export default {
     name: 'VabThemeSetting',
+    data() {
+      return {
+        rightPx: 71,
+      }
+    },
     computed: {
       ...mapGetters({
         showThemeSetting: 'settings/showThemeSetting',
       }),
     },
     methods: {
+      changeThemeSetting(flag) {
+        this.setshowThemeSetting(!flag)
+        this.rightPx = flag == true ? 0 : 71
+      },
+      ...mapActions({
+        setshowThemeSetting: 'settings/setshowThemeSetting',
+      }),
       handleOpenTheme() {
         this.$baseEventBus.$emit('theme')
       },
@@ -49,6 +72,13 @@
 </script>
 
 <style lang="scss" scoped>
+  ::v-deep .setting-btn {
+    position: fixed;
+    top: 47.5%;
+    z-index: $base-z-index + 1;
+    text-align: center;
+    cursor: pointer;
+  }
   .vab-theme-setting {
     position: fixed;
     top: 50%;

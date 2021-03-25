@@ -461,7 +461,7 @@
         if (results) {
           this.AllDict = results
           console.log(this.AllDict)
-          this.handleCurrentChange(res.results[0])
+          this.handleCurrentChange(results[0])
         }
       },
       async Industry() {

@@ -2,12 +2,9 @@
  * @description 路由拦截状态管理，目前两种模式：all模式与intelligence模式，其中partialRoutes是菜单暂未使用
  */
 import { asyncRoutes, constantRoutes, resetRouter } from '@/router'
-import { indexRoutes, errorRoutes } from '@/config/router.config'
+import { errorRoutes } from '@/config/router.config'
 import { getRouterList } from '@/api/User'
 import { convertRouter, filterRoutes } from '@/utils/routes'
-import { authentication, rolesControl } from '@/config'
-import { isArray } from '@/utils/validate'
-
 const state = () => ({
   routes: [],
   cachedRoutes: [],
@@ -61,75 +58,73 @@ const actions = {
   async setRoutes({ commit }, mode = 'none') {
     // 默认前端路由
     let routes = [...asyncRoutes]
-    // 设置游客路由关闭路由拦截(不需要可以删除)
-    const control = mode === 'visit' ? false : rolesControl
     // 设置后端路由(不需要可以删除)
-    if (authentication === 'all') {
-      const { results } = await getRouterList()
-
-      /**
-       * 处理路由
-       */
-      let data = []
-      results.forEach((item, key) => {
-        if (item.children) {
-          item.children.forEach((i, k) => {
-            i.hidden = i.meta.hidden || false
-            i.menuHidden = i.meta.menuHidden || false
-            i.alwaysShow = i.meta.alwaysShow || false
-            i.name = i.name
-            i.path = i.url
-            i.component = i.meta.component
-            i.meta.title = i.meta.title
-            i.meta.icon = i.meta.icon
-          })
-        }
-        if (item.meta.redirect) {
-          data.push({
-            hidden: item.meta.hidden || false,
-            menuHidden: item.meta.menuHidden || false,
-            alwaysShow: item.meta.alwaysShow || false,
-            name: item.name,
-            path: item.url,
-            component: item.meta.component,
-            redirect: item.meta.redirect,
-            meta: {
-              title: item.meta.title,
-              icon: item.meta.icon,
-            },
-            children: item.children,
-          })
-        } else {
-          data.push({
-            hidden: item.hidden || false,
-            menuHidden: item.menuHidden || false,
-            alwaysShow: item.alwaysShow || false,
-            name: item.name,
-            path: item.url,
-            component: item.meta.component,
-            meta: {
-              title: item.meta.title,
-              icon: item.meta.icon,
-            },
-            children: item.children,
-          })
-        }
-      })
-      // return false
-      if (!isArray(data))
-        Vue.prototype.$baseMessage(
-          '路由格式返回有误！',
-          'error',
-          false,
-          'vab-hey-message-error'
-        )
-      if (data[data.length - 1].path !== '*') data.unshift(indexRoutes)
-      data.push(errorRoutes)
-      routes = convertRouter(data)
-      console.log(routes)
+    const { results } = await getRouterList()
+    if (!results) {
+      Vue.prototype.$baseMessage(
+        '路由未正常返回！',
+        'error',
+        false,
+        'vab-hey-message-error'
+      )
+      return false
     }
+    /**
+     * 处理路由
+     */
+    let data = []
+    results.forEach((item, key) => {
+      if (item.children) {
+        item.children.forEach((i, k) => {
+          i.hidden = i.meta.hidden || false
+          i.menuHidden = i.meta.menuHidden || false
+          i.alwaysShow = i.meta.alwaysShow || false
+          i.name = i.name
+          i.path = i.url
+          i.component = i.meta.component
+          i.meta.title = i.meta.title
+          i.meta.icon = i.meta.icon
+        })
+      }
+      if (item.meta.redirect) {
+        data.push({
+          hidden: item.meta.hidden || false,
+          menuHidden: item.meta.menuHidden || false,
+          alwaysShow: item.meta.alwaysShow || false,
+          name: item.name,
+          path: item.url,
+          component: item.meta.component,
+          redirect: item.meta.redirect,
+          meta: {
+            title: item.meta.title,
+            icon: item.meta.icon,
+          },
+          children: item.children,
+        })
+      } else {
+        data.push({
+          hidden: item.hidden || false,
+          menuHidden: item.menuHidden || false,
+          alwaysShow: item.alwaysShow || false,
+          name: item.name,
+          path: item.url,
+          component: item.meta.component,
+          meta: {
+            title: item.meta.title,
+            icon: item.meta.icon,
+          },
+          children: item.children,
+        })
+      }
+    })
+    if (data[data.length - 1].path !== '*') {
+      data.push(errorRoutes)
+      console.log(data)
+      routes = convertRouter(data)
+    }
+
     // 根据权限和rolesControl过滤路由
-    const finallyRoutes = filterRoutes([...constantRoutes, ...routes], control)
+    const finallyRoutes = filterRoutes([...constantRoutes, ...routes])
     // 设置菜单所需路由
     commit('setRoutes', finallyRoutes)
     // 根据可访问路由重置Vue Router

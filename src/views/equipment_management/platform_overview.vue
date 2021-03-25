@@ -10,7 +10,14 @@
   <div class="platform">
     <el-tabs v-model="activeName">
       <el-row>
-        <el-col :xs="24" :sm="24" :md="8" :lg="6" :xl="4">
+        <el-col
+          :lg="{ span: '4-8' }"
+          class="card-panel-col"
+          :xs="24"
+          :sm="24"
+          :md="8"
+          :xl="4"
+        >
           <el-card class="box-card">
             <el-col :span="12" class="card-left">
               <vab-icon icon="projector-2-fill" />
@@ -21,7 +28,14 @@
             </el-col>
           </el-card>
         </el-col>
-        <el-col :xs="24" :sm="24" :md="8" :lg="6" :xl="4">
+        <el-col
+          :lg="{ span: '4-8' }"
+          class="card-panel-col"
+          :xs="24"
+          :sm="24"
+          :md="8"
+          :xl="4"
+        >
           <el-card class="box-card">
             <el-col :span="12">
               <vab-icon icon="projector-fill" />
@@ -32,7 +46,14 @@
             </el-col>
           </el-card>
         </el-col>
-        <el-col :xs="24" :sm="24" :md="8" :lg="6" :xl="4">
+        <el-col
+          :lg="{ span: '4-8' }"
+          class="card-panel-col"
+          :xs="24"
+          :sm="24"
+          :md="8"
+          :xl="4"
+        >
           <el-card class="box-card">
             <el-col :span="12">
               <vab-icon icon="apps-fill" />
@@ -43,7 +64,14 @@
             </el-col>
           </el-card>
         </el-col>
-        <el-col :xs="24" :sm="24" :md="8" :lg="6" :xl="4">
+        <el-col
+          :xs="24"
+          :sm="24"
+          :md="8"
+          :lg="{ span: '4-8' }"
+          class="card-panel-col"
+          :xl="4"
+        >
           <el-card class="box-card">
             <el-col :span="12">
               <vab-icon icon="device-recover-fill" />
@@ -54,7 +82,14 @@
             </el-col>
           </el-card>
         </el-col>
-        <el-col :xs="24" :sm="24" :md="8" :lg="6" :xl="4">
+        <el-col
+          :xs="24"
+          :sm="24"
+          :md="8"
+          :lg="{ span: '4-8' }"
+          class="card-panel-col"
+          :xl="4"
+        >
           <el-card class="box-card">
             <el-col :span="12">
               <vab-icon icon="bar-chart-2-line" />
@@ -238,6 +273,9 @@
   }
 </script>
 <style lang="scss" scoped>
+  .el-col-lg-4-8 {
+    width: 20%;
+  }
   .platform {
     box-sizing: border-box;
     width: 100%;

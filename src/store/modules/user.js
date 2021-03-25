@@ -4,7 +4,7 @@
 
 import { getUserInfo, login, logout, socialLogin } from '@/api/User/index'
 import { tokenTableName, storage, title, tokenName } from '@/config'
-import { getToken, removeToken, setToken } from '@/utils/vuex'
+import { getToken, removeToken, setToken, clearCookie } from '@/utils/vuex'
 import { resetRouter } from '@/router'
 import { license, SiteDefault } from '@/api/License'
 const state = () => ({
@@ -202,6 +202,10 @@ const actions = {
     // await dispatch('acl/setLicense', false, { root: true })
     // await dispatch('acl/setDefault', {}, { root: true })
     // await dispatch('settings/setTitle', '', { root: true })
+    // 退出后清理所有的cookie sessionStorage localStorage
+    localStorage.clear()
+    sessionStorage.clear()
+    clearCookie()
     await resetRouter()
     removeToken(tokenTableName)
   },

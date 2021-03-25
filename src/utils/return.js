@@ -1,6 +1,6 @@
 // parse错误返回
 import { Message } from 'element-ui'
-import Cookies from 'js-cookie'
+// import Cookies from 'js-cookie'
 export function returnLogin(error) {
   if (error.code == '209') {
     Message({

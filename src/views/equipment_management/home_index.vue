@@ -93,11 +93,17 @@
           placeholder="请选择状态"
           class="selectdetail"
           size="small"
+          clearable
         >
           <el-option value="在线" />
           <el-option value="离线" />
         </el-select>
-        <el-select v-model="selectdevice" class="selectdetail" size="small">
+        <el-select
+          v-model="selectdevice"
+          class="selectdetail"
+          size="small"
+          clearable
+        >
           <el-option :value="$translateTitle('equipment.devicename')" />
           <el-option :value="$translateTitle('equipment.devicenumber')" />
         </el-select>

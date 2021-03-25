@@ -273,8 +273,92 @@
   }
 </script>
 <style lang="scss" scoped>
-  .el-col-lg-4-8 {
-    width: 20%;
+  @media only screen and (min-width: 768px) {
+    .el-col-sm-4-8 {
+      width: 20%;
+    }
+
+    .el-col-sm-offset-4-8 {
+      margin-left: 20%;
+    }
+
+    .el-col-sm-pull-4-8 {
+      position: relative;
+
+      right: 20%;
+    }
+
+    .el-col-sm-push-4-8 {
+      position: relative;
+
+      left: 20%;
+    }
+  }
+
+  @media only screen and (min-width: 992px) {
+    .el-col-md-4-8 {
+      width: 20%;
+    }
+
+    .el-col-md-offset-4-8 {
+      margin-left: 20%;
+    }
+
+    .el-col-md-pull-4-8 {
+      position: relative;
+
+      right: 20%;
+    }
+
+    .el-col-md-push-4-8 {
+      position: relative;
+
+      left: 20%;
+    }
+  }
+
+  @media only screen and (min-width: 1200px) {
+    .el-col-lg-4-8 {
+      width: 20%;
+    }
+
+    .el-col-lg-offset-4-8 {
+      margin-left: 20%;
+    }
+
+    .el-col-lg-pull-4-8 {
+      position: relative;
+
+      right: 20%;
+    }
+
+    .el-col-lg-push-4-8 {
+      position: relative;
+
+      left: 20%;
+    }
+  }
+
+  @media only screen and (min-width: 1920px) {
+    .el-col-xl-4-8 {
+      width: 20%;
+    }
+
+    .el-col-xl-offset-4-8 {
+      margin-left: 20%;
+    }
+
+    .el-col-xl-pull-4-8 {
+      position: relative;
+
+      right: 20%;
+    }
+
+    .el-col-xl-push-4-8 {
+      position: relative;
+
+      left: 20%;
+    }
   }
   .platform {
     box-sizing: border-box;

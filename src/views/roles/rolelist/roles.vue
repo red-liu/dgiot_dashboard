@@ -618,14 +618,49 @@
           })
         }
       },
+      getCheckedKeys (data, keys, key) {
+        var res = [];
+        recursion(data, false);
+        return res;
+
+        // arr -> 树形总数据
+        // keys -> getCheckedKeys获取到的选中key值
+        // isChild -> 用来判断是否是子节点
+        function recursion (arr, isChild) {
+          var aCheck = [];
+          for ( var i = 0; i < arr.length; i++ ) {
+            var obj = arr[i];
+            aCheck[i] = false;
+
+            if ( obj.children ) {
+              aCheck[i] = recursion(obj.children, true) ? true : aCheck[i];
+              if ( aCheck[i] ) {
+                res.push(obj);
+              }
+            }
+
+            for ( var j = 0; j < keys.length; j++ ) {
+              if ( obj[key] == keys[j] ) {
+                aCheck[i] = true;
+                if ( res.indexOf(obj[key]) == -1 ) {
+                  res.push(obj);
+                }
+                break;
+              }
+            }
+          }
+          if ( isChild ) {
+            return aCheck.indexOf(true) != -1;
+          }
+        }
+      },
       // 修改角色权限
       async exportRolerole(row) {
-        console.log('menus', this.roleItem)
+        let checkmenu = []
+        let selectMenu = this.getCheckedKeys(this.menuTreeData, this.$refs.menusTree.getCheckedKeys(), 'objectId');
         let usersList = []
         let rolesList = []
         let checkrole = []
-        let checkmenu = []
-        let selectMenu = this.$refs.menusTree.getCheckedNodes()
         let selectRermission = this.$refs.permissionTree.getCheckedNodes()
         let rolesData = this.roleItem.roles
         let usersData = this.roleItem.users
@@ -644,6 +679,7 @@
           rolesList.push(item.name)
         })
         if (selectMenu && selectRermission) {
+          console.log(selectMenu,this.$refs.menusTree.getHalfCheckedKeys()) // 选中子集时候把父及选中
           selectMenu.forEach((item) => {
             console.log('selectMenu', item)
             checkmenu.push(item.label)

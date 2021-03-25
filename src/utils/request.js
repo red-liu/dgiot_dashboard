@@ -81,7 +81,6 @@ const handleData = ({ config, data, status, statusText }) => {
  */
 let serviceBaseUrl = baseURL
 const { host } = window.location
-console.log('host serviceWen', host)
 if (host == 'dgiotdashboard-8gb17b3673ff6cdd-1253666439.tcloudbaseapp.com') {
   serviceBaseUrl =
     'https://dgiotdashboard-8gb17b3673ff6cdd-1253666439.ap-shanghai.app.tcloudbase.com/'

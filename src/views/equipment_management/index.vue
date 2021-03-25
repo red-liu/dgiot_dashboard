@@ -1,8 +1,5 @@
 <template>
   <div class="equipment">
-    <h3 style="margin: 0">
-      {{ $translateTitle('equipment.equipmentstatistics') }}
-    </h3>
     <div class="equ_header">
       <ul>
         <li>

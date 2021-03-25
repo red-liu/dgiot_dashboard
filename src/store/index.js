@@ -1,9 +1,9 @@
 /*
  * @Author: h7ml
  * @Date: 2021-01-14 14:35:36
- * @LastEditTime: 2021-03-15 16:24:35
+ * @LastEditTime: 2021-03-25 20:33:20
  * @LastEditors: h7ml
- * @FilePath: \dgiot_dashboard\src\store\index.js
+ * @FilePath: \shuwa_dashboard\src\store\index.js
  * @Description:
  */
 /**
@@ -19,7 +19,6 @@ files.keys().forEach((key) => {
 Object.keys(modules).forEach((key) => {
   modules[key]['namespaced'] = true
 })
-console.log(modules)
 const store = new Vuex.Store({
   modules,
 })

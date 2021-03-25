@@ -88,6 +88,15 @@
             :value="item.objectId"
           />
         </el-select>
+        <el-select
+          v-model="onlinedevices"
+          placeholder="请选择状态"
+          class="selectdetail"
+          size="small"
+        >
+          <el-option value="在线" />
+          <el-option value="离线" />
+        </el-select>
         <el-select v-model="selectdevice" class="selectdetail" size="small">
           <el-option :value="$translateTitle('equipment.devicename')" />
           <el-option :value="$translateTitle('equipment.devicenumber')" />
@@ -571,8 +580,8 @@
       return {
         productimg: '',
         bmapdialogVisible: false,
-        onlineall: '',
-        activeall: '',
+        onlineall: 0,
+        activeall: 0,
         userId: '',
         batchid: '',
         pcdialogVisible: true,
@@ -581,6 +590,7 @@
         cities: [],
         activeName: 'first',
         selectdevice: '',
+        onlinedevices: '',
         deviceinput: '',
         devicenumber: '',
         multipleTable: [],
@@ -888,6 +898,13 @@
             params.where.name = this.deviceinput
           } else {
             params.where.devaddr = this.deviceinput
+          }
+        }
+        if (this.onlinedevices != '') {
+          if (this.onlinedevices == '在线') {
+            params.where.status = 'ONLINE'
+          } else {
+            params.where.status = 'OFFLINE'
           }
         }
         if (this.devicenumber != '') {
@@ -1401,15 +1418,18 @@
     width: 100%;
     height: 100%;
     padding: 20px;
+
     .equ_header {
       box-sizing: border-box;
       width: 100%;
       height: 60px;
       padding-left: 40px;
+
       ul {
         box-sizing: border-box;
         display: flex;
         padding-left: 20px;
+
         li {
           width: 200px;
           height: 60px;
@@ -1426,9 +1446,11 @@
             text-align: right;
             border: 0;
           }
+
           &:nth-child(4) {
             border: 0;
           }
+
           p {
             font-size: 14px;
             line-height: 0;
@@ -1448,24 +1470,29 @@
     font-size: 16px;
     line-height: 50px;
   }
+
   .equipment .el-tabs__header {
     margin: 0;
   }
+
   .equipment .el-tabs__content {
     box-sizing: border-box;
     padding: 20px;
     background: #f4f4f4;
   }
+
   .equipment #pane-first {
     box-sizing: border-box;
     padding: 10px;
     background: #ffffff;
   }
+
   .equipment #pane-second {
     box-sizing: border-box;
     padding: 10px;
     background: #ffffff;
   }
+
   .equipment #pane-first .equdevices .el-input {
     width: 200px;
   }
@@ -1473,13 +1500,16 @@
   .equipment .el-dialog__footer {
     border-top: 1px solid #cccccc;
   }
+
   .equipment .devicecontent .el-form {
     display: flex;
     flex-wrap: wrap;
   }
+
   .equipment .devicecontent .el-form .el-input--suffix .el-input__inner {
     padding: 0 15px;
   }
+
   .equipment .devicecontent .el-form .el-icon-plus {
     width: 40px;
     height: 40px;
@@ -1489,27 +1519,34 @@
     cursor: pointer;
     background: cornflowerblue;
   }
+
   .equipment .devicecontent .el-form .el-form-item {
     width: 50%;
   }
+
   .equipment .devicecontent .el-form .el-form-item:last-child {
     width: 100%;
   }
+
   .equipment .devicecontent .el-form .el-select {
     width: 100%;
   }
+
   .equipment .ACTIVE,
   .equipment .ONLINE {
     color: green;
   }
+
   .equipment .OFFLINE,
   .equipment .UNACTIVE {
     color: red;
   }
+
   .equipment .selectdetail {
     max-width: 200px;
     margin: 10px 0;
   }
+
   /* .equipment .devicecontent .el-form .el-form-item .is-required:not(.is-no-asterisk):after{
     content: '*';
     color: #F56C6C;

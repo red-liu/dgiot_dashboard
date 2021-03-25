@@ -657,7 +657,8 @@
       // 修改角色权限
       async exportRolerole(row) {
         let checkmenu = []
-        let selectMenu = this.getCheckedKeys(this.menuTreeData, this.$refs.menusTree.getCheckedKeys(), 'objectId');
+        let selectMenu = this.getCheckedKeys(this.menuTreeData, this.$refs.menusTree.getCheckedKeys(), 'objectId'); // 选中子级时选中父级
+        // let selectMenu = this.$refs.menusTree.getCheckedNodes()  // 只选中子级
         let usersList = []
         let rolesList = []
         let checkrole = []
@@ -679,7 +680,6 @@
           rolesList.push(item.name)
         })
         if (selectMenu && selectRermission) {
-          console.log(selectMenu,this.$refs.menusTree.getHalfCheckedKeys()) // 选中子集时候把父及选中
           selectMenu.forEach((item) => {
             console.log('selectMenu', item)
             checkmenu.push(item.label)

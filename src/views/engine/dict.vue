@@ -420,6 +420,7 @@
           创建字典模板
         </el-button>
         <el-table
+          v-loading="listLoading"
           :header-cell-style="{ 'text-align': 'center' }"
           :cell-style="{ 'text-align': 'center' }"
           :data="dictRecord"
@@ -538,7 +539,7 @@
         </el-button>
         <el-table
           v-show="isALL"
-          v-loading="loading"
+          v-loading="listLoading"
           :header-cell-style="{ 'text-align': 'center' }"
           :cell-style="{ 'text-align': 'center' }"
           :data="dictData"
@@ -757,6 +758,7 @@
         dialogtempconfig: [],
         dictData: [],
         dictRecord: [],
+        listLoading: false,
         dictRecordOpt: [],
         dictOptions: ['String', 'Boolean', 'Number'],
         dictForm: {
@@ -827,14 +829,14 @@
       },
       async selectDictChange(objectId) {
         if (objectId == '0') {
-          this.loading = true
+          this.listLoading = true
           this.getDictRecord()
           this.isALL = true
         } else {
           getDict(objectId).then((res) => {
             this.dialogtempconfig = res.data.params
           })
-          this.loading = true
+          this.listLoading = true
           const parsms = {
             order: '-createdAt',
             limit: 100,
@@ -846,7 +848,7 @@
           const { results } = await queryDict(parsms)
           this.isALL = false
           this.filterObj = results
-          this.loading = false
+          this.listLoading = false
           this.dictList = []
           this.filterObj.map((item) => {
             const data = { objectId: item.objectId }
@@ -894,7 +896,7 @@
       selectChange(objectId) {
         var obj = {}
         getDict(objectId).then((res) => {
-          this.loading = true
+          this.listLoading = true
           this.arrlist = res.data.params
           var obj1 = {
             templateId: [
@@ -937,7 +939,7 @@
           }
           this.addDictForm.templateId = objectId
           this.addDictForm.templateName = res.data.name
-          this.loading = false
+          this.listLoading = false
         })
       },
       submitFormTempDict() {
@@ -1210,7 +1212,7 @@
         }
       },
       async getDictData() {
-        this.loading = true
+        this.listLoading = true
         const parsms = {
           order: '-createdAt',
           keys: 'count(*)',
@@ -1224,11 +1226,11 @@
         this.total1 = count
         this.dictRecordOpt = []
         this.dictRecord = results
+        this.listLoading = false
         this.dictRecordOpt.push(
           { data: { name: 'ALL' }, objectId: '0' },
           ...results
         )
-        this.loading = false
         // console.log('aa', this.dictRecordOpt);
       },
       channelSizeChange1(val) {
@@ -1248,7 +1250,7 @@
         this.getDictRecord()
       },
       async getDictRecord() {
-        this.loading = true
+        this.listLoading = true
         const parsms = {
           order: '-createdAt',
           keys: 'count(*)',
@@ -1260,7 +1262,7 @@
         }
         const { results, count } = await queryDict(parsms)
         this.total = count
-        this.loading = false
+        this.listLoading = false
         this.dictData = results
       },
     }, // 如果页面有keep-alive缓存功能，这个函数会触发

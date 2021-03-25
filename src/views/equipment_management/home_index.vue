@@ -168,6 +168,7 @@
       <div class="tabstable">
         <el-table
           ref="filterTable"
+          v-loading="listLoading"
           :data="tableData"
           :row-style="rowClass"
           style="width: 100%; margin-top: 20px; text-align: center"
@@ -584,6 +585,7 @@
         }
       }
       return {
+        listLoading: false,
         productimg: '',
         bmapdialogVisible: false,
         onlineall: 0,
@@ -890,6 +892,7 @@
         // this.getDevices()
       },
       async getDevices(start) {
+        this.listLoading = true
         this.tableData = []
         const params = {
           limit: this.devicelength,
@@ -922,9 +925,10 @@
         if (start == 0) {
           this.devicestart = 0
         }
-        const res = await this.$queryDevice(params)
-        this.tableData = res.results
-        this.devicetotal = res.count
+        const { results = [], count = 0 } = await this.$queryDevice(params)
+        this.listLoading = false
+        this.tableData = results
+        this.devicetotal = count
         // 查询激活设备
         this.getActiveDevices()
         // 查询在线设备

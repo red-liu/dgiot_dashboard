@@ -240,6 +240,7 @@
               style="margin: 20px 0; cursor: pointer"
             >
               <el-card
+                v-show="addchannel.region == item.cType"
                 :shadow="addchannel.region == item.cType ? 'always' : 'hover'"
                 :style="{
                   color:
@@ -252,14 +253,12 @@
                   <span>{{ item.title.zh }}</span>
                   <el-button
                     :disabled="resourceid != ''"
-                    :type="
-                      addchannel.region == item.cType ? 'success' : 'primary'
-                    "
+                    type="success"
                     size="mini"
                     style="float: right"
                     @click="setCard(item.cType)"
                   >
-                    {{ addchannel.region == item.cType ? '已选' : '选择' }}
+                    已选
                   </el-button>
                 </div>
                 <div class="text item">
@@ -520,6 +519,57 @@
       this.getApplication()
     },
     methods: {
+      addchannelForm(formName) {
+        if (this.resourceid) {
+          // this.$message("编辑通道")
+          this.editChannel(this.resourceid, formName)
+        } else {
+          this.$refs[formName].validate((valid) => {
+            if (valid && this.addchannel.applicationtText) {
+              var obj = {}
+              for (var key in this.addchannel) {
+                obj[key] = this.addchannel[key]
+              }
+              delete obj.region
+              delete obj.desc
+              delete obj.type
+              delete obj.isEnable
+              delete obj.name
+              const aclKey = 'role' + ':' + this.addchannel.applicationtText
+              const aclObj = {}
+              aclObj[aclKey] = { read: true, write: true }
+              const data = {
+                ACL: aclObj,
+                config: obj,
+                name: this.addchannel.name,
+                cType: this.addchannel.region,
+                desc: this.addchannel.desc,
+                isEnable: false,
+                status: 'OFFLINE',
+                type: this.addchannel.type.toString(),
+              }
+              this.addchannelaxios(data)
+            } else {
+              this.$message('有必填项未填')
+            }
+          })
+        }
+      },
+      async addchannelaxios(data) {
+        await postChannel(data).then((results) => {
+          if (results) {
+            this.$message({
+              type: 'success',
+              message: this.channelupdated == '编辑' ? '编辑成功' : '创建成功',
+            })
+            this.$refs['addchannel'].resetFields()
+            this.addchannel = {}
+            // this.reload()
+            this.channelForm = false
+            this.resourceid = ''
+          }
+        })
+      },
       handleNodeClick(data) {
         this.showTree = !this.showTree
         this.addchannel.applicationtText = data.alias
@@ -603,42 +653,6 @@
         this.resoucetype = row.cType
         this.description = row.desc
       },
-      addchannelForm(formName) {
-        if (this.resourceid) {
-          // this.$message("编辑通道")
-          this.editChannel(this.resourceid, formName)
-        } else {
-          this.$refs[formName].validate((valid) => {
-            if (valid && this.addchannel.applicationtText) {
-              var obj = {}
-              for (var key in this.addchannel) {
-                obj[key] = this.addchannel[key]
-              }
-              delete obj.region
-              delete obj.desc
-              delete obj.type
-              delete obj.isEnable
-              delete obj.name
-              const aclKey = 'role' + ':' + this.addchannel.applicationtText
-              const aclObj = {}
-              aclObj[aclKey] = { read: true, write: true }
-              const data = {
-                ACL: aclObj,
-                config: obj,
-                name: this.addchannel.name,
-                cType: this.addchannel.region,
-                desc: this.addchannel.desc,
-                isEnable: false,
-                status: 'OFFLINE',
-                type: this.addchannel.type.toString(),
-              }
-              this.addchannelaxios(data)
-            } else {
-              this.$message('有必填项未填')
-            }
-          })
-        }
-      },
       async editChannel(channeld, form) {
         var obj = {}
         for (var key in this.addchannel) {
@@ -668,22 +682,7 @@
           this.Get_Re_Channel(0)
         }
       },
-      async addchannelaxios(data) {
-        await postChannel(data).then((results) => {
-          if (results) {
-            this.$message({
-              type: 'success',
-              message: this.channelupdated == '编辑' ? '编辑成功' : '创建成功',
-            })
-            this.$refs['addchannel'].resetFields()
-            this.addchannel = {}
-            // this.reload()
-            this.channelForm = false
-            this.resourceid = ''
-            this.Get_Re_Channel(0)
-          }
-        })
-      },
+
       // 删除通道
       deleteChannel(scope) {
         this.delchannelaxios(scope)

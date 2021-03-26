@@ -5,7 +5,7 @@
       icon="el-icon-setting"
       size="mini"
       circle
-      :style="{ right: rightPx + 'px' }"
+      :style="{ right: showThemeSetting == true ? '72px' : '0px' }"
       class="setting-btn"
       @click="changeThemeSetting(showThemeSetting)"
     />
@@ -40,9 +40,7 @@
   export default {
     name: 'VabThemeSetting',
     data() {
-      return {
-        rightPx: 71,
-      }
+      return {}
     },
     computed: {
       ...mapGetters({
@@ -52,7 +50,6 @@
     methods: {
       changeThemeSetting(flag) {
         this.setshowThemeSetting(!flag)
-        this.rightPx = flag == true ? 0 : 71
       },
       ...mapActions({
         setshowThemeSetting: 'settings/setshowThemeSetting',

@@ -31,5 +31,5 @@ module.exports = {
   // 是否开启全屏组件
   showFullScreen: true,
   // 是否开启右侧悬浮窗
-  showThemeSetting: true,
+  showThemeSetting: false,
 }

@@ -782,13 +782,12 @@
 </script>
 <style scoped lang="scss">
   .roles {
-    box-sizing: border-box;
-    width: 100%;
-    min-height: 875px;
-    padding: 20px;
     background: #ffffff;
 
     .rightTable {
+      height: calc( 100vh - #{$base-top-bar-height}*4 - 25px );
+      overflow-x: hidden;
+      overflow-y: scroll;
       .search {
         margin: 20px;
         text-align: center;
@@ -800,16 +799,21 @@
     }
   }
   .rolefooter {
+    height: calc( 100vh - #{$base-top-bar-height}*4 - 25px );
+    overflow-x: hidden;
+    overflow-y: scroll;
     display: flex;
     width: 100%;
-    height: auto;
+    //height: auto;
     margin-top: 10px;
   }
   .footerleft,
   .footerright {
+    height: calc( 100vh - #{$base-top-bar-height}*4 - 25px );
+    overflow-x: hidden;
+    overflow-y: scroll;
     box-sizing: border-box;
     width: 45%;
-    height: auto;
     padding: 20px;
     border: 1px solid #cccccc;
   }
@@ -834,6 +838,9 @@
   }
 
   .leftTree {
+    height: calc( 100vh - #{$base-top-bar-height}*4 - 25px );
+    overflow-x: hidden;
+    overflow-y: scroll;
     span.selected {
       font-weight: bold;
       color: #409eff;

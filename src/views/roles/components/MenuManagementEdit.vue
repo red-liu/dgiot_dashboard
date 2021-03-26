@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    :close-on-click-modal="false"
     :title="title"
     :visible.sync="dialogFormVisible"
     width="70%"
@@ -16,7 +17,7 @@
       :inline="true"
       :model="form"
       :rules="rules"
-      label-width="140px"
+      label-width="100px"
     >
       <el-form-item label="name" prop="name">
         <el-input v-model="form.name">
@@ -32,7 +33,7 @@
           </template>
         </el-input>
       </el-form-item>
-      <el-form-item label="vue文件路径">
+      <el-form-item label="vue文件路径" prop="meta.component">
         <el-input v-model="form.meta.component">
           <template slot="prepend">
             <vab-icon icon="vuejs-fill" />
@@ -46,14 +47,14 @@
           </template>
         </el-input>
       </el-form-item>
-      <el-form-item label="标题" prop="title">
+      <el-form-item label="标题" prop="meta.title">
         <el-input v-model="form.meta.title">
           <template slot="prepend">
             <vab-icon icon="article-line" />
           </template>
         </el-input>
       </el-form-item>
-      <el-form-item label="图标" prop="icon">
+      <el-form-item label="图标" prop="meta.icon">
         <el-popover
           popper-class="icon-selector-popper"
           trigger="click"
@@ -76,26 +77,35 @@
           </template>
         </el-input>
       </el-form-item>
-      <el-form-item label="隐藏" prop="hidden">
+      <el-form-item
+        label="隐藏"
+        title="隐藏后将不在菜单列表中展示，但是可以被访问"
+        prop="hidden"
+      >
         <el-switch v-model="form.meta.hidden" />
       </el-form-item>
-      <el-form-item label="始终显示当前节点" prop="alwaysShow">
-        <el-switch v-model="form.meta.alwaysShow" />
-      </el-form-item>
-      <el-form-item label="自定义svg图标" prop="isCustomSvg">
-        <el-switch v-model="form.meta.isCustomSvg" />
-      </el-form-item>
-      <el-form-item label="固定" prop="noClosable">
+      <!--      <el-form-item label="始终显示当前节点" prop="alwaysShow">-->
+      <!--        <el-switch v-model="form.meta.alwaysShow" />-->
+      <!--      </el-form-item>-->
+      <el-form-item
+        label="固定"
+        title="除首页外,其他页面不建议选择此项"
+        prop="noClosable"
+      >
         <el-switch v-model="form.meta.noClosable" />
       </el-form-item>
-      <el-form-item label="无缓存" prop="noKeepAlive">
+      <el-form-item
+        label="无缓存"
+        title="开启后该页面的数据将不被缓存"
+        prop="noKeepAlive"
+      >
         <el-switch v-model="form.meta.noKeepAlive" />
       </el-form-item>
-      <el-form-item label="不显示当前标签页" prop="tabHidden">
-        <el-switch v-model="form.meta.tabHidden" />
-      </el-form-item>
+      <!--      <el-form-item label="不显示当前标签页" prop="tabHidden">-->
+      <!--        <el-switch v-model="form.meta.tabHidden" />-->
+      <!--      </el-form-item>-->
       <el-form-item label="排序" prop="orderBy">
-        <el-input-number v-model="form.orderBy" label="描述文字" />
+        <el-input-number v-model.number="form.orderBy" label="描述文字" />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -171,7 +181,7 @@
             {
               type: 'string',
               required: true,
-              message: '请输入name',
+              message: 'name,用做页面缓存,首字母大写,不可重复',
               trigger: 'blur',
             },
             { type: 'string', message: 'name类型为string', trigger: 'blur' },
@@ -184,31 +194,39 @@
           ],
           url: [
             {
+              type: 'string',
               required: true,
               trigger: 'blur',
-              message: '请输入url',
+              message: '路径地址,将展示在浏览器地址栏中',
             },
           ],
-          // component: [
-          //   {
-          //     type: 'string',
-          //     required: true,
-          //     trigger: 'blur',
-          //     message: '请输入vue文件路径',
-          //   },
-          // ],
+          'meta.component': [
+            {
+              required: true,
+              trigger: 'blur',
+              message: 'vue文件路径,一般为@views/下的文件路径',
+            },
+          ],
           'meta.title': [
             {
               required: true,
               trigger: 'blur',
-              message: '请输入标题',
+              message: '标题,展示在侧边栏菜单列表和顶部菜单列表',
             },
           ],
           'meta.icon': [
             {
               required: true,
               trigger: 'blur',
-              message: '请选择图标',
+              message: '图标，展示在侧边栏菜单列表和顶部菜单列表',
+            },
+          ],
+          orderBy: [
+            {
+              type: 'number',
+              required: true,
+              trigger: 'blur',
+              message: '排序层级,决定页面的排序',
             },
           ],
         },
@@ -281,29 +299,12 @@
       },
       save() {
         this.$refs['form'].validate(async (valid) => {
-          if (valid && this.form.meta.component) {
+          if (valid) {
             if (this.form.objectId) {
               this._putMenu(this.form.objectId, this.form)
             } else {
               this._addMenu(this.form)
-              // const { msg } = await doEdit(this.form)
-              // this.$baseMessage(
-              //   msg,
-              //   'success',
-              //   false,
-              //   'vab-hey-message-success'
-              // )
-              // this.$emit('fetch-data')
-              // this.close()
             }
-          } else {
-            this.$baseMessage(
-              '请检查必填项',
-              'error',
-              false,
-              'vab-hey-message-error'
-            )
-            return false
           }
         })
       },
@@ -325,9 +326,8 @@
         this.menuid = ''
         this.$emit('fetch-data')
         this.$refs['form'].resetFields()
-        this.menuid = ''
-        this.form = this.$options.data().form
         this.dialogFormVisible = false
+        this.form = this.$options.data().form
       },
       async _addMenu(form) {
         const aclKey = '*'
@@ -343,16 +343,16 @@
         }
         let params = {
           ACL: setAcl,
-          meta: this.form.meta,
-          name: this.form.name,
+          meta: form.meta,
+          name: form.name,
           parent: {
             objectId: '0',
             __type: 'Pointer',
             className: 'Menu',
           },
-          url: this.form.url,
-          icon: this.form.meta.icon,
-          orderBy: Number(this.form.orderBy),
+          url: form.url,
+          icon: form.meta.icon,
+          orderBy: Number(form.orderBy),
         }
         if (this.menuid == '') {
           params.parent.objectId = '0'
@@ -361,6 +361,7 @@
             message: '新增成功',
             type: 'success',
           })
+          this.closeDialog()
         } else {
           params.parent.objectId = this.menuid
 

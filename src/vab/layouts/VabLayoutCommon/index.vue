@@ -82,7 +82,8 @@
     ::v-deep {
       .vab-tabs-content {
         width: calc(
-          100% - 60px - #{$base-font-size-default} - #{$base-padding} - 2px
+          100% - #{$base-top-bar-height} - #{$base-font-size-default} - #{$base-padding} -
+            2px
         ) !important;
       }
 

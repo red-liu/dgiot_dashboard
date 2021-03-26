@@ -77,6 +77,7 @@ const actions = {
     const { nick, objectId } = data
     if (nick) commit('setUsername', nick)
     if (objectId) commit('setObejectId', objectId)
+    const page_title = getToken('title', 'sessionStorage') || title
     if (token) {
       commit('setToken', token)
       const hour = new Date().getHours()
@@ -91,7 +92,7 @@ const actions = {
           ? '下午好'
           : '晚上好'
       Vue.prototype.$baseNotify(
-        `欢迎登录${getToken('title', 'sessionStorage')}`,
+        `欢迎${nick}您登录${page_title}`,
         `${thisTime}！`
       )
     } else {

@@ -1,8 +1,5 @@
 <template>
   <div class="equipment">
-    <h3 style="margin: 0">
-      {{ $translateTitle('equipment.equipmentstatistics') }}
-    </h3>
     <div class="equ_header">
       <ul>
         <li>
@@ -49,26 +46,6 @@
             </el-tooltip>
           </p>
           <span>{{ onlineall }}</span>
-        </li>
-        <li>
-          <div class="block">
-            <el-image
-              v-if="productimg"
-              :src="productimg"
-              style="
-                position: relative;
-                top: -55px;
-                width: 250px;
-                height: 200px;
-                line-height: 200px;
-                text-align: center;
-              "
-            >
-              <div slot="error" class="image-slot">
-                <i class="el-icon-picture-outline" />
-              </div>
-            </el-image>
-          </div>
         </li>
       </ul>
     </div>
@@ -168,6 +145,7 @@
       <div class="tabstable">
         <el-table
           ref="filterTable"
+          v-loading="listLoading"
           :data="tableData"
           :row-style="rowClass"
           style="width: 100%; margin-top: 20px; text-align: center"
@@ -584,6 +562,7 @@
         }
       }
       return {
+        listLoading: false,
         productimg: '',
         bmapdialogVisible: false,
         onlineall: 0,
@@ -893,6 +872,7 @@
         // this.getDevices()
       },
       async getDevices(start) {
+        this.listLoading = true
         this.tableData = []
         const params = {
           limit: this.devicelength,
@@ -925,9 +905,10 @@
         if (start == 0) {
           this.devicestart = 0
         }
-        const res = await this.$queryDevice(params)
-        this.tableData = res.results
-        this.devicetotal = res.count
+        const { results = [], count = 0 } = await this.$queryDevice(params)
+        this.listLoading = false
+        this.tableData = results
+        this.devicetotal = count
         // 查询激活设备
         this.getActiveDevices()
         // 查询在线设备
@@ -1432,13 +1413,12 @@
       box-sizing: border-box;
       width: 100%;
       height: 60px;
-      padding-left: 40px;
-
+      margin: 0 auto;
       ul {
         box-sizing: border-box;
         display: flex;
         padding-left: 20px;
-
+        width: 200px * 4;
         li {
           width: 200px;
           height: 60px;
@@ -1450,11 +1430,11 @@
           //   text-align: left;
           //   line-height: 60px;
           // }
-          &:last-child {
-            flex-grow: 2;
-            text-align: right;
-            border: 0;
-          }
+          //&:last-child {
+          //  flex-grow: 2;
+          //  text-align: right;
+          //  border: 0;
+          //}
 
           &:nth-child(4) {
             border: 0;

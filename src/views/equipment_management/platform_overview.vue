@@ -363,7 +363,7 @@
   .platform {
     box-sizing: border-box;
     width: 100%;
-    height: 100%;
+    //height: calc(100vh - #{$base-top-bar-height}* 3 - 25px);
     padding: 10px;
     background-size: 100%;
     .box-card {

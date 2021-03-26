@@ -26,6 +26,7 @@
       </el-form>
       <!----------------------------------------------------资源通道表格------------------>
       <el-table
+        v-loading="listLoading"
         :data="tableData"
         :row-class-name="getChannelEnable"
         style="width: 100%"
@@ -459,6 +460,7 @@
     // inject: ['reload'],
     data() {
       return {
+        listLoading: false,
         dialogVisible: false,
         isopen: 'suo',
         pwdType: 'password',
@@ -543,6 +545,7 @@
         }
       },
       async Get_Re_Channel(start) {
+        this.listLoading = true
         if (start == 0) {
           this.start = 0
         }
@@ -554,6 +557,7 @@
         const { results } = await queryChannel(params)
         this.total = results.length
         this.tableData = results
+        this.listLoading = false
       },
 
       async getApplication() {

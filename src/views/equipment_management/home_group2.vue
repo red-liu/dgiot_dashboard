@@ -36,7 +36,11 @@
             </el-form-item>
           </el-form>
           <div class="protable">
-            <el-table :data="proTableData" style="width: 100%">
+            <el-table
+              v-loading="listLoading"
+              :data="proTableData"
+              style="width: 100%"
+            >
               <el-table-column prop="objectId" label="ProductID" width="200" />
               <el-table-column
                 :label="$translateTitle('product.productname')"
@@ -461,6 +465,7 @@
   export default {
     data() {
       return {
+        listLoading: false,
         custom_row: {},
         custom_status: 'add',
         hashkey: '',
@@ -869,6 +874,7 @@
         this.allTableDate = Dictres.results
       },
       async searchProduct(start) {
+        this.listLoading = true
         if (start == 0) {
           this.start = 0
         }
@@ -895,6 +901,7 @@
               category.push(items.category)
             }
           })
+          this.listLoading = false
           this.proTableData = results
           this.total = count
         }

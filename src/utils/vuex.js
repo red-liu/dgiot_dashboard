@@ -74,7 +74,6 @@ export function removeToken(tokenName, storage) {
     return localStorage.removeItem(tokenName)
   }
 }
-
 function foreach() {
   var strCookie = document.cookie
   var arrCookie = strCookie.split('; ')
@@ -93,6 +92,7 @@ function DelCookie(name) {
   exp.setTime(exp.getTime() - 1)
   var cval = GetCookie(name)
   document.cookie = name + '=' + cval + '; expires=' + exp.toGMTString()
+  console.log(`退出后清除Cookies      ${name}`)
 }
 function GetCookie(name) {
   var arg = name + '='
@@ -116,4 +116,5 @@ export function clearCookie() {
       document.cookie =
         keys[i] + '=0; expire=' + date.toGMTString() + '; path=/'
   }
+  foreach()
 }

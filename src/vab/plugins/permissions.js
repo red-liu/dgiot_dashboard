@@ -1,9 +1,9 @@
 /*
  * @Author: h7ml
  * @Date: 2021-03-11 12:41:30
- * @LastEditTime: 2021-03-18 17:01:54
+ * @LastEditTime: 2021-03-25 20:46:08
  * @LastEditors: h7ml
- * @FilePath: \dgiot_dashboard\src\vab\plugins\permissions.js
+ * @FilePath: \shuwa_dashboard\src\vab\plugins\permissions.js
  * @Description:
  */
 /**
@@ -39,7 +39,9 @@ router.beforeEach(async (to, from, next) => {
     if (store.getters['routes/routes'].length) {
       // 禁止已登录用户返回登录页
       if (to.path === '/login') {
-        next({ path: '/' })
+        next({
+          path: '/',
+        })
         if (showProgressBar) VabProgress.done()
       } else next()
     } else {
@@ -53,7 +55,10 @@ router.beforeEach(async (to, from, next) => {
         else await store.dispatch('user/setVirtualRoles')
         // 根据路由模式获取路由并根据权限过滤
         await store.dispatch('routes/setRoutes', authentication)
-        next({ ...to, replace: true })
+        next({
+          ...to,
+          replace: true,
+        })
       } catch (err) {
         console.error('vue-admin-beautiful错误拦截:', err)
         await store.dispatch('user/resetAll')
@@ -65,12 +70,17 @@ router.beforeEach(async (to, from, next) => {
       // 设置游客路由(不需要可以删除)
       if (supportVisit && !store.getters['routes/routes'].length) {
         await store.dispatch('routes/setRoutes', 'visit')
-        next({ ...to, replace: true })
+        next({
+          ...to,
+          replace: true,
+        })
       } else next()
     } else next(toLoginRoute(to.path))
   }
 })
 router.afterEach((to) => {
+  // 输出路由信息，方便找到点击的页面
+  console.log('%c%s', 'color: red;font-size: 12px;', to.meta.component)
   if (to.meta.title) document.title = getPageTitle(`${to.meta.title}`)
   if (VabProgress.status) VabProgress.done()
 })

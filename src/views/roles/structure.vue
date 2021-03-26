@@ -808,8 +808,6 @@
   .structure {
     box-sizing: border-box;
     width: 100%;
-    height: 100%;
-    padding: 20px;
     background: #ffffff;
 
     .tabContent {
@@ -817,6 +815,11 @@
         float: left;
         margin-top: 30px;
         margin-left: 20px;
+      }
+      .leftTree {
+        height: calc(100vh - #{$base-top-bar-height}* 4 - 25px);
+        overflow-x: hidden;
+        overflow-y: scroll;
       }
 
       .elTable {

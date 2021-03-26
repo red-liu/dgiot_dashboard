@@ -199,14 +199,14 @@
       :visible.sync="channelForm"
       :close-on-click-modal="false"
       :before-close="handleClose"
-      width="50%"
-      top="10"
+      width="30%"
+      top="10vh"
     >
       <el-form
         ref="addchannel"
         :model="addchannel"
         :rules="addrules"
-        label-width="120px"
+        label-width="auto"
       >
         <el-form-item label="通道类型" prop="region" label-width="100px">
           <el-select
@@ -226,23 +226,22 @@
             :gutter="24"
             style="
               width: 100%;
-              max-height: 500px;
-              overflow-x: hidden;
-              overflow-y: scroll;
-              line-height: 30px;
+              height: 100px;
+              margin-top: 20px;
               text-align: center;
             "
           >
             <el-col
               v-for="(item, index) in channelregion"
               :key="index"
-              :span="8"
-              style="margin: 20px 0; cursor: pointer"
+              :span="24"
+              style="cursor: pointer"
             >
               <el-card
                 v-show="addchannel.region == item.cType"
                 :shadow="addchannel.region == item.cType ? 'always' : 'hover'"
                 :style="{
+                  display: addchannel.region == item.cType ? 'block' : 'none',
                   color:
                     addchannel.region == item.cType ? '#00bad0' : '#c0c4cc',
                 }"
@@ -373,7 +372,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="handleClose">
+        <el-button style="margin-right: 20px" @click="handleClose">
           {{ $translateTitle('developer.cancel') }}
         </el-button>
         <el-button type="primary" @click="addchannelForm('addchannel')">
@@ -750,18 +749,6 @@
       },
       orderObject(object) {
         var arr = []
-        var obj = {}
-        var obj1 = {
-          roles: [
-            { required: true, message: '请选择所属应用', trigger: 'blur' },
-          ],
-          name: [
-            { required: true, message: '请输入通道名称', trigger: 'blur' },
-          ],
-          region: [
-            { required: true, message: '请选择服务类型', trigger: 'change' },
-          ],
-        }
         for (var key in object) {
           object[key].showname = key
           arr.push(object[key])
@@ -977,8 +964,13 @@
     width: 100%;
     height: 100%;
     padding: 20px;
-    ::v-deep .green_active {
-      color: green;
+    ::v-deep {
+      .green_active {
+        color: green;
+      }
+      .dialog-footer {
+        text-align: center;
+      }
     }
     ::v-deep .red_active {
       color: red;

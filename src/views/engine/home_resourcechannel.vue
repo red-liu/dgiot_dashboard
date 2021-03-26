@@ -259,7 +259,7 @@
                     style="float: right"
                     @click="setCard(item.cType)"
                   >
-                    {{ addchannel.region == item.cType ? '已选择' : '选择' }}
+                    {{ addchannel.region == item.cType ? '已选' : '选择' }}
                   </el-button>
                 </div>
                 <div class="text item">
@@ -703,9 +703,15 @@
           })
       },
       addchanneltype() {
-        this.arrlist = []
-        this.channelForm = true
-        this.channelupdated = '新增'
+        // this.arrlist = []
+        // this.channelForm = true
+        // this.channelupdated = '新增'
+        this.$router.push({
+          path: '/CreateResourcechannel',
+          query: {
+            type: 'create',
+          },
+        })
       },
       // 关闭弹窗
       handleClose() {

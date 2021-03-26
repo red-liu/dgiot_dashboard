@@ -60,7 +60,7 @@ router.beforeEach(async (to, from, next) => {
           replace: true,
         })
       } catch (err) {
-        console.error('vue-admin-beautiful错误拦截:', err)
+        console.error('错误拦截:', err)
         await store.dispatch('user/resetAll')
         next(toLoginRoute(to.path))
       }

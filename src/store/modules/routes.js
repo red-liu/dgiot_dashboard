@@ -77,6 +77,7 @@ const actions = {
       if (item.children) {
         item.children.forEach((i, k) => {
           i.hidden = i.meta.hidden || false
+          i.meta.noKeepAlive = i.meta.noKeepAlive || false
           i.menuHidden = i.meta.menuHidden || false
           i.alwaysShow = i.meta.alwaysShow || false
           i.name = i.name
@@ -98,6 +99,7 @@ const actions = {
           meta: {
             title: item.meta.title,
             icon: item.meta.icon,
+            noKeepAlive: item.meta.noKeepAlive || false,
           },
           children: item.children,
         })
@@ -112,6 +114,7 @@ const actions = {
           meta: {
             title: item.meta.title,
             icon: item.meta.icon,
+            noKeepAlive: item.meta.noKeepAlive || false,
           },
           children: item.children,
         })

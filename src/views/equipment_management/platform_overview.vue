@@ -198,6 +198,9 @@
     mounted() {
       this.getAllAxios()
     },
+    activated() {
+      console.log('233', 23333333333333333333333)
+    }, //如果页面有keep-alive缓存功能，这个函数会触发
     methods: {
       async getAllAxios() {
         this.$baseColorfullLoading(1, '批量请求数据中')

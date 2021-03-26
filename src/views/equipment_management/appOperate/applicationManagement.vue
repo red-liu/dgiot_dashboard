@@ -1,6 +1,5 @@
 <template>
   <div id="application">
-    <h3>应用管理</h3>
     <el-tabs v-model="activeName">
       <el-tab-pane label="应用管理" name="app">
         <div class="form">
@@ -370,7 +369,6 @@
   #application {
     box-sizing: border-box;
     width: 100%;
-    height: 100%;
     padding: 20px;
     margin: 0 auto;
     ::v-deep .el-tabs {

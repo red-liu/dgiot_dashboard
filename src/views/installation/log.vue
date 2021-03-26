@@ -93,11 +93,8 @@
       :before-close="handleClose"
       width="30%"
     >
-      <el-form model="form">
-        <el-form-item :label="$translateTitle('node.nodename')">
-          <el-input v-model="form.nodename" type="text" />
-        </el-form-item>
-      </el-form>
+      <span>{{ $translateTitle('node.nodename') }}</span>
+      <el-input v-model="form.nodename" type="text" />
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">
           {{ $translateTitle('developer.cancel') }}

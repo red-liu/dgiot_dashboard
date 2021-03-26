@@ -265,7 +265,9 @@
                   <el-row :gutter="24">
                     <el-col :span="12">
                       <img
-                        src="https://imgs.iotku.com/2020/2/21/23efecea9bfdbbf8a132089e251fc6e7.png"
+                        :src="
+                          item.params.ico.default ? item.params.ico.default : ''
+                        "
                         class="image"
                         style="width: 50px; height: 50px"
                       />

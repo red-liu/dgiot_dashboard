@@ -16,7 +16,7 @@
     </div>
     <el-table
       v-loading="listLoading"
-      height="600"
+      size="mini"
       :data="treeData"
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       border
@@ -230,7 +230,6 @@
   .rolescontrol {
     box-sizing: border-box;
     width: 100%;
-    min-height: 875px;
     padding: 20px;
     background: #ffffff;
   }

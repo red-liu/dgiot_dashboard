@@ -6,6 +6,13 @@
           <vab-query-form-top-panel :span="12">
             <div class="search">
               <el-button
+                icon="el-icon-s-tools"
+                type="primary"
+                @click="toggleExpandAll(isdefaultExpandAll)"
+              >
+                展开/收起菜单
+              </el-button>
+              <el-button
                 icon="el-icon-plus"
                 type="primary"
                 @click="handleEdit({}, 'one')"
@@ -30,6 +37,7 @@
           </vab-query-form-top-panel>
         </vab-query-form>
         <el-table
+          v-if="refreshTable"
           v-loading="listLoading"
           :data="treeData"
           size="mini"
@@ -39,7 +47,7 @@
           :default-expand-all="isdefaultExpandAll"
           row-key="objectId"
         >
-          <el-table-column align="center" label="标题" width="200">
+          <el-table-column align="center" fixed label="标题" width="200">
             <template #default="{ row }">
               <span>
                 {{ row.meta.title }}
@@ -62,17 +70,6 @@
           />
           <el-table-column
             align="center"
-            label="是否隐藏"
-            show-overflow-tooltip
-          >
-            <template #default="{ row }">
-              <span>
-                {{ row.meta.hidden ? '是' : '否' }}
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            align="center"
             label="vue文件路径"
             width="400"
             show-overflow-tooltip
@@ -87,7 +84,7 @@
             align="center"
             show-overflow-tooltip
             label="重定向"
-            width="120"
+            width="200"
           >
             <template #default="{ row }">
               <span>
@@ -95,36 +92,49 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="图标" show-overflow-tooltip>
-            <template #default="{ row }">
-              <span v-if="row.meta">
-                <vab-icon v-if="row.meta.icon" :icon="row.meta.icon" />
-              </span>
-            </template>
-          </el-table-column>
           <el-table-column
             align="center"
-            label="是否固定"
+            label="高级配置"
             show-overflow-tooltip
           >
             <template #default="{ row }">
-              <span v-if="row.meta">
-                {{ row.meta.noClosable ? '是' : '否' }}
-              </span>
+              <el-popover trigger="hover" placement="top">
+                <p>
+                  是否隐藏：
+                  <el-tag type="success" title="是否隐藏">
+                    {{ row.meta.hidden ? '是' : '否' }}
+                  </el-tag>
+                </p>
+                <p>
+                  当前路由是否可关闭多标签页：
+                  <el-tag
+                    v-if="row.meta"
+                    type="info"
+                    title="当前路由是否可关闭多标签页"
+                  >
+                    {{ row.meta.noClosable ? '是' : '否' }}
+                  </el-tag>
+                </p>
+                <p>
+                  是否无缓存：
+                  <el-tag v-if="row.meta" title="是否无缓存">
+                    {{ row.meta.noKeepAlive ? '是' : '否' }}
+                  </el-tag>
+                </p>
+                <div slot="reference" class="name-wrapper">
+                  <el-tag size="medium">
+                    <vab-icon v-if="row.meta.icon" :icon="row.meta.icon" />
+                  </el-tag>
+                </div>
+              </el-popover>
             </template>
           </el-table-column>
           <el-table-column
+            width="220px"
+            fixed="right"
+            label="操作"
             align="center"
-            label="是否无缓存"
-            show-overflow-tooltip
           >
-            <template #default="{ row }">
-              <span v-if="row.meta">
-                {{ row.meta.noKeepAlive ? '是' : '否' }}
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column width="220px" label="操作" align="center">
             <template #default="{ row }">
               <el-button
                 size="mini"
@@ -141,11 +151,10 @@
                 @click="handleEdit(row, 'editMenu')"
               />
               <el-button
-                v-if="row.parent != '0'"
                 size="mini"
                 type="danger"
                 icon="el-icon-delete"
-                :title="$translateTitle('developer.delete')"
+                :title="$translateTitle('developer.delete') + row.meta.title"
                 @click="handleDelete(row)"
               />
             </template>
@@ -172,6 +181,7 @@
     components: { Edit },
     data() {
       return {
+        refreshTable: 'false',
         isdefaultExpandAll: false,
         MenuForm: {
           name: '',
@@ -314,6 +324,13 @@
       this.getRole()
     },
     methods: {
+      toggleExpandAll(flag) {
+        this.refreshTable = false
+        this.isdefaultExpandAll = !flag
+        this.$nextTick(() => {
+          this.refreshTable = true
+        })
+      },
       handleNodeClick() {
         this.fetchData()
       },
@@ -420,7 +437,6 @@
       },
       // 删除菜单
       handleDelete(row) {
-        console.log(row)
         if (!row.children) {
           this.$del_object('Menu', row.objectId).then((res) => {
             if (res.error) {
@@ -478,7 +494,6 @@
           this.data.push(obj)
         })
 
-        console.log('results', results)
         this.listLoading = false
       },
     },
@@ -489,7 +504,6 @@
   .menu {
     box-sizing: border-box;
     width: 100%;
-    min-height: 875px;
     padding: 20px;
     background: #ffffff;
   }

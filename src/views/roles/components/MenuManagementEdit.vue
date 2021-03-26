@@ -325,9 +325,8 @@
         this.menuid = ''
         this.$emit('fetch-data')
         this.$refs['form'].resetFields()
-        this.menuid = ''
-        this.form = this.$options.data().form
         this.dialogFormVisible = false
+        this.form = this.$options.data().form
       },
       async _addMenu(form) {
         const aclKey = '*'
@@ -343,16 +342,16 @@
         }
         let params = {
           ACL: setAcl,
-          meta: this.form.meta,
-          name: this.form.name,
+          meta: form.meta,
+          name: form.name,
           parent: {
             objectId: '0',
             __type: 'Pointer',
             className: 'Menu',
           },
-          url: this.form.url,
-          icon: this.form.meta.icon,
-          orderBy: Number(this.form.orderBy),
+          url: form.url,
+          icon: form.meta.icon,
+          orderBy: Number(form.orderBy),
         }
         if (this.menuid == '') {
           params.parent.objectId = '0'
@@ -361,6 +360,7 @@
             message: '新增成功',
             type: 'success',
           })
+          this.closeDialog()
         } else {
           params.parent.objectId = this.menuid
 

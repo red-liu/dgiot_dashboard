@@ -25,6 +25,38 @@ import {
   getDevice,
 } from '@/api/Device/index'
 import { queryProduct } from '@/api/Product/index'
+
+// https://www.jianshu.com/p/abdee4e7875a
+/**
+ *
+ * @param option
+ * @returns {*}
+ */
+function moreHttp(option) {
+  let arr = [],
+    keys = []
+  for (let key in option) {
+    keys.push(key)
+    arr.push(option[key])
+  }
+  return axios.all(arr).then(
+    axios.spread(function () {
+      let result = {}
+      for (let i = 0; i < arguments.length; i++) {
+        let item = arguments[i]
+        if (item) {
+          if (item.data && item.data.data) {
+            result[keys[i]] = item.data.data
+          } else {
+            result[keys[i]] = item
+          }
+        }
+      }
+      return result
+    })
+  )
+}
+
 function objGet(data, path) {
   if (data == undefined) return ''
 
@@ -106,6 +138,7 @@ export function translateTitle(title) {
 
 export default {
   install(Vue, options) {
+    Vue.prototype.$moreHttp = moreHttp
     Vue.prototype.$globalConfig = globalConfig
     Vue.prototype.$getToken = getToken
     Vue.prototype.$setToken = setToken

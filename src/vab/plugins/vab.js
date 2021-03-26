@@ -156,18 +156,19 @@ Vue.prototype.$baseConfirm = (
 
 /**
  * @description 全局Notification
- * @param {*} message
- * @param {*} title
- * @param {*} type
- * @param {*} position
+ * @param message
+ * @param title
+ * @param type
+ * @param position
+ * @param duration
  */
-Vue.prototype.$baseNotify = (message, title, type, position) => {
+Vue.prototype.$baseNotify = (message, title, type, position, duration) => {
   Notification({
     title: title,
     message: message,
     position: position || 'top-right',
     type: type || 'success',
-    duration: messageDuration,
+    duration: duration || messageDuration,
   })
 }
 
@@ -192,11 +193,3 @@ Vue.prototype.$baseTableHeight = (formType) => {
  * @description 全局事件总线
  */
 Vue.prototype.$baseEventBus = new Vue()
-!(() => {
-  if (process.env.NODE_ENV !== 'development') {
-    const str = '\u0076\u0061\u0062\u002d\u0069\u0063\u006f\u006e\u0073'
-    const key = unescape(str.replace(/\\u/g, '%u'))
-    if (!dependencies[key]) Vue.prototype = null
-    if (!process.env.VUE_APP_SECRET_KEY) Vue.prototype = null
-  }
-})()

@@ -196,14 +196,67 @@
       }
     },
     mounted() {
-      this.getProject_count()
-      this.getProduct_count()
-      this.getApp_count()
-      this.getDev_count()
-      this.getDev_active_count()
-      this.getDev_online_count()
+      this.getAllAxios()
     },
     methods: {
+      async getAllAxios() {
+        this.$baseColorfullLoading(1, '批量请求数据中')
+        const res = await this.$moreHttp({
+          Product_num: await product_count({
+            limit: 0,
+            count: 1,
+            skip: 9999,
+          }),
+          Project_num: await Project_count({
+            limit: 0,
+            count: 1,
+            skip: 9999,
+          }),
+          app_num: await app_count({
+            limit: 0,
+            count: 1,
+            skip: 9999,
+          }),
+          dev_num: await dev_count({
+            limit: 0,
+            count: 1,
+            skip: 9999,
+          }),
+          dev_active_num: await dev_active_count({
+            limit: 0,
+            count: 1,
+            skip: 9999,
+            where: {
+              status: 'ACTIVE',
+            },
+          }),
+          dev_online_num: await dev_online_count({
+            limit: 0,
+            count: 1,
+            skip: 9999,
+            where: {
+              status: 'ONLINE',
+            },
+          }),
+        })
+        const {
+          Product_num = { count: 0 },
+          Project_num = { count: 0 },
+          app_num = { count: 0 },
+          dev_num = { count: 0 },
+          dev_active_num = { count: 0 },
+          dev_online_num = { count: 0 },
+        } = res
+        this.$baseLoading().close()
+        console.log(res)
+        console.log(dev_online_num)
+        this.product_count = Product_num.count
+        this.project_count = Project_num.count
+        this.app_count = app_num.count
+        this.dev_count = dev_num.count
+        this.dev_active_count = dev_active_num.count
+        this.dev_online_count = dev_online_num.count
+      },
       handleChange() {},
       handleClickVisit(project) {
         const url =
@@ -220,54 +273,6 @@
             project: project.id,
           },
         })
-      },
-      async getProject_count() {
-        const Project_num = await Project_count({
-          limit: 0,
-          count: 1,
-        })
-        this.project_count = Project_num.count
-      },
-      async getProduct_count() {
-        const Product_num = await product_count({
-          limit: 0,
-          count: 1,
-        })
-        this.product_count = Product_num.count
-      },
-      async getApp_count() {
-        const app_num = await app_count({
-          limit: 0,
-          count: 1,
-        })
-        this.app_count = app_num.count
-      },
-      async getDev_count() {
-        const dev_num = await dev_count({
-          limit: 0,
-          count: 1,
-        })
-        this.dev_count = dev_num.count || 0
-      },
-      async getDev_active_count() {
-        const dev_active_num = await dev_active_count({
-          limit: 0,
-          count: 1,
-          where: {
-            status: 'ACTIVE',
-          },
-        })
-        this.dev_active_count = dev_active_num.count
-      },
-      async getDev_online_count() {
-        const dev_online_num = await dev_online_count({
-          limit: 0,
-          count: 1,
-          where: {
-            status: 'ONLINE',
-          },
-        })
-        this.dev_online_count = dev_online_num.count
       },
     },
   }

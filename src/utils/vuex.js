@@ -77,6 +77,7 @@ export function removeToken(tokenName, storage) {
 function foreach() {
   var strCookie = document.cookie
   var arrCookie = strCookie.split('; ')
+  console.log(`退出后清除Cookies ${arrCookie}`)
   for (var i = 0; i < arrCookie.length; i++) {
     var arr = arrCookie[i].split('=')
     if (arr.length > 0) DelCookie(arr[0])
@@ -92,7 +93,6 @@ function DelCookie(name) {
   exp.setTime(exp.getTime() - 1)
   var cval = GetCookie(name)
   document.cookie = name + '=' + cval + '; expires=' + exp.toGMTString()
-  console.log(`退出后清除Cookies      ${name}`)
 }
 function GetCookie(name) {
   var arg = name + '='

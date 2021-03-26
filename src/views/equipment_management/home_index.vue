@@ -823,6 +823,8 @@
       // 激活设备
       async getActiveDevices() {
         var params = {
+          limit: 1,
+          keys: 'count(*)',
           where: {
             status: 'ACTIVE',
           },
@@ -843,16 +845,17 @@
         if (this.equvalue != 0) {
           params.where.product = this.equvalue
         }
-        var devices = await this.$queryDevice(params)
-        this.activeall = devices.results.length
+        var res = await this.$queryDevice(params)
+        this.activeall = res.count
       },
       async getOnlineDevices() {
         var params = {
+          limit: 1,
+          keys: 'count(*)',
           where: {
             status: 'ONLINE',
           },
         }
-
         if (this.deviceinput != '') {
           if (this.selectdevice == '设备名称') {
             params.where.name = this.deviceinput
@@ -866,8 +869,8 @@
         if (this.equvalue != 0) {
           params.where.product = this.equvalue
         }
-        var devices = await this.$queryDevice(params)
-        this.onlineall = devices.results.length
+        var res = await this.$queryDevice(params)
+        this.onlineall = res.count
       },
 
       // 查询产品

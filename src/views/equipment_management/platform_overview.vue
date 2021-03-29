@@ -217,29 +217,25 @@
           skip: 0,
           where: {},
         }
-        let Params_active = Object.assign(
-          {
-            where: {
-              status: 'ACTIVE',
-            },
-          },
-          params
-        )
-        let Params_online = Object.assign(
-          {
-            where: {
-              status: 'ONLINE',
-            },
-          },
-          params
-        )
         const res = await this.$moreHttp({
           dev_num: await dev_count(params),
           app_num: await app_count(params),
           Product_num: await product_count(params),
           Project_num: await Project_count(params),
-          dev_active_num: await dev_active_count(Params_active),
-          dev_online_num: await dev_online_count(Params_online),
+          dev_active_num: await dev_active_count(
+            Object.assign(params, {
+              where: {
+                status: 'ACTIVE',
+              },
+            })
+          ),
+          dev_online_num: await dev_online_count(
+            Object.assign(params, {
+              where: {
+                status: 'ONLINE',
+              },
+            })
+          ),
         })
         const {
           dev_num = { count: 0 },

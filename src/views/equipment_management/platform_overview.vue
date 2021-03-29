@@ -72,13 +72,7 @@
           class="card-panel-col"
           :xl="4"
         >
-          <el-card
-            v-loading="loading"
-            class="box-card"
-            element-loading-text="查询设备总数中"
-            element-loading-spinner="el-icon-loading"
-            element-loading-background="rgba(0, 0, 0, 0.8)"
-          >
+          <el-card class="box-card">
             <el-col :span="12">
               <vab-icon icon="device-recover-fill" />
             </el-col>
@@ -187,7 +181,6 @@
     components: {},
     data() {
       return {
-        loading: false,
         activeName: 'devchart',
         filterBox: 'filterBox-first',
         project_count: '-',
@@ -205,48 +198,51 @@
     },
     mounted() {
       this.getAllAxios()
-      this.getDev_num()
     },
     activated() {
-      console.log('233', 23333333333333333333333)
+      console.log('keep-alive生效')
     }, //如果页面有keep-alive缓存功能，这个函数会触发
     methods: {
       async getAllAxios() {
         this.$baseColorfullLoading(1, '批量请求数据中')
-        const res = await this.$moreHttp({
-          app_num: await app_count({
-            limit: 0,
-            count: 1,
-            keys: 'count(*)',
-          }),
-          Product_num: await product_count({
-            limit: 0,
-            count: 1,
-            keys: 'count(*)',
-          }),
-          Project_num: await Project_count({
-            limit: 0,
-            count: 1,
-            keys: 'count(*)',
-          }),
-          dev_active_num: await dev_active_count({
-            limit: 0,
-            count: 1,
-            keys: 'count(*)',
+        // （1）如果列为主键，count(列名)效率优于count(1)
+        // （2）如果列不为主键，count(1)效率优于count(列名)
+        // （3）如果表中存在主键，count(主键列名)效率最优
+        // （4）如果表中只有一列，则count(*)效率最优
+        // （5）如果表有多列，且不存在主键，则count(1)效率优于count(*)
+        let params = {
+          // keys: 'count(*)',
+          count: 'objectId',
+          limit: 1,
+          skip: 0,
+          where: {},
+        }
+        let Params_active = Object.assign(
+          {
             where: {
               status: 'ACTIVE',
             },
-          }),
-          dev_online_num: await dev_online_count({
-            limit: 0,
-            count: 1,
-            keys: 'count(*)',
+          },
+          params
+        )
+        let Params_online = Object.assign(
+          {
             where: {
               status: 'ONLINE',
             },
-          }),
+          },
+          params
+        )
+        const res = await this.$moreHttp({
+          dev_num: await dev_count(params),
+          app_num: await app_count(params),
+          Product_num: await product_count(params),
+          Project_num: await Project_count(params),
+          dev_active_num: await dev_active_count(Params_active),
+          dev_online_num: await dev_online_count(Params_online),
         })
         const {
+          dev_num = { count: 0 },
           Product_num = { count: 0 },
           Project_num = { count: 0 },
           app_num = { count: 0 },
@@ -256,21 +252,12 @@
         this.$baseColorfullLoading().close()
         console.log(res)
         console.log(dev_online_num)
+        this.dev_count = dev_num.count || 0
         this.product_count = Product_num.count
         this.project_count = Project_num.count
         this.app_count = app_num.count
         this.dev_active_count = dev_active_num.count
         this.dev_online_count = dev_online_num.count
-      },
-      async getDev_num() {
-        this.loading = true
-        const { count = 0 } = await dev_count({
-          limit: 0,
-          count: 1,
-          keys: 'count(*)',
-        })
-        this.loading = false
-        this.dev_count = count || 0
       },
       handleChange() {},
       handleClickVisit(project) {

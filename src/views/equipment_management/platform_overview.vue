@@ -206,30 +206,30 @@
       async getAllAxios() {
         this.$baseColorfullLoading(1, '批量请求数据中')
         const res = await this.$moreHttp({
+          app_num: await app_count({
+            limit: 0,
+            count: 1,
+            keys: 'count(*)',
+          }),
           Product_num: await product_count({
             limit: 0,
             count: 1,
-            skip: 9999,
+            keys: 'count(*)',
           }),
           Project_num: await Project_count({
             limit: 0,
             count: 1,
-            skip: 9999,
-          }),
-          app_num: await app_count({
-            limit: 0,
-            count: 1,
-            skip: 9999,
+            keys: 'count(*)',
           }),
           dev_num: await dev_count({
             limit: 0,
             count: 1,
-            skip: 9999,
+            keys: 'count(*)',
           }),
           dev_active_num: await dev_active_count({
             limit: 0,
             count: 1,
-            skip: 9999,
+            keys: 'count(*)',
             where: {
               status: 'ACTIVE',
             },
@@ -237,7 +237,7 @@
           dev_online_num: await dev_online_count({
             limit: 0,
             count: 1,
-            skip: 9999,
+            keys: 'count(*)',
             where: {
               status: 'ONLINE',
             },

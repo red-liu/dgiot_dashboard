@@ -257,7 +257,7 @@
         this.product_count = Product_num.count
         this.project_count = Project_num.count
         this.app_count = app_num.count
-        this.dev_count = dev_num.count
+        this.dev_count = dev_num.count || 0
         this.dev_active_count = dev_active_num.count
         this.dev_online_count = dev_online_num.count
       },

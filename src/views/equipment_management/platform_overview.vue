@@ -251,7 +251,7 @@
           dev_active_num = { count: 0 },
           dev_online_num = { count: 0 },
         } = res
-        this.$baseLoading().close()
+        this.$baseColorfullLoading().close()
         console.log(res)
         console.log(dev_online_num)
         this.product_count = Product_num.count

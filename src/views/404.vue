@@ -23,6 +23,15 @@
             <router-link class="bullshit-return-home" to="/">
               {{ jumpTime }}s&nbsp;{{ btn }}
             </router-link>
+            <el-button
+              type="primary"
+              size="medium"
+              style="margin-left: 20px"
+              round
+              @click="logout"
+            >
+              {{ $translateTitle('退出登录') }}
+            </el-button>
           </div>
         </el-col>
       </el-row>
@@ -32,6 +41,7 @@
 
 <script>
   import { mapActions, mapGetters } from 'vuex'
+  import { toLoginRoute } from '@/utils/routes'
 
   export default {
     name: 'Page404',
@@ -53,6 +63,7 @@
     computed: {
       ...mapGetters({
         visitedRoutes: 'tabs/visitedRoutes',
+        objectId: 'user/objectId',
       }),
     },
     mounted() {
@@ -61,6 +72,7 @@
     methods: {
       ...mapActions({
         delVisitedRoute: 'tabs/delVisitedRoute',
+        _logout: 'user/logout',
       }),
       timeChange() {
         this.timer = setInterval(() => {
@@ -72,6 +84,10 @@
             clearInterval(this.timer)
           }
         }, 1000)
+      },
+      async logout() {
+        await this._logout()
+        await this.$router.push(toLoginRoute(this.$route.path))
       },
     },
   }

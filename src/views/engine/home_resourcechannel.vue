@@ -226,7 +226,8 @@
             :gutter="24"
             style="
               width: 100%;
-              height: 100px;
+              min-height: 0;
+              max-height: 100px;
               margin-top: 20px;
               text-align: center;
             "
@@ -238,6 +239,7 @@
               style="cursor: pointer"
             >
               <el-card
+                v-if="item.params.ico && item.params.ico.default"
                 v-show="addchannel.region == item.cType"
                 :shadow="addchannel.region == item.cType ? 'always' : 'hover'"
                 :style="{
@@ -844,6 +846,7 @@
         this.addrules = obj1
       },
       editorChannel(row) {
+        console.log(row)
         this.channelrow = row
         this.resourceid = row.objectId
         this.channelForm = true

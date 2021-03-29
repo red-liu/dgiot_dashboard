@@ -198,6 +198,7 @@
     },
     mounted() {
       this.getAllAxios()
+      this.getDev_num()
     },
     activated() {
       console.log('233', 23333333333333333333333)
@@ -225,11 +226,6 @@
             count: 1,
             keys: 'count(*)',
           }),
-          dev_num: await dev_count({
-            limit: 0,
-            count: 1,
-            keys: 'count(*)',
-          }),
           dev_active_num: await dev_active_count({
             limit: 0,
             count: 1,
@@ -251,7 +247,6 @@
           Product_num = { count: 0 },
           Project_num = { count: 0 },
           app_num = { count: 0 },
-          dev_num = { count: 0 },
           dev_active_num = { count: 0 },
           dev_online_num = { count: 0 },
         } = res
@@ -260,9 +255,16 @@
         this.product_count = Product_num.count
         this.project_count = Project_num.count
         this.app_count = app_num.count
-        this.dev_count = dev_num.count || 0
         this.dev_active_count = dev_active_num.count
         this.dev_online_count = dev_online_num.count
+      },
+      async getDev_num() {
+        const { count = 0 } = await dev_count({
+          limit: 0,
+          count: 1,
+          keys: 'count(*)',
+        })
+        this.dev_count = count || 0
       },
       handleChange() {},
       handleClickVisit(project) {

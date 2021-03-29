@@ -24,6 +24,8 @@ module.exports = {
     PrometheusUrl: 'http://101.32.100.234:9090/',
     server: 'http://132.232.119.105',
     sukeUrl: 'http://118.31.59.148',
+    suke168: 'http://suke168.com',
+    Url114: 'http://114.117.171.37/',
     imgurl: 'http://101.32.100.234:3000/',
   },
 }

@@ -129,14 +129,26 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response) => handleData(response),
   (error) => {
-    const { response } = error
-    if (response === undefined) {
+    const { response, config } = error
+    if (response) {
+      return handleData(response)
+    } else {
+      console.log('error', error)
+      console.log('config', config)
+      console.log('response', response)
       Vue.prototype.$baseMessage(
-        '未可知错误，大部分是由于后端不支持跨域CORS或无效配置引起',
+        `请求出错：请求链接：${config.url}，错误信息：${error}`,
         'error'
       )
       return {}
-    } else return handleData(response)
+    }
+    // if (response === undefined) {
+    //   Vue.prototype.$baseMessage(
+    //     '未可知错误，大部分是由于后端不支持跨域CORS或无效配置引起',
+    //     'error'
+    //   )
+    //   return {}
+    // } else return handleData(response)
   }
 )
 

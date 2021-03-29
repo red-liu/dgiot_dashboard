@@ -75,7 +75,7 @@
           <el-card
             v-loading="loading"
             class="box-card"
-            element-loading-text="查询激活设备总数中"
+            element-loading-text="查询设备总数中"
             element-loading-spinner="el-icon-loading"
             element-loading-background="rgba(0, 0, 0, 0.8)"
           >
@@ -83,7 +83,7 @@
               <vab-icon icon="device-recover-fill" />
             </el-col>
             <el-col :span="12" class="card-right">
-              <p>激活设备</p>
+              <p>设备总数</p>
               <p>{{ dev_count }}</p>
             </el-col>
           </el-card>
@@ -205,6 +205,7 @@
     },
     mounted() {
       this.getAllAxios()
+      this.getDev_num()
     },
     activated() {
       console.log('233', 23333333333333333333333)
@@ -212,10 +213,6 @@
     methods: {
       async getAllAxios() {
         this.$baseColorfullLoading(1, '批量请求数据中')
-        // 此接口由于后端数据查询返回数据缓慢,临时使用定时器关闭loading
-        setTimeout(() => {
-          this.$baseColorfullLoading().close()
-        }, 4500)
         const res = await this.$moreHttp({
           app_num: await app_count({
             limit: 0,
@@ -256,7 +253,7 @@
           dev_active_num = { count: 0 },
           dev_online_num = { count: 0 },
         } = res
-        this.getDev_num()
+        this.$baseColorfullLoading().close()
         console.log(res)
         console.log(dev_online_num)
         this.product_count = Product_num.count
@@ -272,7 +269,7 @@
           count: 1,
           keys: 'count(*)',
         })
-        this.loading = true
+        this.loading = false
         this.dev_count = count || 0
       },
       handleChange() {},

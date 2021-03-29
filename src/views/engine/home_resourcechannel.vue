@@ -208,7 +208,7 @@
         :rules="addrules"
         label-width="auto"
       >
-        <el-form-item label="通道类型" prop="region" label-width="100px">
+        <el-form-item label="通道类型" prop="region">
           <el-select
             v-model="addchannel.region"
             disabled

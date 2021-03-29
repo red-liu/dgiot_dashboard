@@ -17,21 +17,21 @@
           </p>
           <span>{{ devicetotal }}</span>
         </li>
-        <li>
-          <p>
-            <span class="svg-container">
-              <vab-icon icon="numbers-fill" />
-            </span>
-            {{ $translateTitle('equipment.activationdevice') }}
-            <el-tooltip
-              :content="$translateTitle('equipment.totalactive')"
-              placement="top"
-            >
-              <i class="el-icon-question" />
-            </el-tooltip>
-          </p>
-          <span>{{ activeall }}</span>
-        </li>
+        <!--        <li>-->
+        <!--          <p>-->
+        <!--            <span class="svg-container">-->
+        <!--              <vab-icon icon="numbers-fill" />-->
+        <!--            </span>-->
+        <!--            {{ $translateTitle('equipment.activationdevice') }}-->
+        <!--            <el-tooltip-->
+        <!--              :content="$translateTitle('equipment.totalactive')"-->
+        <!--              placement="top"-->
+        <!--            >-->
+        <!--              <i class="el-icon-question" />-->
+        <!--            </el-tooltip>-->
+        <!--          </p>-->
+        <!--          <span>{{ activeall }}</span>-->
+        <!--        </li>-->
         <li>
           <p>
             <span class="svg-container">
@@ -799,34 +799,34 @@
       handleClosebmap() {
         this.bmapdialogVisible = false
       },
-      // 激活设备
-      async getActiveDevices() {
-        var params = {
-          limit: 1,
-          keys: 'count(*)',
-          where: {
-            status: 'ACTIVE',
-          },
-        }
-        if (this.deviceinput != '') {
-          if (
-            this.selectdevice == '设备名称' ||
-            this.selectdevice == 'Device Name'
-          ) {
-            params.where.name = this.deviceinput
-          } else {
-            params.where.devaddr = this.deviceinput
-          }
-        }
-        if (this.devicenumber != '') {
-          params.where.devaddr = this.devicenumber
-        }
-        if (this.equvalue != 0) {
-          params.where.product = this.equvalue
-        }
-        var res = await this.$queryDevice(params)
-        this.activeall = res.count
-      },
+      // // 激活设备
+      // async getActiveDevices() {
+      //   var params = {
+      //     limit: 1,
+      //     keys: 'count(*)',
+      //     where: {
+      //       status: 'ACTIVE',
+      //     },
+      //   }
+      //   if (this.deviceinput != '') {
+      //     if (
+      //       this.selectdevice == '设备名称' ||
+      //       this.selectdevice == 'Device Name'
+      //     ) {
+      //       params.where.name = this.deviceinput
+      //     } else {
+      //       params.where.devaddr = this.deviceinput
+      //     }
+      //   }
+      //   if (this.devicenumber != '') {
+      //     params.where.devaddr = this.devicenumber
+      //   }
+      //   if (this.equvalue != 0) {
+      //     params.where.product = this.equvalue
+      //   }
+      //   var res = await this.$queryDevice(params)
+      //   this.activeall = res.count
+      // },
       async getOnlineDevices() {
         var params = {
           limit: 1,
@@ -909,8 +909,8 @@
         this.listLoading = false
         this.tableData = results
         this.devicetotal = count
-        // 查询激活设备
-        this.getActiveDevices()
+        // // 查询激活设备
+        // this.getActiveDevices()
         // 查询在线设备
         this.getOnlineDevices()
       },

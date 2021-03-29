@@ -205,7 +205,6 @@
     },
     mounted() {
       this.getAllAxios()
-      this.getDev_num()
     },
     activated() {
       console.log('233', 23333333333333333333333)
@@ -250,7 +249,6 @@
             },
           }),
         })
-        this.loading = true
         const {
           Product_num = { count: 0 },
           Project_num = { count: 0 },
@@ -258,6 +256,7 @@
           dev_active_num = { count: 0 },
           dev_online_num = { count: 0 },
         } = res
+        this.getDev_num()
         console.log(res)
         console.log(dev_online_num)
         this.product_count = Product_num.count
@@ -267,6 +266,7 @@
         this.dev_online_count = dev_online_num.count
       },
       async getDev_num() {
+        this.loading = true
         const { count = 0 } = await dev_count({
           limit: 0,
           count: 1,

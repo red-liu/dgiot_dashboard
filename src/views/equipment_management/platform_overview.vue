@@ -72,7 +72,13 @@
           class="card-panel-col"
           :xl="4"
         >
-          <el-card class="box-card">
+          <el-card
+            v-loading="loading"
+            class="box-card"
+            element-loading-text="查询激活设备总数中"
+            element-loading-spinner="el-icon-loading"
+            element-loading-background="rgba(0, 0, 0, 0.8)"
+          >
             <el-col :span="12">
               <vab-icon icon="device-recover-fill" />
             </el-col>
@@ -181,6 +187,7 @@
     components: {},
     data() {
       return {
+        loading: false,
         activeName: 'devchart',
         filterBox: 'filterBox-first',
         project_count: '-',
@@ -243,6 +250,7 @@
             },
           }),
         })
+        this.loading = true
         const {
           Product_num = { count: 0 },
           Project_num = { count: 0 },
@@ -264,6 +272,7 @@
           count: 1,
           keys: 'count(*)',
         })
+        this.loading = true
         this.dev_count = count || 0
       },
       handleChange() {},

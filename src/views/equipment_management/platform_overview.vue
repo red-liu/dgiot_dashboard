@@ -204,7 +204,11 @@
     }, //如果页面有keep-alive缓存功能，这个函数会触发
     methods: {
       async getAllAxios() {
-        // this.$baseColorfullLoading(1, '批量请求数据中')
+        this.$baseColorfullLoading(1, '批量请求数据中')
+        // 此接口由于后端数据查询返回数据缓慢,临时使用定时器关闭loading
+        setTimeout(() => {
+          this.$baseColorfullLoading().close()
+        }, 4500)
         const res = await this.$moreHttp({
           app_num: await app_count({
             limit: 0,
@@ -251,7 +255,6 @@
           dev_active_num = { count: 0 },
           dev_online_num = { count: 0 },
         } = res
-        this.$baseColorfullLoading().close()
         console.log(res)
         console.log(dev_online_num)
         this.product_count = Product_num.count

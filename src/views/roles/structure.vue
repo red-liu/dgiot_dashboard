@@ -232,20 +232,18 @@
                       > -->
                     </template>
                   </el-table-column>
-
-                  <!--分页组件-->
-                  <el-pagination
-                    v-show="total > 2"
-                    :total="total"
-                    :page-sizes="[1, 5, 10]"
-                    :page-size="pagesize"
-                    style="margin-top: 8px"
-                    layout="total, prev, pager, next, sizes"
-                    class="total_pagination"
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                  />
                 </el-table>
+                <!--分页组件-->
+                <el-pagination
+                  :total="total"
+                  :page-sizes="[1, 5, 10]"
+                  :page-size="pagesize"
+                  style="margin-top: 8px"
+                  layout="total, prev, pager, next, sizes"
+                  class="total_pagination"
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange"
+                />
               </div>
             </el-col>
           </el-row>
@@ -722,6 +720,7 @@
             return item.username.indexOf('user_for_') == -1
           })
           this.pictLoading = false
+          this.total = this.tempData.length
         } else {
           this.pictLoading = false
           this.total = 0
@@ -732,7 +731,8 @@
         const { results = [] } = await Roletree()
         if (results) {
           this.deptTreeData = results
-          this.handleNodeClick(this.deptTreeData[0])
+          // this.handleNodeClick(this.deptTreeData[0])
+          this.userFordepartment()
         } else {
           this.$message('部门列表获取失败')
           this.deptTreeData = []

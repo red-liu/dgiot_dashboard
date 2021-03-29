@@ -31,7 +31,7 @@ Vue.prototype.$baseLoading = (index, text) => {
       lock: true,
       text: text || loadingText,
       spinner: 'vab-loading-type' + index,
-      background: 'hsla(0,0%,100%,.8)',
+      background: 'hsla(0,0%,100%,0.8)',
     })
   }
   return loading

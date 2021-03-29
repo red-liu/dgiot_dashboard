@@ -630,6 +630,16 @@
         const { results = [] } = await Roletree()
         this.allApps = results
         const res = await resourceTypes()
+        res.forEach((item) => {
+          if (!item.params.ico) {
+            item.params.ico = {
+              title: { en: 'channel ICO', zh: '通道ICO' },
+              description: { en: 'channel ICO', zh: '通道ICO' },
+              default:
+                'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/logo/logo.png',
+            }
+          }
+        })
         this.channelregion = res
       },
       // 更新状态

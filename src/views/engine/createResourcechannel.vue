@@ -131,7 +131,9 @@
                   <el-col :span="12">
                     <img
                       :src="
-                        item.params.ico.default ? item.params.ico.default : ''
+                        item.params.ico.default
+                          ? item.params.ico.default
+                          : 'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/logo/logo.png'
                       "
                       class="image"
                       style="width: 50px; height: 50px"
@@ -179,6 +181,7 @@
     components: {},
     data() {
       return {
+        channelregion: [],
         defaultProps: {
           children: 'children',
           label: 'label',
@@ -401,6 +404,16 @@
       },
       async getResource() {
         const res = await resourceTypes()
+        res.forEach((item) => {
+          if (!item.params.ico) {
+            item.params.ico = {
+              title: { en: 'channel ICO', zh: '通道ICO' },
+              description: { en: 'channel ICO', zh: '通道ICO' },
+              default:
+                'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/logo/logo.png',
+            }
+          }
+        })
         this.channelregion = res
         this.$nextTick(() => {
           this.initFrom()

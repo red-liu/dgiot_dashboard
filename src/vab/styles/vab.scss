@@ -200,7 +200,10 @@ html {
       opacity: 0.6;
       backdrop-filter: blur(10px);
     }
+    .el-notification{
+      max-width: 330px !important;
 
+    }
     /* el-image-viewer遮罩 */
     .el-image-viewer__mask {
       background-color: rgba(0, 0, 0, 0.5);

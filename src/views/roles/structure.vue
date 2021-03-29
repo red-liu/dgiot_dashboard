@@ -643,11 +643,13 @@
           cancelButtonText: '取消',
           type: 'warning',
         }).then(async () => {
-          const data = {
-            department: this.curDepartmentId,
-            username: row.username,
-          }
-          const res = await delUser(data)
+          // const data = {
+          //   department: this.curDepartmentId,
+          //   username: row.username,
+          // }
+          console.log(row)
+          const { objectId } = row
+          const res = await delUser(objectId)
           if (res) {
             this.$message({
               type: 'success',

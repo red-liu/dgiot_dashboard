@@ -177,6 +177,7 @@
     dev_online_count,
   } from '@/api/Platform/index'
   export default {
+    name: 'Index',
     components: {},
     data() {
       return {

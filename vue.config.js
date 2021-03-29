@@ -61,7 +61,7 @@ module.exports = {
     },
     proxy: {
       [baseURL]: {
-        target: process.env.VUE_APP_server,
+        target: proxyUrl.sukeUrl,
         ws: true,
         changeOrigin: true,
         pathRewrite: {

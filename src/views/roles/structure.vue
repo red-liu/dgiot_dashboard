@@ -101,6 +101,7 @@
                   type="primary"
                   icon="el-icon-search"
                   size="small"
+                  :disabled="query.value == ''"
                   @click="userFordepartment(0)"
                 >
                   {{ $translateTitle('developer.search') }}
@@ -165,6 +166,7 @@
             <el-col :span="17">
               <div class="elTable">
                 <el-table
+                  v-loading="pictLoading"
                   :data="tableFilterData"
                   style="width: 90%; margin-top: 20px"
                 >
@@ -297,7 +299,7 @@
 <script>
   import { Promise } from 'q'
   import { Roletree } from '@/api/Menu/index'
-  import { postUser, delUser } from '@/api/User/index'
+  import { postUser, delUser, queryUser } from '@/api/User/index'
   import { queryRoledepartment } from '@/api/Role/index'
   var arr = []
   export default {
@@ -323,6 +325,7 @@
         }
       }
       return {
+        departmentObj: [],
         departmentname: '',
         curDepartmentId: '',
         deptTreeData: [],
@@ -438,6 +441,7 @@
       // addItemUser
       addItemUser(item) {
         this.deptOption = []
+        this.departmentObj = item
         console.log(item)
         this.deptOption.push(item)
         this.adduserDiadlog = true
@@ -477,6 +481,7 @@
               type: 'success',
             })
             this.adduserDiadlog = false
+            this.handleNodeClick(this.departmentObj)
           } else {
             this.$message('添加失败')
           }
@@ -668,104 +673,40 @@
         this.userFordepartment()
       },
       // 初始化用户
-      userFordepartment(start) {
+      async userFordepartment(start) {
+        this.pictLoading = true
+        this.tempData = []
         if (start == 0) {
           this.start = 0
+        } else {
+          this.query.value = ''
         }
-        // var User = Parse.Object.extend("_User");
-        // var query = new Parse.Query(User);
-        // if (this.query.value != "") {
-        //   query.matches("username", this.query.value, "i");
-        //   this.pagesize = 10;
-        //   this.start = 0;
-        // }
-        // query.limit(this.pagesize);
-        // query.skip(this.start);
-        // query.count().then(count => {
-        //   if (count) {
-        //     this.total = count;
-        //     query.find().then(results => {
-        //       results.map(item => {
-        //         var obj = {
-        //           attributes: {}
-        //         };
-        //         obj.attributes.username = item.attributes.username;
-        //         obj.attributes.phone = item.attributes.phone;
-        //         obj.attributes.email = item.attributes.email;
-        //         obj.attributes.departmentname = item.attributes.departmentname;
-        //         obj.attributes.emailVerified = item.attributes.emailVerified;
-        //         obj.createdAt = item.createdAt;
-        //         obj.id = item.id;
-        //         obj.departmentid = item.attributes.department
-        //           ? item.attributes.department.id
-        //           : "";
-        //         this.tableData.push(obj);
-        //         this.tempData = this.tableData;
-        //       });
-        //     });
-        //   } else {
-        //     this.dataforuser = [];
-        //     this.total = 0;
-        //   }
-        // });
+        let params = {
+          limit: this.pagesize,
+          skip: this.start,
+          where: {},
+          keys: 'count(*)',
+        }
+        const { results } = await queryUser(params)
+        if (results) {
+          if (this.query.value) {
+            this.tempData = results.filter((item) => {
+              return item.username.indexOf(this.query.value) != -1
+            })
+          } else {
+            this.tempData = results
+          }
+          this.pictLoading = false
+        } else {
+          this.pictLoading = false
+        }
+        this.total = this.tempData.length
       },
       adduser() {
         this.adduserDiadlog = true
         // this.$router.push({
         //   path: "/roles/adduser"
         // });
-      },
-      changerole(index, row) {
-        var emailrole = ''
-        var emailtype = ''
-        var isemail = true
-        if (row.emailVerified == true) {
-          emailrole = '禁用'
-          isemail = false
-          emailtype = 'warning'
-        } else {
-          emailrole = '启用'
-          emailtype = 'success'
-          isemail = true
-        }
-        this.$confirm('是否' + emailrole + '', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: emailtype,
-        })
-          .then(() => {
-            // var User = Parse.Object.extend("_User");
-            // var user = new Parse.Query(User);
-            // user.get(row.id).then(resultes => {
-            //   resultes.set("emailVerified", isemail);
-            //   resultes.save().then(
-            //     res => {
-            //       if (res) {
-            //         this.$message({
-            //           type: "success",
-            //           message: "已" + emailrole + ""
-            //         });
-            //       }
-            //       this.getDepartment();
-            //     },
-            //     error => {
-            //       console.log(error);
-            //       if (error.code == 119) {
-            //         this.$message({
-            //           type: "error",
-            //           message: error.message
-            //         });
-            //       }
-            //     }
-            //   );
-            // });
-          })
-          .catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消',
-            })
-          })
       },
       async handleNodeClick(data) {
         this.departmentname = data.name

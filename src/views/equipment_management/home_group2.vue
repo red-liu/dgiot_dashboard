@@ -626,8 +626,9 @@
     },
     methods: {
       handleNodeClick(data) {
+        console.log(data)
         this.showTree = !this.showTree
-        this.form.relationApp = data.alias
+        this.form.relationApp = data.name
       },
       changeNode(val, first) {
         if (first != 0) {

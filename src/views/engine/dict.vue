@@ -867,7 +867,7 @@
       },
       handleNodeClick(data) {
         this.showTree = !this.showTree
-        this.addDictForm.applicationtText = data.alias
+        this.addDictForm.applicationtText = data.name
       },
       editAllDict(row) {
         this.editDictId = row.objectId

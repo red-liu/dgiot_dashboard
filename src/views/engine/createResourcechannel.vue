@@ -400,7 +400,7 @@
       },
       handleNodeClick(data) {
         this.showTree = !this.showTree
-        this.addchannel.applicationtText = data.alias
+        this.addchannel.applicationtText = data.name
       },
       async getResource() {
         const res = await resourceTypes()

@@ -575,7 +575,7 @@
       },
       handleNodeClick(data) {
         this.showTree = !this.showTree
-        this.addchannel.applicationtText = data.alias
+        this.addchannel.applicationtText = data.name
       },
       inputChange(val) {
         console.log(val)

@@ -600,7 +600,7 @@
       },
       handleNodeClick(data) {
         this.showTree = !this.showTree
-        this.addchannel.applicationtText = data.alias
+        this.addchannel.applicationtText = data.name
       },
       // 初始化弹框数据
       async dialogType() {

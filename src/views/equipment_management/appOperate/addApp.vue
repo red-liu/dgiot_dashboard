@@ -689,7 +689,7 @@
       },
       handleNodeClick(data) {
         this.showTree = !this.showTree
-        this.addchannel.applicationtText = data.alias
+        this.addchannel.applicationtText = data.name
       },
       // 获取行业信息
       async Industry() {

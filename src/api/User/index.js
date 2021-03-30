@@ -23,7 +23,7 @@ export function EmployeesHired(params) {
 export function EmployeeTurnover(params) {
   return request({
     url: '/user',
-    method: 'post',
+    method: 'DELETE',
     data: params,
   })
 }

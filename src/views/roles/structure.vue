@@ -88,40 +88,42 @@
           <el-row :gutter="24">
             <el-col :span="7">
               <div class="elTree">
-                <el-input
-                  v-model="query.value"
-                  :placeholder="$translateTitle('user.name')"
-                  clearable
-                  style="width: 200px"
-                  class="filter-item"
-                  size="small"
-                />
-                <el-button
-                  class="filter-item"
-                  type="primary"
-                  icon="el-icon-search"
-                  size="small"
-                  :disabled="query.value == ''"
-                  @click="userFordepartment(0)"
-                >
-                  {{ $translateTitle('developer.search') }}
-                </el-button>
-                <!--               <el-button
-                  class="filter-item"
-                  type="primary"
-                  icon="el-icon-circle-plus"
-                  @click="adduser"
-                  size="small"
-                  >{{  $translateTitle("user.newusers") }}</el-button
-                >-->
-                <el-button
-                  class="filter-item"
-                  type="primary"
-                  size="small"
-                  @click="userFordepartment()"
-                >
-                  所有用户
-                </el-button>
+                <div v-show="false" class="setting">
+                  <el-input
+                    v-model="query.value"
+                    :placeholder="$translateTitle('user.name')"
+                    clearable
+                    style="width: 200px"
+                    class="filter-item"
+                    size="small"
+                  />
+                  <el-button
+                    class="filter-item"
+                    type="primary"
+                    icon="el-icon-search"
+                    size="small"
+                    :disabled="query.value == ''"
+                    @click="userFordepartment(0)"
+                  >
+                    {{ $translateTitle('developer.search') }}
+                  </el-button>
+                  <!--               <el-button
+                    class="filter-item"
+                    type="primary"
+                    icon="el-icon-circle-plus"
+                    @click="adduser"
+                    size="small"
+                    >{{  $translateTitle("user.newusers") }}</el-button
+                  >-->
+                  <el-button
+                    class="filter-item"
+                    type="primary"
+                    size="small"
+                    @click="userFordepartment()"
+                  >
+                    所有用户
+                  </el-button>
+                </div>
                 <!-- <el-tree
               :data="treeData"
               :props="elTreedefaultProps"
@@ -674,6 +676,7 @@
       },
       // 初始化用户
       async userFordepartment(start) {
+        return false
         this.pictLoading = true
         this.tempData = []
         if (start == 0) {

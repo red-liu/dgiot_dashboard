@@ -77,6 +77,7 @@
           id: 'testId111',
           x: randomNum(0, 100),
           y: randomNum(0, 100),
+
           radius: randomNum(0, 100),
           fill: randomHexColor(),
           stroke: randomHexColor(),

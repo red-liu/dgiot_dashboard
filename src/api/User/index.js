@@ -12,6 +12,21 @@ export async function queryUser(params) {
   return query_object('_User', params)
 }
 
+export function EmployeesHired(params) {
+  return request({
+    url: '/user',
+    method: 'post',
+    data: params,
+  })
+}
+
+export function EmployeeTurnover(params) {
+  return request({
+    url: '/user',
+    method: 'post',
+    data: params,
+  })
+}
 export async function getUser(ObjectId) {
   return get_object('_User', ObjectId)
 }

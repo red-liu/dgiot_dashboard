@@ -466,3 +466,31 @@ export function handleZero(value) {
     return value
   }
 }
+/*
+ * @description 随机生成十六进制颜色
+ */
+
+export function randomHexColor() {
+  var hex = Math.floor(Math.random() * 16777216).toString(16) //生成ffffff以内16进制数
+  while (hex.length < 6) {
+    //while循环判断hex位数，少于6位前面加0凑够6位
+    hex = '0' + hex
+  }
+  return '#' + hex //返回‘#'开头16进制颜色
+}
+/*
+ * @description 生成从minNum到maxNum的随机数
+ */
+export function randomNum(minNum, maxNum) {
+  switch (arguments.length) {
+    case 1:
+      return parseInt(Math.random() * minNum + 1, 10)
+      break
+    case 2:
+      return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10)
+      break
+    default:
+      return 0
+      break
+  }
+}

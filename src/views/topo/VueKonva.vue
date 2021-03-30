@@ -9,6 +9,7 @@
   </div>
 </template>
 <script>
+  import { randomHexColor, randomNum } from '@/utils'
   export default {
     data() {
       return {
@@ -17,6 +18,7 @@
           height: 200,
         },
         configCircle: {
+          id: 'testId',
           x: 100,
           y: 100,
           radius: 70,
@@ -30,33 +32,17 @@
       getRef() {
         const el = this.$refs['stage']
         console.log(el.getNode().cache())
-        console.log(el.getStage().toJSON())
-        el.create(
-          {
-            attrs: { width: 200, height: 200 },
-            className: 'Stage',
-            children: [
-              {
-                attrs: {},
-                className: 'Layer',
-                children: [
-                  {
-                    attrs: {
-                      x: 100,
-                      y: 100,
-                      radius: 70,
-                      fill: 'pink',
-                      stroke: 'black',
-                      strokeWidth: 4,
-                    },
-                    className: 'Circle',
-                  },
-                ],
-              },
-            ],
-          },
-          'Stage'
-        )
+        let toJSON = el.getStage().toJSON()
+        console.log(toJSON)
+        this.configCircle = {
+          id: 'testId111',
+          x: randomNum(0, 100),
+          y: randomNum(0, 100),
+          radius: randomNum(0, 100),
+          fill: randomHexColor(),
+          stroke: randomHexColor(),
+          strokeWidth: randomNum(0, 100),
+        }
         // console.log(el.create())
       },
     },

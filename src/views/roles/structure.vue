@@ -220,6 +220,7 @@
                       <el-button
                         type="danger"
                         size="small"
+                        :disabled="!curDepartmentId"
                         @click="handleDetele(scope.row)"
                       >
                         {{ $translateTitle('developer.delete') }}
@@ -297,7 +298,13 @@
 <script>
   import { Promise } from 'q'
   import { Roletree } from '@/api/Menu/index'
-  import { postUser, delUser, queryUser } from '@/api/User/index'
+  import {
+    postUser,
+    delUser,
+    queryUser,
+    EmployeesHired,
+    EmployeeTurnover,
+  } from '@/api/User/index'
   import { queryRoledepartment } from '@/api/Role/index'
   var arr = []
   export default {
@@ -470,9 +477,10 @@
             phone: this.userInfoForm.phone,
             email: this.userInfoForm.email,
             department: this.userInfoForm.departmentid,
+            emailVerified: true,
             // aclId:this.aclId
           }
-          const res = await postUser(params)
+          const res = await EmployeesHired(params)
           if (res) {
             this.$message({
               message: '用户添加成功！',
@@ -633,14 +641,6 @@
       },
       // 删除
       handleDetele(row) {
-        if (!this.curDepartmentId) {
-          this.$message({
-            type: 'error',
-            message: '请先选择部门',
-          })
-          return
-        }
-
         this.$confirm('此操作将永久删除此用户, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -650,9 +650,11 @@
           //   department: this.curDepartmentId,
           //   username: row.username,
           // }
-          console.log(row)
-          const { objectId } = row
-          const res = await delUser(objectId)
+          const params = {
+            department: this.curDepartmentId,
+            username: row.username,
+          }
+          const res = await EmployeeTurnover(params)
           if (res) {
             this.$message({
               type: 'success',
@@ -700,12 +702,12 @@
         }
         this.total = this.tempData.length
       },
-      adduser() {
-        this.adduserDiadlog = true
-        // this.$router.push({
-        //   path: "/roles/adduser"
-        // });
-      },
+      // adduser() {
+      //   this.adduserDiadlog = true
+      //   // this.$router.push({
+      //   //   path: "/roles/adduser"
+      //   // });
+      // },
       async handleNodeClick(data) {
         this.departmentname = data.name
         this.curDepartmentId = data.objectId

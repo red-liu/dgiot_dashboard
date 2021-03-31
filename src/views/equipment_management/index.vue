@@ -241,33 +241,33 @@
                   <span>{{ scope.row.product.name }}</span>
                 </template>
               </el-table-column>
-              <!--              <el-table-column-->
-              <!--                :label="$translateTitle('equipment.nodetype')"-->
-              <!--                align="center"-->
-              <!--                width="200"-->
-              <!--              >-->
-              <!--                <template slot-scope="scope">-->
-              <!--                  <vab-icon-->
-              <!--                    :icon="-->
-              <!--                      scope.row.nodeType == 0 ? 'hotel-bed-fill' : 'hotel-fill'-->
-              <!--                    "-->
-              <!--                    style="width: 2rem; height: 2rem"-->
-              <!--                  />-->
-              <!--                  &lt;!&ndash; <el-tag type="success" >设备</el-tag>-->
-              <!--                  <el-tag type="success" v-else>网关</el-tag>&ndash;&gt;-->
-              <!--                </template>-->
-              <!--              </el-table-column>-->
-              <el-table-column label="授权码" align="center" width="200">
+              <el-table-column
+                :label="$translateTitle('equipment.nodetype')"
+                align="center"
+                width="200"
+              >
                 <template slot-scope="scope">
-                  <span>
-                    {{
-                      scope.row.basedata && scope.row.basedata.auth
-                        ? scope.row.basedata.auth
-                        : ''
-                    }}
-                  </span>
+                  <vab-icon
+                    :icon="
+                      scope.row.nodeType == 0 ? 'hotel-bed-fill' : 'hotel-fill'
+                    "
+                    style="width: 2rem; height: 2rem"
+                  />
+                  <!-- <el-tag type="success" >设备</el-tag>
+                                <el-tag type="success" v-else>网关</el-tag>-->
                 </template>
               </el-table-column>
+              <!--              <el-table-column label="授权码" align="center" width="200">-->
+              <!--                <template slot-scope="scope">-->
+              <!--                  <span>-->
+              <!--                    {{-->
+              <!--                      scope.row.basedata && scope.row.basedata.auth-->
+              <!--                        ? scope.row.basedata.auth-->
+              <!--                        : ''-->
+              <!--                    }}-->
+              <!--                  </span>-->
+              <!--                </template>-->
+              <!--              </el-table-column>-->
               <el-table-column
                 :label="
                   $translateTitle('developer.enable') +
@@ -515,19 +515,19 @@
             <el-form-item :label="$translateTitle('equipment.equipmentbrand')">
               <el-input v-model="deviceform.brand" />
             </el-form-item>
-            <el-form-item v-if="deviceform.auth" label="授权码">
-              <el-input v-model="deviceform.auth" />
-            </el-form-item>
-            <el-form-item v-if="deviceform.yysId" label="应用商">
-              <el-select v-model="deviceform.yysId" placeholder="应用商">
-                <el-option
-                  v-for="(item, index) in yysSelect"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.key"
-                />
-              </el-select>
-            </el-form-item>
+            <!--            <el-form-item v-if="deviceform.auth" label="授权码">-->
+            <!--              <el-input v-model="deviceform.auth" />-->
+            <!--            </el-form-item>-->
+            <!--            <el-form-item v-if="deviceform.yysId" label="应用商">-->
+            <!--              <el-select v-model="deviceform.yysId" placeholder="应用商">-->
+            <!--                <el-option-->
+            <!--                  v-for="(item, index) in yysSelect"-->
+            <!--                  :key="index"-->
+            <!--                  :label="item.name"-->
+            <!--                  :value="item.key"-->
+            <!--                />-->
+            <!--              </el-select>-->
+            <!--            </el-form-item>-->
             <el-form-item
               :label="$translateTitle('equipment.installationlocation')"
             >

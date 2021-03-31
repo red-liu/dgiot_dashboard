@@ -52,12 +52,12 @@ html {
 
         .vab-app-main {
           width: 100%;
-          padding: $base-padding;
+          padding: 0 1.5px;
           overflow: hidden;
           transition: $base-transition;
 
           > section {
-            height: calc( 100vh - #{$base-top-bar-height}*3 - 25px );
+            height: calc( 100vh - #{$base-top-bar-height}*2.7);
             overflow-x: hidden;
             overflow-y: scroll;
             background: $base-color-white;

@@ -1,7 +1,6 @@
 <template>
   <footer class="vab-footer">
-    <vab-icon icon="copyright-line" />
-    {{ copyright }}
+    {{ copyright.replace(/Copyright /, '') }}
   </footer>
 </template>
 
@@ -29,12 +28,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 55px;
-    padding: 0 $base-padding 0 $base-padding;
+    min-height: $base-footer-height;
     color: rgba(0, 0, 0, 0.45);
     background: $base-color-white;
     border-top: 1px dashed $base-border-color;
-
+    font-size: 12px;
+    font-weight: 700;
     i {
       margin: 0 5px;
     }

@@ -5,7 +5,10 @@
       icon="el-icon-setting"
       size="mini"
       circle
-      :style="{ right: showThemeSetting == true ? '72px' : '0px' }"
+      :style="{
+        right: showThemeSetting == true ? '72px' : '0px',
+        display: device == 'mobile' ? 'none' : 'block',
+      }"
       class="setting-btn"
       @click="changeThemeSetting(showThemeSetting)"
     />
@@ -44,6 +47,7 @@
     },
     computed: {
       ...mapGetters({
+        device: 'settings/device',
         showThemeSetting: 'settings/showThemeSetting',
       }),
     },

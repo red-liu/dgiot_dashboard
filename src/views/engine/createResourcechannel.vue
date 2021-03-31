@@ -7,157 +7,173 @@
       :model="addchannel"
       size="mini"
     >
-      <el-form-item
-        :label="$translateTitle('developer.channelname')"
-        prop="name"
-      >
-        <el-input
-          v-model="addchannel.name"
-          style="float: left"
-          :placeholder="$translateTitle('developer.channelname')"
-          autocomplete="off"
-        />
-      </el-form-item>
-      <el-form-item
-        :rules="[
-          { required: true, message: '请选择所属应用', trigger: 'blur' },
-        ]"
-        label="所属应用"
-      >
-        <el-input
-          v-model="addchannel.applicationtText"
-          placeholder="请选择所属应用"
-          readonly
-        >
-          <template slot="append">
-            <i
-              :class="[showTree ? 'el-icon-arrow-up' : 'el-icon-arrow-down']"
-              style="cursor: pointer"
-              @click="showTree = !showTree"
+      <el-row>
+        <el-col :span="12">
+          <el-form-item
+            :label="$translateTitle('developer.channelname')"
+            prop="name"
+          >
+            <el-input
+              v-model="addchannel.name"
+              style="float: left"
+              :placeholder="$translateTitle('developer.channelname')"
+              autocomplete="off"
             />
-          </template>
-        </el-input>
-        <div v-if="showTree" class="device-tree">
-          <el-tree
-            default-expand-all="true"
-            :data="allApps"
-            :props="defaultProps"
-            @node-click="handleNodeClick"
-          />
-        </div>
-      </el-form-item>
-      <el-col v-for="(item, index) in arrlist" :key="index" :span="12">
-        <el-form-item
-          :label="item.title.zh"
-          :required="item.required"
-          :prop="item.showname"
-        >
-          <el-input
-            v-if="item.type == 'string'"
-            v-model="addchannel[item.showname]"
-          />
-          <el-input
-            v-else-if="item.type == 'integer'"
-            v-model.number="addchannel[item.showname]"
-          />
-          <el-select
-            v-else-if="item.type == 'boolean'"
-            v-model="addchannel[item.showname]"
-            class="notauto"
-            readonly
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item
+            :rules="[
+              { required: true, message: '请选择所属应用', trigger: 'blur' },
+            ]"
+            label="所属应用"
           >
-            <el-option :value="true" label="是" />
-            <el-option :value="false" label="否" />
-          </el-select>
-        </el-form-item>
-      </el-col>
-
-      <el-form-item label="通道类型" prop="region">
-        <el-select
-          v-model="addchannel.region"
-          style="display: block"
-          placeholder="通道类型"
-          @change="removeauto"
-        >
-          <el-option
-            v-for="(item, index) in channelregion"
-            :key="index"
-            style="display: block"
-            :label="item.title.zh"
-            :value="item.cType"
-          />
-        </el-select>
-        <el-row
-          :gutter="24"
-          style="
-            width: 100%;
-            max-height: 500px;
-            overflow-x: hidden;
-            overflow-y: scroll;
-            line-height: 30px;
-            text-align: center;
-          "
-        >
-          <el-col
-            v-for="(item, index) in channelregion"
-            :key="index"
-            :span="4"
-            style="padding: 0; margin: 20px; cursor: pointer"
-          >
-            <el-card
-              :shadow="addchannel.region == item.cType ? 'always' : 'hover'"
-              :style="{
-                color: addchannel.region == item.cType ? '#00bad0' : '#c0c4cc',
-              }"
-              size="mini"
-              class="box-card"
+            <el-input
+              v-model="addchannel.applicationtText"
+              placeholder="请选择所属应用"
+              readonly
             >
-              <div slot="header" class="clearfix">
-                <el-button
-                  :disabled="resourceid != ''"
-                  :type="
-                    addchannel.region == item.cType ? 'success' : 'primary'
-                  "
-                  size="mini"
-                  style="text-align: center"
-                  @click="setCard(item.cType)"
-                >
-                  {{ addchannel.region == item.cType ? '已选' : '选择' }}
-                </el-button>
-                <p>{{ item.title.zh }}</p>
-              </div>
-              <div class="text item">
-                <el-row :gutter="24">
-                  <el-col :span="12">
-                    <img
-                      :src="
-                        item.params.ico.default
-                          ? item.params.ico.default
-                          : 'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/logo/logo.png'
-                      "
-                      class="image"
-                      style="width: 50px; height: 50px"
-                    />
-                  </el-col>
-                  <el-col :span="12">
-                    <el-tag>{{ item.cType }}</el-tag>
-                  </el-col>
-                </el-row>
-              </div>
-            </el-card>
-          </el-col>
-        </el-row>
-      </el-form-item>
-      <!---------------------统一的配置描述---------------------------->
-      <el-form-item :label="$translateTitle('developer.describe')">
-        <el-input
-          v-model="addchannel.desc"
-          :rows="3"
-          :placeholder="$translateTitle('developer.describe')"
-          autocomplete="off"
-          type="textarea"
-        />
-      </el-form-item>
+              <template slot="append">
+                <i
+                  :class="[
+                    showTree ? 'el-icon-arrow-up' : 'el-icon-arrow-down',
+                  ]"
+                  style="cursor: pointer"
+                  @click="showTree = !showTree"
+                />
+              </template>
+            </el-input>
+            <div v-if="showTree" class="device-tree">
+              <el-tree
+                default-expand-all
+                :data="allApps"
+                :props="defaultProps"
+                @node-click="handleNodeClick"
+              />
+            </div>
+          </el-form-item>
+        </el-col>
+
+        <el-form-item label="通道类型" prop="region">
+          <el-select
+            v-model="addchannel.region"
+            style="display: block"
+            placeholder="通道类型"
+            @change="removeauto"
+          >
+            <el-option
+              v-for="(item, index) in channelregion"
+              :key="index"
+              style="display: block"
+              :label="item.title.zh"
+              :value="item.cType"
+            />
+          </el-select>
+          <el-row
+            :gutter="24"
+            style="
+              width: 100%;
+              max-height: 500px;
+              overflow-x: hidden;
+              overflow-y: scroll;
+              line-height: 30px;
+              text-align: center;
+            "
+          >
+            <el-col
+              v-for="(item, index) in channelregion"
+              :key="index"
+              :span="4"
+              style="padding: 0; margin: 20px; cursor: pointer"
+            >
+              <el-card
+                :shadow="addchannel.region == item.cType ? 'always' : 'hover'"
+                :style="{
+                  color:
+                    addchannel.region == item.cType ? '#00bad0' : '#c0c4cc',
+                }"
+                size="mini"
+                class="box-card"
+              >
+                <div slot="header" class="clearfix">
+                  <el-button
+                    :disabled="resourceid != ''"
+                    :type="
+                      addchannel.region == item.cType ? 'success' : 'primary'
+                    "
+                    size="mini"
+                    style="text-align: center"
+                    @click="setCard(item.cType)"
+                  >
+                    {{ addchannel.region == item.cType ? '已选' : '选择' }}
+                  </el-button>
+                  <p>{{ item.title.zh }}</p>
+                </div>
+                <div class="text item">
+                  <el-row :gutter="24">
+                    <el-col :span="12">
+                      <img
+                        :src="
+                          item.params.ico.default
+                            ? item.params.ico.default
+                            : 'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/logo/logo.png'
+                        "
+                        class="image"
+                        style="width: 50px; height: 50px"
+                      />
+                    </el-col>
+                    <el-col :span="12">
+                      <el-tag>{{ item.cType }}</el-tag>
+                    </el-col>
+                  </el-row>
+                </div>
+              </el-card>
+            </el-col>
+          </el-row>
+        </el-form-item>
+        <el-col v-for="(item, index) in arrlist" :key="index" :span="12">
+          <el-form-item
+            v-show="item.showname != 'ico'"
+            :label="item.title.zh"
+            :required="item.required"
+            :prop="item.showname"
+          >
+            <el-input
+              v-if="item.type == 'string'"
+              v-model="addchannel[item.showname]"
+            />
+            <el-input
+              v-else-if="item.type == 'integer'"
+              v-model.number="addchannel[item.showname]"
+            />
+            <el-image
+              v-else-if="item.showname == 'ico'"
+              style="display: none"
+            />
+            <el-select
+              v-else-if="item.type == 'boolean'"
+              v-model="addchannel[item.showname]"
+              class="notauto"
+              readonly
+            >
+              <el-option :value="true" label="是" />
+              <el-option :value="false" label="否" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <!---------------------统一的配置描述---------------------------->
+        <el-col :span="24">
+          <el-form-item :label="$translateTitle('developer.describe')">
+            <el-input
+              v-model="addchannel.desc"
+              :rows="3"
+              :placeholder="$translateTitle('developer.describe')"
+              autocomplete="off"
+              type="textarea"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="handleClose">
@@ -306,6 +322,7 @@
               this.selectregion = item
               this.arrlist = this.orderObject(this.selectregion.params)
               this.arrlist.map((item) => {
+                //  这里过滤掉 showname 为ico的
                 if (item.default) {
                   obj[item.showname] = item.default
                 } else {
@@ -367,9 +384,14 @@
             obj.applicationtText = key ? key.substr(5) : ''
           }
         }
+        console.log('obj', obj)
         this.addchannel = obj
         this.addchannel.region = val
         this.addrules = obj1
+        // 选择通道类型后 清除校验规则
+        this.$nextTick(() => {
+          this.$refs['addchannel'].clearValidate()
+        })
       },
       async addchannelaxios(data) {
         await postChannel(data).then((results) => {
@@ -445,9 +467,9 @@
           margin: 0;
         }
         .el-tree > .el-tree-node {
-          height: 200px; //这里的高根据实际情况
-          min-width: 100%;
           display: inline-block;
+          min-width: 100%;
+          height: 200px; //这里的高根据实际情况
         }
       }
     }

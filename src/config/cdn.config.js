@@ -15,7 +15,7 @@ module.exports = {
       'https://unpkg.com/codemirror@5.58.2/lib/codemirror.css',
       'https://unpkg.com/codemirror@5.58.3/addon/lint/lint.css',
       'https://unpkg.com/codemirror@5.58.3/theme/rubyblue.css',
-      'https://unpkg.com/topology-vue@0.5.2/topology-vue.css',
+      'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/css/topology-vue/topology-vue.css',
     ],
     js: [
       'https://unpkg.com/vue@2.6.12/dist/vue.js', // 这里如果使用了min.js 则无法在控制台使用vue-devtools

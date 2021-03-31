@@ -1193,33 +1193,53 @@
       },
       /* device添加表单提交*/
       async editorDevice(row) {
+        console.log(row)
+        const {
+          devaddr,
+          detail,
+          ip,
+          isEnable,
+          name,
+          objectId,
+          product,
+          status,
+          updatedAt,
+          basedata = {
+            auth: '',
+            yysId: '',
+          },
+          location = {
+            longitude: '',
+            longitudeL: '',
+          },
+        } = row
         // 这里再去查询tag
         // console.log(row)
         this.deviceform = {}
-        this.deviceid = row.objectId
+        this.deviceid = objectId
         this.devicedialogVisible = true
         this.deviceform = {
-          devaddr: row.devaddr,
-          name: row.name,
-          assetNum: row.detail == undefined ? '' : row.detail.assetNum,
-          devModel: row.detail == undefined ? '' : row.detail.devModel,
-          desc: row.detail == undefined ? '' : row.detail.desc,
-          productid: row.product.objectId,
-          brand: row.detail == undefined ? '' : row.detail.brand,
-          productName: row.product.objectId,
-          status: row.status,
-          isEnable: row.isEnable,
-          address: row.detail == undefined ? '' : row.detail.address,
-          auth: row.basedata.auth == undefined ? '' : row.basedata.auth,
-          yysId: row.basedata.yysId == undefined ? '' : row.basedata.yysId,
+          devaddr: devaddr,
+          name: name,
+          assetNum: detail.assetNum,
+          devModel: detail.devModel,
+          desc: detail.desc,
+          productid: product.objectId,
+          brand: detail.brand,
+          productName: product.objectId,
+          status: status,
+          isEnable: isEnable,
+          address: detail.address,
+          auth: basedata.auth,
+          yysId: basedata.yysId,
         }
         this.bmapform = {
-          address: row.detail == undefined ? '' : row.detail.address,
+          address: detail.address,
         }
 
         this.center = {
-          lat: row.latitude,
-          lng: row.longitude,
+          lat: latitude,
+          lng: longitude,
         }
 
         // row.location.latitude +  row.location.longitude
@@ -1417,8 +1437,8 @@
       ul {
         box-sizing: border-box;
         display: flex;
-        padding-left: 20px;
         width: 200px * 4;
+        padding-left: 20px;
         li {
           width: 200px;
           height: 60px;

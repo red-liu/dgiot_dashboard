@@ -22,27 +22,12 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item
-            :rules="[
-              { required: true, message: '请选择所属应用', trigger: 'blur' },
-            ]"
-            label="所属应用"
-          >
+          <el-form-item label="所属应用" prop="applicationtText">
             <el-input
               v-model="addchannel.applicationtText"
-              placeholder="请选择所属应用"
               readonly
-            >
-              <template slot="append">
-                <i
-                  :class="[
-                    showTree ? 'el-icon-arrow-up' : 'el-icon-arrow-down',
-                  ]"
-                  style="cursor: pointer"
-                  @click="showTree = !showTree"
-                />
-              </template>
-            </el-input>
+              @focus="showTree = !showTree"
+            />
             <div v-if="showTree" class="device-tree">
               <el-tree
                 default-expand-all
@@ -54,26 +39,29 @@
           </el-form-item>
         </el-col>
 
-        <el-form-item label="通道类型" prop="region">
-          <el-select
-            v-model="addchannel.region"
-            style="display: block"
-            placeholder="通道类型"
-            @change="removeauto"
-          >
-            <el-option
-              v-for="(item, index) in channelregion"
-              :key="index"
+        <el-col :span="24">
+          <el-form-item label="通道类型" prop="region">
+            <el-select
+              v-model="addchannel.region"
               style="display: block"
-              :label="item.title.zh"
-              :value="item.cType"
-            />
-          </el-select>
+              placeholder="通道类型"
+              @change="removeauto"
+            >
+              <el-option
+                v-for="(item, index) in channelregion"
+                :key="index"
+                style="display: block"
+                :label="item.title.zh"
+                :value="item.cType"
+              />
+            </el-select>
+          </el-form-item>
           <el-row
             :gutter="24"
             style="
               width: 100%;
               max-height: 500px;
+              margin: 0;
               overflow-x: hidden;
               overflow-y: scroll;
               line-height: 30px;
@@ -130,7 +118,7 @@
               </el-card>
             </el-col>
           </el-row>
-        </el-form-item>
+        </el-col>
         <el-col v-for="(item, index) in arrlist" :key="index" :span="12">
           <el-form-item
             v-show="item.showname != 'ico'"
@@ -207,14 +195,14 @@
         allApps: [],
         arrlist: [],
         addrules: {
-          roles: [
-            { required: true, message: '请选择所属应用', trigger: 'blur' },
+          applicationtText: [
+            { required: true, message: '请选择所属应用', trigger: 'change' },
           ],
           name: [
             { required: true, message: '请输入通道名称', trigger: 'blur' },
           ],
           region: [
-            { required: true, message: '请选择服务类型', trigger: 'change' },
+            { required: true, message: '请选择通道类型', trigger: 'change' },
           ],
         },
         addchannel: {
@@ -256,40 +244,36 @@
         this.handleTabRemove()
       },
       addchannelForm(formName) {
-        if (this.resourceid) {
-          // this.$message("编辑通道")
-          this.editChannel(this.resourceid, formName)
-        } else {
-          this.$refs[formName].validate((valid) => {
-            if (valid && this.addchannel.applicationtText) {
-              var obj = {}
-              for (var key in this.addchannel) {
-                obj[key] = this.addchannel[key]
-              }
-              delete obj.region
-              delete obj.desc
-              delete obj.type
-              delete obj.isEnable
-              delete obj.name
-              const aclKey = 'role' + ':' + this.addchannel.applicationtText
-              const aclObj = {}
-              aclObj[aclKey] = { read: true, write: true }
-              const data = {
-                ACL: aclObj,
-                config: obj,
-                name: this.addchannel.name,
-                cType: this.addchannel.region,
-                desc: this.addchannel.desc,
-                isEnable: false,
-                status: 'OFFLINE',
-                type: this.addchannel.type.toString(),
-              }
-              this.addchannelaxios(data)
-            } else {
-              this.$message('有必填项未填')
+        console.log(this.addchannel.applicationtText)
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            var obj = {}
+            for (var key in this.addchannel) {
+              obj[key] = this.addchannel[key]
             }
-          })
-        }
+            delete obj.region
+            delete obj.desc
+            delete obj.type
+            delete obj.isEnable
+            delete obj.name
+            const aclKey = 'role' + ':' + this.addchannel.applicationtText
+            const aclObj = {}
+            aclObj[aclKey] = { read: true, write: true }
+            const data = {
+              ACL: aclObj,
+              config: obj,
+              name: this.addchannel.name,
+              cType: this.addchannel.region,
+              desc: this.addchannel.desc,
+              isEnable: false,
+              status: 'OFFLINE',
+              type: this.addchannel.type.toString(),
+            }
+            this.addchannelaxios(data)
+          } else {
+            this.$message('有必填项未填')
+          }
+        })
       },
       setCard(item) {
         this.removeauto(item)
@@ -305,14 +289,14 @@
       removeauto(val) {
         var obj = {}
         var obj1 = {
-          roles: [
-            { required: true, message: '请选择所属应用', trigger: 'blur' },
+          applicationtText: [
+            { required: true, message: '请选择所属应用', trigger: 'change' },
           ],
           name: [
             { required: true, message: '请输入通道名称', trigger: 'blur' },
           ],
           region: [
-            { required: true, message: '请选择服务类型', trigger: 'change' },
+            { required: true, message: '请选择通道类型', trigger: 'change' },
           ],
         }
         if (this.resourceid == '') {
@@ -388,10 +372,6 @@
         this.addchannel = obj
         this.addchannel.region = val
         this.addrules = obj1
-        // 选择通道类型后 清除校验规则
-        this.$nextTick(() => {
-          this.$refs['addchannel'].clearValidate()
-        })
       },
       async addchannelaxios(data) {
         await postChannel(data).then((results) => {
@@ -400,7 +380,7 @@
               type: 'success',
               message: this.channelupdated == '编辑' ? '编辑成功' : '创建成功',
             })
-            this.$refs['addchannel'].resetFields()
+            // this.$refs['addchannel'].resetFields()
             this.addchannel = {}
             // this.reload()
             this.channelForm = false
@@ -421,8 +401,12 @@
         this.$router.go(-1)
       },
       handleNodeClick(data) {
+        this.$set(this.addchannel, 'applicationtText', data.name)
         this.showTree = !this.showTree
-        this.addchannel.applicationtText = data.name
+      },
+      clearValidate(type) {
+        console.log(`清除了 ${type} 的规则校验`)
+        this.$refs.addchannel.clearValidate(`${type}`)
       },
       async getResource() {
         const res = await resourceTypes()

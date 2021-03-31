@@ -608,8 +608,8 @@
           status: '',
           isEnable: '',
           brand: '',
-          auth: '12345678',
-          yysId: '09',
+          auth: '',
+          yysId: '',
         },
         yysSelect: [],
         rules: {
@@ -1152,7 +1152,7 @@
           status: '',
           isEnable: '',
           brand: '',
-          auth: '12345678',
+          auth: '',
           yysId: '',
         }
         this.$refs['deviceform'].resetFields()
@@ -1443,11 +1443,13 @@
       width: 100%;
       height: 60px;
       margin: 0 auto;
+
       ul {
         box-sizing: border-box;
         display: flex;
         width: 200px * 4;
         padding-left: 20px;
+
         li {
           width: 200px;
           height: 60px;

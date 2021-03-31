@@ -208,7 +208,7 @@
               />
             </div>
 
-            <el-form ref="ruleForm" :model="form" :rules="rules">
+            <el-form ref="form" :model="form" :rules="rules">
               <el-form-item
                 :label="$translateTitle('product.productname')"
                 prop="name"
@@ -241,17 +241,9 @@
                 <el-input
                   v-model="form.relationApp"
                   placeholder="请选择所属应用"
-                >
-                  <template slot="append">
-                    <i
-                      :class="[
-                        showTree ? 'el-icon-arrow-up' : 'el-icon-arrow-down',
-                      ]"
-                      style="cursor: pointer"
-                      @click="showTree = !showTree"
-                    />
-                  </template>
-                </el-input>
+                  readonly
+                  @focus="showTree = !showTree"
+                />
                 <div v-if="showTree">
                   <el-tree
                     :data="allApps"
@@ -264,24 +256,6 @@
                     :value="item.attributes.title" />
                 </el-select> -->
               </el-form-item>
-            </el-form>
-          </div>
-          <!--节点类型-->
-          <div class="contenttwo" style="margin-top: 20px">
-            <div style="display: flex">
-              <span>{{ $translateTitle('product.nodetype') }}</span>
-              <p
-                style="
-                  flex-grow: 2;
-                  width: auto;
-                  height: 1px;
-                  margin: 10px;
-                  border-top: 1px dashed #dddddd;
-                "
-              />
-            </div>
-
-            <el-form ref="ruleForm" :model="form" :rules="rules">
               <el-form-item
                 :label="$translateTitle('product.nodetype')"
                 prop="nodeType"
@@ -301,25 +275,7 @@
                         <el-radio label="否"></el-radio>
                     </el-radio-group>
               </el-form-item>-->
-            </el-form>
-          </div>
-          <!--连网方式-->
-          <div class="contentthird" style="margin-top: 20px">
-            <div style="display: flex">
-              <span>
-                {{ $translateTitle('product.networkinganddescription') }}
-              </span>
-              <p
-                style="
-                  flex-grow: 2;
-                  width: auto;
-                  height: 1px;
-                  margin: 10px;
-                  border-top: 1px dashed #dddddd;
-                "
-              />
-            </div>
-            <el-form ref="ruleForm" :model="form" :rules="rules">
+
               <el-form-item
                 :label="
                   $translateTitle('product.networking') +
@@ -387,10 +343,25 @@
               </el-form-item>
             </el-form>
           </div>
+          <!--节点类型-->
+          <div class="contenttwo" style="margin-top: 20px">
+            <div style="display: flex">
+              <span>{{ $translateTitle('product.nodetype') }}</span>
+              <p
+                style="
+                  flex-grow: 2;
+                  width: auto;
+                  height: 1px;
+                  margin: 10px;
+                  border-top: 1px dashed #dddddd;
+                "
+              />
+            </div>
+          </div>
         </div>
 
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="submitForm('ruleForm')">
+          <el-button type="primary" @click="submitForm()">
             {{ $translateTitle('developer.determine') }}
           </el-button>
           <el-button @click="dialogFormVisible = false">
@@ -626,9 +597,8 @@
     },
     methods: {
       handleNodeClick(data) {
-        console.log(data)
+        this.$set(this.form, 'relationApp', data.name)
         this.showTree = !this.showTree
-        this.form.relationApp = data.name
       },
       changeNode(val, first) {
         if (first != 0) {
@@ -995,7 +965,7 @@
 
         // console.log(results)
       },
-      submitForm(formName) {
+      submitForm() {
         var params = {}
         var initparams = {
           name: this.form.name,
@@ -1005,7 +975,11 @@
           devType: this.form.devType,
           desc: this.form.desc,
         }
-        this.$refs[formName].validate((valid) => {
+        this.$refs.form.validate((valid) => {
+          // console.log(this.$refs.form)
+          // console.log(this.form)
+          // console.log(valid)
+          // return
           if (valid) {
             // 判断是新增产品还是修改
             if (this.custom_status === 'add') {
@@ -1074,7 +1048,7 @@
         })
         this.dialogFormVisible = false
         this.resetProductForm()
-        this.$refs['ruleForm'].resetFields()
+        this.$refs['form'].resetFields()
         this.searchProduct()
       },
       resetProductForm() {

@@ -309,24 +309,13 @@
           </el-select>
         </el-form-item> -->
 
-        <el-form-item
-          :rules="[
-            { required: true, message: '请选择所属应用', trigger: 'blur' },
-          ]"
-          label="所属应用"
-        >
+        <el-form-item prop="applicationtText" label="所属应用">
           <el-input
             v-model="addchannel.applicationtText"
             placeholder="请选择所属应用"
-          >
-            <template slot="append">
-              <i
-                :class="[showTree ? 'el-icon-arrow-up' : 'el-icon-arrow-down']"
-                style="cursor: pointer"
-                @click="showTree = !showTree"
-              />
-            </template>
-          </el-input>
+            readonly
+            @focus="showTree = !showTree"
+          />
           <div v-if="showTree">
             <el-tree
               :data="allApps"
@@ -481,6 +470,9 @@
         },
         applicationList: [],
         addrules: {
+          applicationtText: [
+            { required: true, message: '请选择所属应用', trigger: 'change' },
+          ],
           roles: [
             { required: true, message: '请选择所属应用', trigger: 'blur' },
           ],
@@ -575,7 +567,7 @@
       },
       handleNodeClick(data) {
         this.showTree = !this.showTree
-        this.addchannel.applicationtText = data.name
+        this.$set(this.addchannel, 'applicationtText', data.name)
       },
       inputChange(val) {
         console.log(val)
@@ -773,6 +765,9 @@
       removeauto(val) {
         var obj = {}
         var obj1 = {
+          applicationtText: [
+            { required: true, message: '请选择所属应用', trigger: 'change' },
+          ],
           roles: [
             { required: true, message: '请选择所属应用', trigger: 'blur' },
           ],

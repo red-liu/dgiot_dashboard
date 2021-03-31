@@ -19,7 +19,7 @@ module.exports = {
   // 需要自动注入并加载的模块
   providePlugin: {},
   // npm run build时是否自动生成7z压缩包
-  build7z: true,
+  build7z: false,
   // npm run build时是否生成gzip
   buildGzip: false,
   // npm run build时是否开启图片压缩，由于国内网路原因image-webpack-loader必须使用cnpm安装，如无法使用cnpm，请配置false

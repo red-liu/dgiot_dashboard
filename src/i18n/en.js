@@ -10,6 +10,13 @@ export default {
       maxConnections: 'Max Connections',
       currentConnections: 'Current Connections',
     },
+    home: {
+      app_count: 'application',
+      pro_count: 'products',
+      app_count: 'provider',
+      dev_count: 'devices',
+      dev_online: 'online equipment',
+    },
     // leftbar
     leftbar: {
       // MONITORING
@@ -83,6 +90,8 @@ export default {
       notSupport: "Your browser doesn't support WebSocket",
     },
     route: {
+      云组态: 'cloudConfigurationt',
+      字典管理: 'Dictionary management',
       词典管理: 'Dictionary management',
       通道管理: 'Channel management',
       设备管理: 'device management',
@@ -505,6 +514,8 @@ export default {
       modulename: 'Module Name',
     },
     equipment: {
+      application: 'application',
+      auth: 'auth code',
       equipmentstatistics: 'Equipment Statistics',
       totalequipment: 'Total',
       activationdevice: 'Activeaction',

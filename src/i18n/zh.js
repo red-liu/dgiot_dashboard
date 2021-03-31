@@ -7,6 +7,13 @@ export default {
       maxConnections: '最大连接数',
       currentConnections: '当前连接数',
     },
+    home: {
+      app_count: '项目总数',
+      pro_count: '产品总数',
+      app_count: '应用总数',
+      dev_count: '设备总数',
+      dev_online: '在线设备',
+    },
     // leftbar
     leftbar: {
       // MONITORING
@@ -85,6 +92,8 @@ export default {
     },
     route: {},
     equipment: {
+      application: '应用商',
+      auth: '授权码',
       equipmentstatistics: '设备统计',
       totalequipment: '设备总数',
       activationdevice: '激活设备',

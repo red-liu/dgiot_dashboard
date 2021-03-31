@@ -23,7 +23,7 @@
               <vab-icon icon="projector-2-fill" />
             </el-col>
             <el-col :span="12" class="card-right">
-              <p>项目总数</p>
+              <p>{{ $translateTitle('home.app_count') }}</p>
               <p>{{ project_count }}</p>
             </el-col>
           </el-card>
@@ -41,7 +41,7 @@
               <vab-icon icon="projector-fill" />
             </el-col>
             <el-col :span="12" class="card-right">
-              <p>产品总数</p>
+              <p>{{ $translateTitle('home.pro_count') }}</p>
               <p>{{ product_count }}</p>
             </el-col>
           </el-card>
@@ -59,7 +59,7 @@
               <vab-icon icon="apps-fill" />
             </el-col>
             <el-col :span="12" class="card-right">
-              <p>应用总数</p>
+              <p>{{ $translateTitle('home.app_count') }}</p>
               <p>{{ app_count }}</p>
             </el-col>
           </el-card>
@@ -77,7 +77,7 @@
               <vab-icon icon="device-recover-fill" />
             </el-col>
             <el-col :span="12" class="card-right">
-              <p>设备总数</p>
+              <p>{{ $translateTitle('home.dev_count') }}</p>
               <p>{{ dev_count }}</p>
             </el-col>
           </el-card>
@@ -95,7 +95,7 @@
               <vab-icon icon="bar-chart-2-line" />
             </el-col>
             <el-col :span="12" class="card-right">
-              <p>在线设备</p>
+              <p>{{ $translateTitle('home.dev_online') }}</p>
               <p>{{ dev_online_count }}</p>
             </el-col>
           </el-card>

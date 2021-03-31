@@ -297,7 +297,7 @@
                 icon="el-icon-edit"
                 @click="editorDevice(scope.row)"
               >
-                编辑
+                {{ $translateTitle('concentrator.edit') }}
               </el-link>
               <el-popover
                 :ref="`popover-${scope.$index}`"
@@ -420,19 +420,28 @@
             <el-form-item :label="$translateTitle('equipment.equipmentbrand')">
               <el-input v-model="deviceform.brand" />
             </el-form-item>
-            <!--            <el-form-item v-if="deviceform.auth" label="授权码">-->
-            <!--              <el-input v-model="deviceform.auth" />-->
-            <!--            </el-form-item>-->
-            <!--            <el-form-item v-if="deviceform.yysId" label="应用商">-->
-            <!--              <el-select v-model="deviceform.yysId" placeholder="应用商">-->
-            <!--                <el-option-->
-            <!--                  v-for="(item, index) in yysSelect"-->
-            <!--                  :key="index"-->
-            <!--                  :label="item.name"-->
-            <!--                  :value="item.key"-->
-            <!--                />-->
-            <!--              </el-select>-->
-            <!--            </el-form-item>-->
+            <el-form-item
+              v-if="deviceform.auth"
+              :label="$translateTitle('equipment.auth')"
+            >
+              <el-input v-model="deviceform.auth" />
+            </el-form-item>
+            <el-form-item
+              v-if="deviceform.yysId"
+              :label="$translateTitle('equipment.auth')"
+            >
+              <el-select
+                v-model="deviceform.yysId"
+                :placeholder="$translateTitle('equipment.auth')"
+              >
+                <el-option
+                  v-for="(item, index) in yysSelect"
+                  :key="index"
+                  :label="item.name"
+                  :value="item.key"
+                />
+              </el-select>
+            </el-form-item>
             <el-form-item
               :label="$translateTitle('equipment.installationlocation')"
             >
@@ -1209,8 +1218,8 @@
             yysId: '',
           },
           location = {
-            longitude: '',
-            longitudeL: '',
+            latitude: '30.307102168533543',
+            longitude: '120.1703918503909',
           },
         } = row
         // 这里再去查询tag
@@ -1238,20 +1247,20 @@
         }
 
         this.center = {
-          lat: latitude,
-          lng: longitude,
+          lat: location.latitude,
+          lng: location.longitude,
         }
 
         // row.location.latitude +  row.location.longitude
         // this.addresspointer = row.latitude + ',' + row.longitude
         this.addresspointer =
-          row.detail == undefined
+          detail == undefined
             ? ''
-            : row.location == undefined
+            : location == undefined
             ? ''
-            : row.location.latitude + row.detail == undefined
+            : location.latitude + row.detail == undefined
             ? ''
-            : row.location.longitude
+            : location.longitude
         this.equipmentEditor = '编辑'
         // this.rolesSelect(row.productid)
 

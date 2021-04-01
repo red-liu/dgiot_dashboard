@@ -217,8 +217,8 @@
               <span>{{ scope.row.product.name }}</span>
             </template>
           </el-table-column>
-
           <el-table-column
+            v-if="Default.title != '云寓智慧公寓平台'"
             :label="$translateTitle('equipment.nodetype')"
             align="center"
           >
@@ -233,17 +233,22 @@
                   <el-tag type="success" v-else>网关</el-tag>-->
             </template>
           </el-table-column>
-          <!--          <el-table-column label="授权码" align="center" width="200">-->
-          <!--            <template slot-scope="scope">-->
-          <!--              <span>-->
-          <!--                {{-->
-          <!--                  scope.row.basedata && scope.row.basedata.auth-->
-          <!--                    ? scope.row.basedata.auth-->
-          <!--                    : ''-->
-          <!--                }}-->
-          <!--              </span>-->
-          <!--            </template>-->
-          <!--          </el-table-column>-->
+          <el-table-column
+            v-show="Default.title == '云寓智慧公寓平台'"
+            label="授权码"
+            align="center"
+            width="200"
+          >
+            <template slot-scope="scope">
+              <span>
+                {{
+                  scope.row.basedata && scope.row.basedata.auth
+                    ? scope.row.basedata.auth
+                    : ''
+                }}
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column
             :label="
               $translateTitle('developer.enable') +
@@ -284,6 +289,7 @@
           >
             <template slot-scope="scope">
               <el-link
+                v-if="Default.title != '云寓智慧公寓平台'"
                 :underline="false"
                 type="primary"
                 icon="el-icon-view"
@@ -421,18 +427,18 @@
               <el-input v-model="deviceform.brand" />
             </el-form-item>
             <el-form-item
-              v-if="deviceform.auth"
+              v-if="Default.title == '云寓智慧公寓平台'"
               :label="$translateTitle('equipment.auth')"
             >
               <el-input v-model="deviceform.auth" />
             </el-form-item>
             <el-form-item
-              v-if="deviceform.yysId"
-              :label="$translateTitle('equipment.auth')"
+              v-if="Default.title == '云寓智慧公寓平台'"
+              :label="$translateTitle('equipment.application')"
             >
               <el-select
                 v-model="deviceform.yysId"
-                :placeholder="$translateTitle('equipment.auth')"
+                :placeholder="$translateTitle('equipment.application')"
               >
                 <el-option
                   v-for="(item, index) in yysSelect"
@@ -532,6 +538,7 @@
   </div>
 </template>
 <script>
+  import { mapGetters } from 'vuex'
   import { get_object } from '@/api/shuwa_parse'
   import { queryDict } from '@/api/Direct/index.js'
   import { Batchdelete } from '@/api/Batch'
@@ -677,6 +684,11 @@
         tagsid: '',
         productroleslist: [],
       }
+    },
+    computed: {
+      ...mapGetters({
+        Default: 'acl/Default',
+      }),
     },
     watch: {
       multipleTable(data) {

@@ -1082,8 +1082,7 @@
       },
 
       async addDict_temp(form) {
-        const aclKey =
-          'role' + ':' + JSON.parse(this.$Cookies.get('roles'))[0].name
+        const aclKey = 'role' + ':' + JSON.parse(Cookies.get('roles'))[0].name
         const set_acl = {}
         set_acl[aclKey] = {
           read: true,

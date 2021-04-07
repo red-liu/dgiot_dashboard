@@ -75,6 +75,7 @@ const actions = {
     const data = await login(userInfo)
     const token = data[tokenName]
     const { nick, objectId } = data
+    Cookies.set('roles', data)
     if (nick) commit('setUsername', nick)
     if (objectId) commit('setObejectId', objectId)
     const page_title = getToken('title', 'sessionStorage') || title

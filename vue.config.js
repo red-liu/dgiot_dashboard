@@ -59,8 +59,7 @@ module.exports = {
     },
     proxy: {
       [baseURL]: {
-        // target: proxyUrl.sukeUrl,
-        target: 'http://192.168.1.27:5080/',
+        target: 'http://prod.iotn2n.com/',
         ws: true,
         changeOrigin: true,
         pathRewrite: {

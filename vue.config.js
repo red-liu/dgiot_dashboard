@@ -38,7 +38,7 @@ process.env.VUE_APP_VERSION = version
 process.env.VUE_APP_RELY = rely
 process.env.VUE_APP_Keywords = Keywords
 process.env.VUE_APP_Description = Description
-process.env.VUE_APP_URL = proxyUrl.suke168
+process.env.VUE_APP_URL = proxyUrl
 const resolve = (dir) => {
   return path.join(__dirname, dir)
 }

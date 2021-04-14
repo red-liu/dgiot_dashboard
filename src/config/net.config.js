@@ -18,17 +18,6 @@ module.exports = {
   statusName: 'code',
   // 状态信息的字段名称
   messageName: 'msg',
-  proxyUrl: {
-    // 175
-    xinmaheUrl: 'http://47.110.83.36',
-    toppanDocx: 'http://124.156.217.175:8085',
-    PrometheusUrl: 'http://101.32.100.234:9090',
-    server: 'http://132.232.119.105',
-    sukeUrl: 'http://118.31.59.148',
-    suke168: 'http://suke168.com',
-    prodUrl: 'http://prod.iotn2n.com',
-    Url112: 'http://121.40.78.136:5080',
-    Url114: 'http://114.117.171.37',
-    imgurl: 'http://101.32.100.234:3000',
-  },
+  // 服务器代理地址
+  proxyUrl: 'http://prod.iotn2n.com',
 }

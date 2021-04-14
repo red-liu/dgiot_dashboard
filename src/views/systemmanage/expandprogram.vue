@@ -218,7 +218,7 @@
           ProductKey: '',
           ProductAll: 0,
         },
-        swaggerPath: '',
+        swaggerPath: process.env.VUE_APP_URL + '/swagger/#/',
         decoderstart: 0,
         decodertotal: 0,
         decoderlength: 10,
@@ -254,7 +254,6 @@
       },
     },
     mounted() {
-      this.swaggerPath = process.env.VUE_APP_URL + '/swagger/#/'
       // editor编辑器使用
       editor2 = ace.edit('editor2')
       editor2.session.setMode('ace/mode/python') // 设置语言
@@ -268,11 +267,18 @@
       // this.Industry();
       // this.getAllunit();
       this.getAllDict()
+      this.setPath()
       if (this.$route.query.activeName) {
         this.activeName = this.$route.query.activeName
       }
     },
     methods: {
+      setPath() {
+        console.log(process.env.NODE_ENV)
+        if (process.env.NODE_ENV !== 'development') {
+          this.swaggerPath = location.origin + '/swagger/#/'
+        }
+      },
       // 李宏杰新增   下架api
       handleDelete(index, type, mod) {
         this.$confirm('确认要下架该api吗？')

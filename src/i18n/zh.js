@@ -172,6 +172,10 @@ export default {
       powersupply: '供电单位',
     },
     developer: {
+      Application: '应用商',
+      Company: '单位',
+      authcode: '授权码',
+      createdAt: '创建时间',
       servicechannelmanagement: '服务通道管理',
       servicechannel: '服务通道',
       equipmentchannel: '设备通道',

@@ -178,22 +178,27 @@
             >
               <el-table-column type="selection" align="center" width="55" />
               <el-table-column
-                :label="
-                  $translateTitle('equipment.devicenumber') +
-                  '/' +
-                  $translateTitle('equipment.name')
-                "
+                :label="$translateTitle('equipment.devicenumber')"
                 align="center"
               >
                 <template slot-scope="scope">
-                  <span>{{ scope.row.devaddr }}</span>
-                  <p style="margin: 0; color: green">{{ scope.row.name }}</p>
+                  {{ scope.row.devaddr }}
+                </template>
+              </el-table-column>
+              <el-table-column
+                :label="$translateTitle('equipment.name')"
+                align="center"
+              >
+                <template slot-scope="scope">
+                  <span style="margin: 0; color: green">
+                    {{ scope.row.name }}
+                  </span>
                 </template>
               </el-table-column>
               <el-table-column
                 :label="$translateTitle('equipment.state')"
                 align="center"
-                width="200"
+                width="80"
               >
                 <template slot-scope="scope">
                   <span
@@ -244,7 +249,7 @@
                 </template>
               </el-table-column>
               <el-table-column
-                v-if="Default.title != '云寓智慧公寓平台'"
+                v-if="Company != '云寓智慧公寓平台'"
                 :label="$translateTitle('equipment.nodetype')"
                 align="center"
               >
@@ -260,10 +265,10 @@
                 </template>
               </el-table-column>
               <el-table-column
-                v-if="Default.title == '云寓智慧公寓平台'"
-                label="授权码"
+                v-if="Company == '云寓智慧公寓平台'"
+                :label="$translateTitle('developer.authcode')"
                 align="center"
-                width="200"
+                width="100"
               >
                 <template slot-scope="scope">
                   <span>
@@ -276,13 +281,35 @@
                 </template>
               </el-table-column>
               <el-table-column
+                v-if="Company == '云寓智慧公寓平台'"
+                :label="$translateTitle('developer.Company')"
+                align="center"
+                width="200"
+              >
+                <span>
+                  {{ toggeleCompany }}
+                </span>
+              </el-table-column>
+              <el-table-column
+                v-if="Company == '云寓智慧公寓平台'"
+                :label="$translateTitle('developer.Application')"
+                align="center"
+                width="200"
+              >
+                <template slot-scope="scope">
+                  <span>
+                    {{ scope.row.basedata.yysId }}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column
                 :label="
                   $translateTitle('developer.enable') +
                   '/' +
                   $translateTitle('developer.prohibit')
                 "
                 align="center"
-                width="200"
+                width="100"
               >
                 <template slot-scope="scope">
                   <el-switch
@@ -304,7 +331,11 @@
               <!--              <span v-else>—</span>-->
               <!--            </template>-->
               <!--          </el-table-column>-->
-              <el-table-column label="创建时间" width="200">
+              <el-table-column
+                align="center"
+                :label="$translateTitle('developer.createdAt')"
+                width="200"
+              >
                 <template slot-scope="scope">
                   <span>{{ utc2beijing(scope.row.createdAt) }}</span>
                 </template>
@@ -315,7 +346,7 @@
               >
                 <template slot-scope="scope">
                   <el-link
-                    v-if="Default.title != '云寓智慧公寓平台'"
+                    v-if="Company != '云寓智慧公寓平台'"
                     :underline="false"
                     type="primary"
                     icon="el-icon-view"
@@ -452,13 +483,13 @@
                   <el-input v-model="deviceform.brand" />
                 </el-form-item>
                 <el-form-item
-                  v-if="Default.title == '云寓智慧公寓平台'"
+                  v-if="Company == '云寓智慧公寓平台'"
                   :label="$translateTitle('equipment.auth')"
                 >
                   <el-input v-model="deviceform.auth" />
                 </el-form-item>
                 <el-form-item
-                  v-if="Default.title == '云寓智慧公寓平台'"
+                  v-if="Company == '云寓智慧公寓平台'"
                   :label="$translateTitle('equipment.application')"
                 >
                   <el-select
@@ -578,6 +609,7 @@
   </div>
 </template>
 <script>
+  import * as utils from '@/utils/vuex'
   import { mapGetters } from 'vuex'
   import { get_object } from '@/api/shuwa_parse'
   import { queryDict } from '@/api/Direct/index.js'
@@ -620,6 +652,8 @@
         }
       }
       return {
+        toggeleCompany: '',
+        Company: '',
         access_token: '',
         curDepartmentId: '',
         deptTreeData: [],
@@ -736,7 +770,6 @@
     },
     computed: {
       ...mapGetters({
-        Default: 'acl/Default',
         token: 'user/token',
       }),
     },
@@ -751,10 +784,11 @@
       },
     },
     mounted() {
+      let Default = utils.getToken('Default', 'sessionStorage')
+      this.Company = JSON.parse(Default)['title']
       this.access_token = store.getters['user/token']
       this.getMenu()
       this.searchProduct()
-      this.getDevices(0)
       this.queryYysId()
       language = Cookies.get('language')
       // this.$store.dispatch('getUserId', '111')
@@ -764,9 +798,10 @@
     },
     methods: {
       async getMenu() {
-        const res = await Roletree()
-        if (res) {
-          this.deptTreeData = res.results
+        const { results } = await Roletree()
+        if (results) {
+          this.deptTreeData = results
+          this.handleNodeClick(results[0], 0)
         } else {
           this.$message('部门列表获取失败')
           this.deptTreeData = []
@@ -781,7 +816,10 @@
         } else {
           this.access_token = store.getters['user/token']
         }
-        this.curDepartmentId = data.objectId
+        // 点击的公司名
+        const { name, objectId } = data
+        this.curDepartmentId = objectId
+        this.toggeleCompany = name
         this.getDevices(0)
       },
       async queryYysId() {
@@ -1519,7 +1557,7 @@
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
   .equtabs {
-    height: calc(100vh - #{$base-top-bar-height}* 4 - 0px);
+    height: calc(100vh - #{$base-top-bar-height}* 4 - 56px);
     margin: 20px;
     overflow-x: hidden;
     overflow-y: scroll;
@@ -1567,8 +1605,9 @@
     }
   }
   .leftTree {
-    height: calc(100vh - #{$base-top-bar-height}* 4 + 56px);
-    overflow-x: hidden;
+    height: calc(100vh - #{$base-top-bar-height}* 4 - 56px);
+    width: 200px;
+    overflow-x: scroll;
     overflow-y: scroll;
   }
   .equipment .el-tabs__item {

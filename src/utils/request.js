@@ -57,7 +57,10 @@ const handleData = ({ config, data, status, statusText }) => {
       // return data.data ? data.data : data.msg
       // 或者依然保持完整的格式
       return data
-    case 401 || 209:
+    case 401:
+      backHome()
+      break
+    case 209:
       backHome()
       break
     case 403:

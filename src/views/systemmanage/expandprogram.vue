@@ -97,7 +97,7 @@
         <div class="protolheader">
           <el-tabs v-model="activeName" size="mini">
             <el-tab-pane label="设计" name="design">
-              <json-edit ref="jsonEditor" v-model="itemSwagger" />
+              <JsonEditor ref="jsonEdit" v-model="itemSwagger" />
             </el-tab-pane>
             <el-tab-pane label="编码" name="code">
               <el-form
@@ -152,7 +152,7 @@
   import { getDeviceCountByProduct } from '@/api/Device/index'
   import { getChannelCountByProduct } from '@/api/Channel/index'
   import { getAllunit, getDictCount } from '@/api/Dict/index'
-  import jsonEdit from './jsonEdit/index'
+  import JsonEditor from '@/components/jsonEditor/index'
   // const Base64 = require('js-base64').Base64
   import {
     delExproto,
@@ -179,7 +179,9 @@
   import { returnLogin } from '@/utils/return'
   export default {
     name: 'ThingsParse',
-    components: { jsonEdit },
+    components: {
+      JsonEditor,
+    },
     props: {},
     data() {
       var validCode = (rule, value, callback) => {

@@ -771,12 +771,12 @@
       async handleNodeClick(data, node) {
         if (node.level != 1) {
           // 在这里获取点击厂家的session
-          this.curDepartmentId = data.objectId
           const { access_token = '' } = await getToken(data.name)
           this.access_token = access_token
         } else {
           this.access_token = store.getters['user/token']
         }
+        this.curDepartmentId = data.objectId
         this.getDevices(0)
       },
       async queryYysId() {

@@ -254,21 +254,7 @@
       },
     },
     mounted() {
-      const hostIncludes = [
-        '192.168.2.69',
-        '192.168.2.58',
-        '127.0.0.1',
-        'localhost',
-      ]
-      const { hostname } = location
-
-      if (!hostIncludes.includes(hostname)) {
-        this.swaggerPath = hostname + '' + ':5080/swagger/#/'
-      } else {
-        this.swaggerPath = 'http://pump.iotn2n.com:5080/swagger/#/'
-      }
-      console.log(` this.swaggerPath is ${this.swaggerPath}`)
-
+      this.swaggerPath = process.env.VUE_APP_URL + '/swagger/#/'
       // editor编辑器使用
       editor2 = ace.edit('editor2')
       editor2.session.setMode('ace/mode/python') // 设置语言

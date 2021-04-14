@@ -38,6 +38,7 @@ process.env.VUE_APP_VERSION = version
 process.env.VUE_APP_RELY = rely
 process.env.VUE_APP_Keywords = Keywords
 process.env.VUE_APP_Description = Description
+process.env.VUE_APP_URL = proxyUrl.suke168
 const resolve = (dir) => {
   return path.join(__dirname, dir)
 }
@@ -59,7 +60,7 @@ module.exports = {
     },
     proxy: {
       [baseURL]: {
-        target: 'http://121.40.78.136:5080',
+        target: process.env.VUE_APP_URL,
         ws: true,
         changeOrigin: true,
         pathRewrite: {

@@ -1,58 +1,9 @@
 <template>
   <div class="equipment">
-    <div class="equ_header">
-      <ul>
-        <li>
-          <p>
-            <span class="svg-container">
-              <vab-icon icon="device-fill" />
-            </span>
-            {{ $translateTitle('equipment.totalequipment') }}
-            <el-tooltip
-              :content="$translateTitle('equipment.totalequipment')"
-              placement="top"
-            >
-              <i class="el-icon-question" />
-            </el-tooltip>
-          </p>
-          <span>{{ devicetotal }}</span>
-        </li>
-        <!--        <li>-->
-        <!--          <p>-->
-        <!--            <span class="svg-container">-->
-        <!--              <vab-icon icon="numbers-fill" />-->
-        <!--            </span>-->
-        <!--            {{ $translateTitle('equipment.activationdevice') }}-->
-        <!--            <el-tooltip-->
-        <!--              :content="$translateTitle('equipment.totalactive')"-->
-        <!--              placement="top"-->
-        <!--            >-->
-        <!--              <i class="el-icon-question" />-->
-        <!--            </el-tooltip>-->
-        <!--          </p>-->
-        <!--          <span>{{ activeall }}</span>-->
-        <!--        </li>-->
-        <li>
-          <p>
-            <span class="svg-container">
-              <vab-icon icon="24-hours-line" />
-            </span>
-            {{ $translateTitle('equipment.onlinedevices') }}
-            <el-tooltip
-              :content="$translateTitle('equipment.totalonline')"
-              placement="top"
-            >
-              <i class="el-icon-question" />
-            </el-tooltip>
-          </p>
-          <span>{{ onlineall }}</span>
-        </li>
-      </ul>
-    </div>
     <div class="equtabs">
       <!--tabs第一个标签页-->
       <el-row :gutter="24">
-        <el-col :span="4">
+        <el-col :span="3">
           <div class="leftTree">
             <el-tree
               :data="deptTreeData"
@@ -74,7 +25,56 @@
             </el-tree>
           </div>
         </el-col>
-        <el-col :span="20">
+        <el-col :span="21">
+          <div class="equ_header">
+            <ul>
+              <li>
+                <p>
+                  <span class="svg-container">
+                    <vab-icon icon="device-fill" />
+                  </span>
+                  {{ $translateTitle('equipment.totalequipment') }}
+                  <el-tooltip
+                    :content="$translateTitle('equipment.totalequipment')"
+                    placement="top"
+                  >
+                    <i class="el-icon-question" />
+                  </el-tooltip>
+                </p>
+                <span>{{ devicetotal }}</span>
+              </li>
+              <!--        <li>-->
+              <!--          <p>-->
+              <!--            <span class="svg-container">-->
+              <!--              <vab-icon icon="numbers-fill" />-->
+              <!--            </span>-->
+              <!--            {{ $translateTitle('equipment.activationdevice') }}-->
+              <!--            <el-tooltip-->
+              <!--              :content="$translateTitle('equipment.totalactive')"-->
+              <!--              placement="top"-->
+              <!--            >-->
+              <!--              <i class="el-icon-question" />-->
+              <!--            </el-tooltip>-->
+              <!--          </p>-->
+              <!--          <span>{{ activeall }}</span>-->
+              <!--        </li>-->
+              <li>
+                <p>
+                  <span class="svg-container">
+                    <vab-icon icon="24-hours-line" />
+                  </span>
+                  {{ $translateTitle('equipment.onlinedevices') }}
+                  <el-tooltip
+                    :content="$translateTitle('equipment.totalonline')"
+                    placement="top"
+                  >
+                    <i class="el-icon-question" />
+                  </el-tooltip>
+                </p>
+                <span>{{ onlineall }}</span>
+              </li>
+            </ul>
+          </div>
           <div style="margin-top: 20px" class="equdevices">
             <el-select
               v-model="equvalue"
@@ -376,16 +376,6 @@
                 </template>
               </el-table-column>
             </el-table>
-            <div class="elpagination" style="margin-top: 20px">
-              <el-pagination
-                :page-sizes="[10, 20, 30, 50]"
-                :page-size="devicelength"
-                :total="devicetotal"
-                layout="total, sizes, prev, pager, next, jumper"
-                @size-change="deviceSizeChange"
-                @current-change="deviceCurrentChange"
-              />
-            </div>
           </div>
           <!--添加设备弹窗-->
           <el-dialog
@@ -424,7 +414,11 @@
                   :label="$translateTitle('equipment.devicenumber')"
                   prop="devaddr"
                 >
-                  <el-input v-model="deviceform.devaddr" />
+                  <el-input
+                    v-model="deviceform.devaddr"
+                    :disabled="equipmentEditor == '编辑'"
+                    :readonly="equipmentEditor == '编辑'"
+                  />
                 </el-form-item>
                 <el-form-item
                   :label="$translateTitle('product.productname')"
@@ -432,8 +426,9 @@
                 >
                   <el-select
                     v-model="deviceform.productName"
+                    :disabled="equipmentEditor == '编辑'"
+                    :readonly="equipmentEditor == '编辑'"
                     :placeholder="$translateTitle('equipment.entername')"
-                    :disabled="!productenable || !changeproduct"
                   >
                     <el-option
                       v-for="(item, index) in proTableData1"
@@ -569,6 +564,16 @@
           </el-dialog>
         </el-col>
       </el-row>
+    </div>
+    <div class="elpagination" style="margin-top: 20px">
+      <el-pagination
+        :page-sizes="[10, 20, 30, 50]"
+        :page-size="devicelength"
+        :total="devicetotal"
+        layout="total, sizes, prev, pager, next, jumper"
+        @size-change="deviceSizeChange"
+        @current-change="deviceCurrentChange"
+      />
     </div>
   </div>
 </template>
@@ -1512,12 +1517,12 @@
     },
   }
 </script>
-<style lang="scss" scoped>
-  .equipment {
-    box-sizing: border-box;
-    width: 100%;
-    height: 100%;
-    padding: 20px;
+<style lang="scss" rel="stylesheet/scss" scoped>
+  .equtabs {
+    height: calc(100vh - #{$base-top-bar-height}* 4 - 0px);
+    margin: 20px;
+    overflow-x: hidden;
+    overflow-y: scroll;
 
     .equ_header {
       box-sizing: border-box;
@@ -1561,8 +1566,11 @@
       }
     }
   }
-</style>
-<style>
+  .leftTree {
+    height: calc(100vh - #{$base-top-bar-height}* 4 + 56px);
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
   .equipment .el-tabs__item {
     height: 50px;
     margin: 0;

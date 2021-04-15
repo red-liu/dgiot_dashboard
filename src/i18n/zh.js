@@ -219,6 +219,9 @@ export default {
       disabled: '已禁用',
     },
     product: {
+      config: '配置',
+      dict: '词典',
+      edit: '设备',
       myproduct: '我的产品',
       createproduct: '创建产品',
       searchproductname: '请输入产品名称搜索',

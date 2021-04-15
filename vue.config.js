@@ -24,7 +24,6 @@ const {
   Description,
   dateTime,
 } = require('./src/config')
-const rely = require('vue-plugin-rely')
 const { version, author } = require('./package.json')
 const Webpack = require('webpack')
 const WebpackBar = require('webpackbar')
@@ -35,7 +34,6 @@ process.env.VUE_APP_TITLE = title
 process.env.VUE_APP_AUTHOR = author
 process.env.VUE_APP_UPDATE_TIME = dateTime
 process.env.VUE_APP_VERSION = version
-process.env.VUE_APP_RELY = rely
 process.env.VUE_APP_Keywords = Keywords
 process.env.VUE_APP_Description = Description
 process.env.VUE_APP_URL = proxyUrl

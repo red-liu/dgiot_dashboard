@@ -1605,10 +1605,16 @@
     }
   }
   .leftTree {
-    height: calc(100vh - #{$base-top-bar-height}* 4 - 56px);
+    height: calc(100vh - #{$base-top-bar-height}* 4 - 20px);
     width: 200px;
     overflow-x: scroll;
     overflow-y: scroll;
+    ::v-deep .el-tree {
+      height: calc(100vh - 60px * 4 - 20px);
+      width: 200px;
+      overflow-x: scroll;
+      overflow-y: scroll;
+    }
   }
   .equipment .el-tabs__item {
     height: 50px;

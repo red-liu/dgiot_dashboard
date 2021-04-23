@@ -18,26 +18,26 @@
         style="margin-top: 20px"
         @node-click="handleNodeClick"
       >
-        <span slot-scope="{ node, data }">
+        <span slot-scope="{ n, d }">
           <!-- <img :src='imgsrc' style="width:20px;height:20px;" v-if="data.icon=='集中器'"> -->
           <svg-icon
-            v-if="data.icon == '质检中心'"
+            v-if="d.icon == '质检中心'"
             icon-class="质检中心"
             style="width: 20px; height: 20px"
           />
           <svg-icon
-            v-else-if="data.icon == '泵单位'"
+            v-else-if="d.icon == '泵单位'"
             icon-class="水泵企业"
             style="width: 20px; height: 20px"
           />
           <svg-icon
-            v-else-if="data.icon == '实验室'"
+            v-else-if="d.icon == '实验室'"
             icon-class="实验室"
             style="width: 20px; height: 20px"
           />
           <!-- <img :src='imgsrc4' style="width:20px;height:20px;" v-else-if="data.icon=='线路'">
               <img :src='imgsrc5' style="width:20px;height:20px;" v-else-if="data.icon=='电表'"> -->
-          <span style="padding-left: 4px">{{ node.label }}</span>
+          <span style="padding-left: 4px">{{ n.label }}</span>
         </span>
       </el-tree>
     </div>
@@ -48,7 +48,12 @@
   import { regionData } from 'element-china-area-data'
   export default {
     name: 'Pumpdepartment',
-    props: ['regiondata'],
+    props: {
+      regiondata: {
+        type: Object,
+        default: null,
+      },
+    },
     data() {
       return {
         search: '',
@@ -62,7 +67,6 @@
         treeData1: [],
 
         data1: [],
-        node: [],
         resolve: [],
       }
     },

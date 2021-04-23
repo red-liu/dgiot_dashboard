@@ -28,7 +28,7 @@
     },
     computed: {
       factoryName() {
-        // return this.$store.state.SMHuser.factoryName
+        return this.$store.state.SMHuser.factoryName
       },
       ...mapState({
         /*    currentFactoryData: state => state.SMHuser.currentFactoryData*/
@@ -327,11 +327,11 @@
 </script>
 <style lang="scss">
   .view-chart-box {
-    height: 380px;
-    width: 100%;
-    text-align: center;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 380px;
+    text-align: center;
   }
 </style>

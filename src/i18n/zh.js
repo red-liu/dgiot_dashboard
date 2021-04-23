@@ -8,6 +8,13 @@ export default {
       currentConnections: '当前连接数',
     },
     home: {
+      updatedAt: '更新时间',
+      preview: '查看产品',
+      login: '进入登录',
+      unit: '工程单位',
+      scale: '服务规模',
+      category: '所属行业',
+      messag_loding: '数据请求中',
       cla_count: '项目总数',
       pro_count: '产品总数',
       app_count: '应用总数',
@@ -92,6 +99,7 @@ export default {
     },
     route: {},
     equipment: {
+      move: '迁移',
       application: '应用商',
       auth: '授权码',
       equipmentstatistics: '设备统计',
@@ -149,6 +157,7 @@ export default {
       userinfo: '个人信息',
     },
     concentrator: {
+      konva: '组态',
       concentrator: '集中器',
       input: '请输入内容',
       search: '查询',

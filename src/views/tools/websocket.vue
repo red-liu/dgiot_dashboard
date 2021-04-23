@@ -296,6 +296,7 @@
     Card,
   } from 'element-ui'
   import MQTTConnect from '@/components/MQTTConnect/index'
+  import { _scokethost } from '@/utils/wxscoket'
   export default {
     name: 'WebsocketView',
     components: {
@@ -318,12 +319,18 @@
       }
       next()
     },
+    props: {
+      topic: {
+        type: String,
+        default: '',
+      },
+    },
     data() {
       return {
         retryTimes: 0,
         loading: false,
         sending: false,
-        host: window.location.hostname,
+        host: _scokethost,
         port: 8083,
         path: '/mqtt',
         username: '',
@@ -449,7 +456,7 @@
         }
       },
       mqttSubscribe() {
-        if (this.client.connected) {
+        if (this.client.connected || this.subTopic) {
           this.subscriptions.forEach((x, index) => {
             if (x.topic === this.subTopic) {
               this.subscriptions.splice(index, index + 1)
@@ -596,6 +603,13 @@
         }
       },
       loadConnect() {
+        if (this.topic) {
+          console.log(this.topic, 'topic')
+          this.subTopic = this.topic
+          this.publishTopic = this.topic
+          this.mqttConnect()
+          this.mqttSubscribe()
+        }
         if (MQTTConnect.client && MQTTConnect.client.connected) {
           this.client = MQTTConnect.client
           Object.keys(MQTTConnect.options).forEach((item) => {
@@ -639,8 +653,8 @@
       width: 100%;
     }
     .refresh-btn {
-      font-size: 12px;
       margin-left: 8px;
+      font-size: 12px;
       cursor: pointer;
     }
     .connect-state {

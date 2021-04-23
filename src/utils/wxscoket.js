@@ -1,14 +1,21 @@
 var TOPIC_EMPTY = 'topic为空！'
 var MSG_EMPTY = '消息内容为空！'
 var DISCONNECT_MSG = '当前尚未连接'
-import { tokenTableName, storage } from '@/config'
-import { getToken } from '@/utils/vuex'
+var userName = 'konva'
+let localHost = [
+  'dgiotdashboard-8gb17b3673ff6cdd-1253666439.tcloudbaseapp.com',
+  'dgiiot.gitee.io',
+  'dgiot.github.io',
+]
 var clientssession = getToken(tokenTableName, storage)
-console.log('clientssession', clientssession)
 var info = {
   topic: 'web/' + clientssession,
   qos: 2,
 }
+import { tokenTableName, storage } from '@/config'
+import globalUrl from '@/utils/globalUrl'
+import { getToken } from '@/utils/vuex'
+const { hostname } = window.location
 function getsession(session) {
   clientssession = session
   info = {
@@ -52,17 +59,21 @@ var sendInfo = {
   qos: 0,
   retained: true,
 }
-
+// if (process.env.NODE_ENV == 'development') {
+//   localHost.push('localhost', '127.0.0.1')
+// }
+let _scokethost =
+  globalUrl(hostname, localHost).split('//')[1] || location.hostname
 // eslint-disable-next-line no-unused-vars
 var Websocket = {
   modName: 'websocket',
   client: null,
   connState: false,
   cInfo: {
-    host: location.hostname,
+    host: _scokethost,
     port: 8083,
     clientId: 'C_' + new Date().getTime(),
-    userName: 'test',
+    userName: userName,
     password: 'test123',
     keepAlive: null,
     keepAliveInterval: 10,
@@ -109,21 +120,25 @@ var Websocket = {
   },
 
   add_hook: function (Re, Callback) {
-    if (this.hooks.length > 0) {
-      for (var i = 0; i < this.hooks.length; i++) {
-        if (this.hooks[i].re.toString() == Re.toString()) {
-          this.hooks[i].re = Re
-          this.hooks[i].callback = Callback
+    var _this = this
+    if (_this.hooks.length > 0) {
+      for (var i = 0; i < _this.hooks.length; i++) {
+        if (_this.hooks[i].re.toString() == Re.toString()) {
+          _this.hooks[i].re = Re
+          _this.hooks[i].callback = Callback
           return
         }
       }
     }
-    this.hooks.push({ re: Re, callback: Callback })
+    _this.hooks.push({ re: Re, callback: Callback })
   },
 
   dispatch: function (message) {
+    console.log('message', message)
+    var _this = this
     var topic = message.destinationName
-    this.hooks.map((item) => {
+    const hooks = _this.hooks
+    hooks.map((item) => {
       if (item.re.test(topic)) {
         item.callback(message.payloadString)
       }
@@ -136,7 +151,6 @@ var Websocket = {
     if (_this.client && _this.client.isConnected()) {
       return
     } else {
-      console.log('139', 139)
       _this.newClient()
     }
     _this.client.onConnectionLost = function (responseObject) {
@@ -211,7 +225,6 @@ var Websocket = {
   },
   subscribe: function (subInfo, callback) {
     var _this = this
-    console.log(_this, '_this')
     if (!_this.client || !_this.client.isConnected()) {
       console.log(DISCONNECT_MSG)
       _this.connect()
@@ -308,4 +321,5 @@ export {
   DISCONNECT_MSG,
   didata,
   getsession,
+  _scokethost,
 }

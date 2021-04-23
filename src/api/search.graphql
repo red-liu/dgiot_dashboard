@@ -1,0 +1,13 @@
+query GameScores {
+    gameScores {
+      results {
+        id
+        updatedAt
+        createdAt
+        playerName
+        score
+        cheatMode
+        ACL
+      }
+    }
+  }

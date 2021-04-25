@@ -68,6 +68,7 @@ var sendInfo = {
 // }
 let _scokethost =
   globalUrl(hostname, localHost).split('//')[1] || location.hostname
+console.log(_scokethost)
 // eslint-disable-next-line no-unused-vars
 var Websocket = {
   modName: 'websocket',

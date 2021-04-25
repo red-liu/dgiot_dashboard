@@ -928,6 +928,7 @@
           path: '/Topo/VueKonva',
           query: {
             deviceid: row.objectId,
+            type: 'product',
           },
         })
       },

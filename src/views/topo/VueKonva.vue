@@ -64,6 +64,7 @@
   import setText from '@/utils/konva/setText'
   import konva from '@/api/Mock/konva'
   import websocket from '@/views/tools/websocket'
+  import { _getTopo } from '@/api/Topo'
   export default {
     components: {
       websocket,
@@ -259,9 +260,17 @@
         const { tween } = await setText(this.stage.find(`#${id}`)[0], text)
       },
       // js 绘制
-      createKonva() {
-        if (this.deviceid) {
+      async createKonva() {
+        console.log('query info', this.$route.query)
+        let params = {
+          objectId: this.$route.query.deviceid,
+          type: this.$route.query.type,
+        }
+        // const { msg = '' } = await _getTopo(params)
+        const msg = await _getTopo(params)
+        if (msg == 'SUCCESS') {
           this.subscribe(this.deviceid)
+          this.$message('订阅mqtt消息')
         }
         console.log(JSON.stringify(this.konva))
         let konvaConfig = this.konva

@@ -38,5 +38,6 @@ module.exports = {
     504: '网关超时',
   },
   // 服务器代理地址
-  proxyUrl: 'http://132.232.12.21',
+  // proxyUrl: 'http://132.232.12.21',
+  proxyUrl: 'http://192.168.1.23:5080',
 }

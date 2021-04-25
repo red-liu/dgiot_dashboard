@@ -451,6 +451,6 @@
   </el-container>
 </template>
 
-<script src="./assets/Inspection.js" lang="js"></script>
+<script src="./assets/Inspection/index.js" lang="js"></script>
 
-<style src="./assets/Inspection.scss" lang="scss" scoped></style>
+<style src="./assets/Inspection/index.scss" lang="scss" scoped></style>

@@ -49,6 +49,7 @@ const handleData = ({ config, data, status, statusText }) => {
   let code = data && data[statusName] ? data[statusName] : status
   // 若code属于操作正常code，则status修改为200
   if (codeVerificationArray.includes(code)) code = 200
+  console.log(code)
   switch (code) {
     case 200:
       // 业务层级错误处理，以下是假定restful有一套统一输出格式(指不管成功与否都有相应的数据格式)情况下进行处理

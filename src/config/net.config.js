@@ -20,7 +20,7 @@ module.exports = {
   statusName: 'code',
   // 状态信息的字段名称
   messageName: 'msg',
-  // code 状态码显示字段
+  // code massage
   CODE_MESSAGE: {
     200: '服务器成功返回请求数据',
     201: '新建或修改数据成功',
@@ -38,6 +38,6 @@ module.exports = {
     504: '网关超时',
   },
   // 服务器代理地址
-  // proxyUrl: 'http://132.232.12.21',
+  // proxyUrl: 'https://prod.iotn2n.com',
   proxyUrl: 'http://192.168.1.23:5080',
 }

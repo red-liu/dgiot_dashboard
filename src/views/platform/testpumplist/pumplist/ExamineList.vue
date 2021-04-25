@@ -347,14 +347,11 @@
 
   import RoleTree from '@/views/platform/testpumplist/pumplist/RoleTree'
 
-  import PerformanceDataCurve from '@/views/platform/testpumplist/PerformanceDataCurve'
-
   import { eventBus } from '@/api/eventBus'
 
   export default {
     name: 'ExamineList',
     components: {
-      PerformanceDataCurve,
       RoleTree,
     },
     data() {
@@ -525,19 +522,19 @@
           return this.$globalConfig.serverURL.replace(/\/iotapi/g, '')
         }
       },
-      currentTestData: {
-        set() {},
-        get() {
-          if (this.allResultList && this.allResultList.length > 0) {
-            this.resTempArray = this.allResultList[this.allResultListIndex][
-              'data'
-            ]
-          }
-          eventBus.$emit('itemChange', this.resTempArray)
+      // currentTestData: {
+      //   set() {},
+      //   get() {
+      //     if (this.allResultList && this.allResultList.length > 0) {
+      //       this.resTempArray = this.allResultList[this.allResultListIndex][
+      //         'data'
+      //       ]
+      //     }
+      //     eventBus.$emit('itemChange', this.resTempArray)
 
-          return this.resTempArray
-        },
-      },
+      //     return this.resTempArray
+      //   },
+      // },
     },
     created() {},
     mounted() {
@@ -896,9 +893,9 @@
 </script>
 <style scope>
   .inspection {
+    box-sizing: border-box;
     min-height: 875px;
     padding: 20px;
-    box-sizing: border-box;
     background-size: cover;
   }
   .inspection .el-dropdown-link {
@@ -906,8 +903,8 @@
     /* color: #409EFF; */
   }
   pre {
-    outline: 1px solid #ccc;
     padding: 5px;
+    outline: 1px solid #ccc;
   }
 </style>
 <style lang="scss">
@@ -933,8 +930,8 @@
     width: 100%;
   }
   .inspection .el-divider__text.is-left {
-    color: blue;
     font-size: 16px;
+    color: blue;
   }
 
   a.report-link {

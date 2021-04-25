@@ -2,11 +2,11 @@
   <div class="report_evidence">
     <Pumpdepartment
       style="
+        flex-shrink: 0;
         width: 360px;
         height: 100vh;
-        overflow: scroll;
-        flex-shrink: 0;
         padding: 10px;
+        overflow: scroll;
       "
       @pumpDetail="getPumpNode"
     />
@@ -25,7 +25,7 @@
         <panel-group @handleSetLineChartData="handleSetLineChartData" />
       </div>
       <div>
-        <p style="font-size: 20px; margin: 0 0 10px 0">
+        <p style="margin: 0 0 10px 0; font-size: 20px">
           <svg-icon icon-class="shenhe2" style="width: 2rem; height: 2rem" />
           审核列表管理
         </p>
@@ -85,127 +85,116 @@
           </el-form-item>
         </el-form>
       </div>
-      <template>
-        <el-table :data="tableData" style="width: 100%; text-align: center">
-          <el-table-column
-            type="index"
-            label="序号"
-            align="center"
-            width="50"
-          />
-          <el-table-column
-            prop="date"
-            label="检测取证编号"
-            align="center"
-            width="180"
-          />
-          <el-table-column
-            prop="name"
-            label="委托方"
-            align="center"
-            width="200"
-          />
-          <el-table-column
-            prop="address"
-            align="center"
-            label="所属地址"
-            width="200"
-          />
-          <el-table-column
-            prop="name"
-            label="委托人联系方式"
-            align="center"
-            width="200"
-          />
-          <el-table-column
-            prop="name"
-            label="水泵类型"
-            align="center"
-            width="200"
-          />
-          <el-table-column
-            prop="name"
-            label="水泵型号"
-            align="center"
-            width="200"
-          />
-          <el-table-column
-            prop="name"
-            label="检测单位"
-            align="center"
-            width="200"
-          />
-          <el-table-column
-            prop="name"
-            label="检测标准"
-            align="center"
-            width="200"
-          />
-          <el-table-column
-            prop="name"
-            label="检测实验室"
-            align="center"
-            width="200"
-          />
-          <el-table-column
-            prop="name"
-            label="检测台体"
-            align="center"
-            width="200"
-          />
-          <el-table-column
-            prop="name"
-            label="审核提交时间"
-            align="center"
-            width="200"
-          />
-          <el-table-column
-            prop="name"
-            label="审核状态"
-            align="center"
-            width="200"
-          />
-          <el-table-column
-            prop="name"
-            label="审核人员"
-            align="center"
-            width="200"
-          />
-          <el-table-column
-            prop="name"
-            label="备注"
-            align="center"
-            width="200"
-          />
-          <el-table-column
-            prop="name"
-            label="检测取证审核"
-            align="center"
-            width="200"
-          >
-            <template slot-scope="scope">
-              <el-link :underline="false" type="primary" size="small">
-                <svg-icon
-                  icon-class="chakan"
-                  style="width: 1.5rem; height: 1.5rem"
-                />
-              </el-link>
-              <el-link :underline="false" type="primary" size="small">
-                <svg-icon
-                  icon-class="shenhe"
-                  style="width: 1.5rem; height: 1.5rem"
-                />
-              </el-link>
-              <el-link :underline="false" type="primary" size="small">
-                <svg-icon
-                  icon-class="chexiao"
-                  style="width: 1.5rem; height: 1.5rem"
-                />
-              </el-link>
-            </template>
-          </el-table-column>
-        </el-table>
-      </template>
+      <el-table :data="tableData" style="width: 100%; text-align: center">
+        <el-table-column type="index" label="序号" align="center" width="50" />
+        <el-table-column
+          prop="date"
+          label="检测取证编号"
+          align="center"
+          width="180"
+        />
+        <el-table-column
+          prop="name"
+          label="委托方"
+          align="center"
+          width="200"
+        />
+        <el-table-column
+          prop="address"
+          align="center"
+          label="所属地址"
+          width="200"
+        />
+        <el-table-column
+          prop="name"
+          label="委托人联系方式"
+          align="center"
+          width="200"
+        />
+        <el-table-column
+          prop="name"
+          label="水泵类型"
+          align="center"
+          width="200"
+        />
+        <el-table-column
+          prop="name"
+          label="水泵型号"
+          align="center"
+          width="200"
+        />
+        <el-table-column
+          prop="name"
+          label="检测单位"
+          align="center"
+          width="200"
+        />
+        <el-table-column
+          prop="name"
+          label="检测标准"
+          align="center"
+          width="200"
+        />
+        <el-table-column
+          prop="name"
+          label="检测实验室"
+          align="center"
+          width="200"
+        />
+        <el-table-column
+          prop="name"
+          label="检测台体"
+          align="center"
+          width="200"
+        />
+        <el-table-column
+          prop="name"
+          label="审核提交时间"
+          align="center"
+          width="200"
+        />
+        <el-table-column
+          prop="name"
+          label="审核状态"
+          align="center"
+          width="200"
+        />
+        <el-table-column
+          prop="name"
+          label="审核人员"
+          align="center"
+          width="200"
+        />
+        <el-table-column prop="name" label="备注" align="center" width="200" />
+        <el-table-column
+          prop="name"
+          label="检测取证审核"
+          align="center"
+          width="200"
+        >
+          <template slot-scope="scope">
+            <el-link :underline="false" type="primary" size="small">
+              <svg-icon
+                icon-class="chakan"
+                style="width: 1.5rem; height: 1.5rem"
+              />
+            </el-link>
+            <el-link :underline="false" type="primary" size="small">
+              <svg-icon
+                icon-class="shenhe"
+                style="width: 1.5rem; height: 1.5rem"
+              />
+            </el-link>
+            <el-link :underline="false" type="primary" size="small">
+              <svg-icon
+                icon-class="chexiao"
+                style="width: 1.5rem; height: 1.5rem"
+              />
+            </el-link>
+            {{ scope }}
+          </template>
+        </el-table-column>
+      </el-table>
       <el-pagination
         :page-sizes="[100, 200, 300, 400]"
         :page-size="100"
@@ -269,10 +258,10 @@
 </script>
 <style lang="scss" scoped>
   .report_evidence {
+    box-sizing: border-box;
+    display: flex;
     width: 100%;
     background: #ffffff;
-    display: flex;
-    box-sizing: border-box;
     ::v-deep .el-form {
       .el-input {
         width: 200px;

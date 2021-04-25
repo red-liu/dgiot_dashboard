@@ -256,7 +256,6 @@
         tetbedid: '',
         tableData1: [],
         Datafile: [],
-        tasknameid: '',
         row: 0,
         start1: 1,
         pagesize1: 10,
@@ -1150,10 +1149,10 @@
 </script>
 <style scoped>
   .reportdetail {
+    box-sizing: border-box;
     width: 100%;
     min-height: 100%;
     padding: 20px;
-    box-sizing: border-box;
     background: #ffffff;
   }
 </style>

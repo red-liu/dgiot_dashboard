@@ -11,39 +11,47 @@
       </el-drawer>
     </div>
     <div class="header">
-      <el-row :gutter="24">
-        <el-col :span="6">
-          <el-button type="success" icon="el-icon-setting" @click="drawerFlag">
-            websocket
-          </el-button>
-          <el-button
-            icon="el-icon-document-add"
-            :disabled="deviceid.length < 0"
-            @click="subscribeMqtt(LayerData)"
-          >
-            订阅mqtt
-          </el-button>
-          <el-button
-            icon="el-icon-document-add"
-            :disabled="stop_Mqtt"
-            @click="handleCloseSub(LayerData)"
-          >
-            取消订阅mqtt
-          </el-button>
-        </el-col>
-        <el-col :span="4">
-          自动刷新
-          <el-switch
-            v-model="value"
-            :disabled="deviceid.length < 0"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-            active-text="关闭"
-            inactive-text="开启"
-            @change="stopsub"
-          />
-        </el-col>
-      </el-row>
+      <el-collapse v-model="activeNames">
+        <el-collapse-item name="1">
+          <el-row :gutter="24">
+            <el-col :span="6">
+              <el-button
+                type="success"
+                icon="el-icon-setting"
+                @click="drawerFlag"
+              >
+                websocket
+              </el-button>
+              <el-button
+                icon="el-icon-document-add"
+                :disabled="deviceid.length < 0"
+                @click="subscribeMqtt(LayerData)"
+              >
+                订阅mqtt
+              </el-button>
+              <el-button
+                icon="el-icon-document-add"
+                :disabled="stop_Mqtt"
+                @click="handleCloseSub(LayerData)"
+              >
+                取消订阅mqtt
+              </el-button>
+            </el-col>
+            <el-col :span="4">
+              自动刷新
+              <el-switch
+                v-model="value"
+                :disabled="deviceid.length < 0"
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+                active-text="关闭"
+                inactive-text="开启"
+                @change="stopsub"
+              />
+            </el-col>
+          </el-row>
+        </el-collapse-item>
+      </el-collapse>
     </div>
     <div class="konva">
       <el-row :gutter="24">
@@ -71,6 +79,7 @@
     },
     data() {
       return {
+        activeNames: [],
         deviceid: this.$route.query.deviceid || '',
         konva: konva,
         textConfig: [],
@@ -353,8 +362,8 @@
     width: 100%;
     height: calc(100vh - 211px);
     .header {
-      height: 40px;
-      padding: 10px;
+      /* height: 40px;
+      padding: 10px; */
     }
     .konva {
       /* width: 100vh; */

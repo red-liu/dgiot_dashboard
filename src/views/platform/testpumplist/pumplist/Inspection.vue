@@ -451,6 +451,11 @@
   </el-container>
 </template>
 
-<script src="./assets/Inspection/index.js" lang="js"></script>
+<script>
+  import Inspection from '@/views/platform/testpumplist/pumplist/assets/Inspection/index.js'
+  export default Inspection
+</script>
 
-<style src="./assets/Inspection/index.scss" lang="scss" scoped></style>
+<style lang="scss" scoped>
+  @import '@/views/platform/testpumplist/pumplist/assets/Inspection/index.scss';
+</style>

@@ -185,6 +185,14 @@
                     type="primary"
                     @click="proudctClone(scope.row)"
                   >备份</el-button> -->
+                  <el-button
+                    type="primary"
+                    style="margin: 0 10px 0 10px"
+                    icon="el-icon-s-flag                    "
+                    @click="konvaDevice(scope.row)"
+                  >
+                    {{ $translateTitle('concentrator.konva') }}
+                  </el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -914,6 +922,15 @@
       this.projectName = ''
     },
     methods: {
+      // 组态
+      konvaDevice(row) {
+        this.$router.push({
+          path: '/Topo/VueKonva',
+          query: {
+            deviceid: row.objectId,
+          },
+        })
+      },
       getCategory(key) {
         console.log(key)
         let name = ''

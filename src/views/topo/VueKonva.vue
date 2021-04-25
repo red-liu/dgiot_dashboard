@@ -57,6 +57,7 @@
 <script>
   import { Websocket, sendInfo } from '@/utils/wxscoket.js'
   import createStage from '@/utils/konva/createStage'
+  import createGroup from '@/utils/konva/createGroup'
   import createText from '@/utils/konva/createText'
   import createRect from '@/utils/konva/createRect'
   import createImg from '@/utils/konva/createImg'
@@ -124,12 +125,46 @@
       // 处理mqtt信息
       handleMqttMsg(subdialogid) {
         var submessage = ''
-        var channeltopic = new RegExp('log/channel/' + subdialogid)
+        var channeltopic = new RegExp('thing/' + subdialogid + '/post')
         Websocket.add_hook(channeltopic, (Msg) => {
-          console.log('重新绘制konva', Msg)
-          this.konva = Msg
-          this.createKonva()
-          console.log('mqtt Msg', Msg, subdialogid)
+          console.log(Msg)
+          let defaultMsg = [
+            {
+              id: 'switch',
+              x: 368,
+              y: 837,
+              text: 20,
+              fontSize: 19,
+              fontFamily: 'Calibri',
+              fill: '#a6f279',
+              type: 'text',
+            },
+            {
+              id: 'Acrel',
+              x: 621,
+              y: 6,
+              text: 24,
+              fontSize: 28,
+              fontFamily: 'Calibri',
+              fill: '#f279c9',
+              type: 'text',
+            },
+          ]
+          let LayerData = this.LayerData
+          console.log(LayerData)
+          if (Msg) {
+            LayerData.forEach((item) => {
+              defaultMsg.forEach((msg) => {
+                if (item.id == msg.id) {
+                  alert('绘制新的konva')
+                  this._setText(item.id, item.text)
+                } else {
+                  console.log('exit')
+                }
+              })
+            })
+            this.stage.add(this.layer)
+          }
         })
       },
       // 取消订阅mqtt
@@ -137,7 +172,7 @@
         this.stop_Mqtt = true
         var text0 = JSON.stringify({ action: 'stop_logger' })
         var sendInfo = {
-          topic: 'channel/' + this.deviceid,
+          topic: 'thing/' + this.deviceid + '/post',
           text: text0,
           retained: true,
           qos: 2,
@@ -157,7 +192,7 @@
           text0 = JSON.stringify({ action: 'start_logger' })
         }
         var sendInfo = {
-          topic: 'channel/' + this.deviceid,
+          topic: 'thing/' + this.deviceid + '/post',
           text: text0,
           retained: true,
           qos: 2,
@@ -166,18 +201,19 @@
       },
       // 打开websocket
       drawerFlag() {
-        this.topic = `log/channel/${this.deviceid}`
+        this.topic = `thing/${this.deviceid}/post`
         this.drawer = true
       },
       // mqtt订阅
       subscribe(subdialogid) {
         var info = {
-          topic: 'log/channel/' + subdialogid,
+          topic: `thing/${this.deviceid}/post`,
           qos: 2,
         }
         Websocket.subscribe(info, (res) => {
           console.log(res)
           if (res.result) {
+            // thing/9c5930e565/9CA525B343F0/post
             this.$message(`订阅成功 topic: ${info.topic}`, 'sussess')
             this.stop_Mqtt = false
             this.handleMqttMsg(subdialogid)
@@ -227,7 +263,7 @@
         if (this.deviceid) {
           this.subscribe(this.deviceid)
         }
-        console.log(this.konva)
+        console.log(JSON.stringify(this.konva))
         let konvaConfig = this.konva
         console.log('konvaConfig', konvaConfig)
         let _stateConfig = this.stageConfig
@@ -238,6 +274,30 @@
         } else {
         }
         this.stage = createStage(_stateConfig)
+        var group = new Konva.Group({
+          x: 120,
+          y: 40,
+          id: '_index1',
+          rotation: 20,
+        })
+
+        var colors = ['red', 'orange', 'yellow']
+
+        for (var i = 0; i < 3; i++) {
+          var box = new Konva.Rect({
+            x: i * 120,
+            y: i * 40,
+            width: 100,
+            height: 50,
+            name: colors[i],
+            fill: colors[i],
+            stroke: 'black',
+            strokeWidth: 4,
+            id: colors[i],
+          })
+
+          group.add(box)
+        }
 
         this.LayerData.filter((item) => {
           switch (item.type) {
@@ -248,6 +308,7 @@
               break
             case 'text':
               this.textConfig.push(item)
+              group.add(createText(item))
               this.layer.add(createText(item))
               break
             case 'rect':
@@ -259,7 +320,13 @@
               break
           }
         })
+        this.layer.add(group)
+        // this._setText(
+        //   'switch',
+        //   'switchswitchswitchswitchswitchswitchswitchswitchswitchswitchswitchswitchswitchswitch'
+        // )
         this.stage.add(this.layer)
+        console.log(this.stage.toJSON())
       },
     },
   }

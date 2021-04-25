@@ -7,6 +7,10 @@ let localHost = [
   'dgiiot.gitee.io',
   'dgiot.github.io',
 ]
+
+if (process.env.NODE_ENV == 'development') {
+  localHost.push('localhost', '127.0.0.1')
+}
 var clientssession = getToken(tokenTableName, storage)
 var info = {
   topic: 'web/' + clientssession,

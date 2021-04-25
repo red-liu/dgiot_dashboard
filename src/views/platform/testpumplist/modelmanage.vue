@@ -189,7 +189,7 @@
                 <el-col :span="4">
                   <p
                     v-if="selected_file && selected_file.src"
-                    style="text-align: center; font-weight: bold"
+                    style="font-weight: bold; text-align: center"
                   >
                     {{ selected_file.name }}
                   </p>
@@ -247,11 +247,11 @@
                   style="
                     position: relative;
                     top: -100px;
-                    opacity: 0;
                     z-index: 5;
-                    height: 100px;
                     width: 100px;
+                    height: 100px;
                     cursor: pointer;
+                    opacity: 0;
                   "
                   @change="upload($event)"
                 />
@@ -361,6 +361,8 @@
 <script>
   import RoleTree from '@/views/platform/testpumplist/pumplist/RoleTree'
   import { mapGetters } from 'vuex'
+  import { queryProduct, delProduct } from '@/api/Product'
+  import { cereteReport, postReportFile, putReportFile } from '@/api/Platform'
   export default {
     name: 'ModelManamge',
     components: {
@@ -436,7 +438,7 @@
     },
     computed: {
       fileDomain: function () {
-        return this.$getUrlPrefix(this.$Cookies.get('fileserver'))
+        return 'http://file.iotn2n.com'
       },
       ...mapGetters(['treeState']),
     },
@@ -444,52 +446,34 @@
       this.getReport()
     },
     methods: {
-      getIotHubProduct() {
+      async getIotHubProduct() {
         const loading = this.$loading({
           background: 'rgba(0, 0, 0, 0.5)',
         })
-
-        this.$axiosWen
-          .get('/classes/Product', {
-            params: {
-              where: {
-                category: 'IotHub',
-              },
-              order: '-updatedAt', // -updatedAt  updatedAt
-            },
-          })
-          .then((response) => {
-            loading.close()
-            this.iotHubDialogShow = true
-            if (response && response.results) {
-              this.iotHubProductList = response.results
-            } else {
-              this.iotHubProductList = []
-            }
-          })
-          .catch((err) => {
-            loading.close()
-          })
+        let params = {
+          where: {
+            category: 'IotHub',
+          },
+          order: '-updatedAt', // -updatedAt  updatedAt
+        }
+        const { results = [] } = await queryProduct(params)
+        loading.close()
+        this.iotHubDialogShow = true
+        this.iotHubProductList = results
       },
-      getReport() {
-        this.$axiosWen
-          .get('/classes/Product', {
-            params: {
-              where: {
-                category: 'Evidence',
-                nodeType: 1,
-              },
-              order: '-updatedAt', // -updatedAt  updatedAt
-            },
-          })
-          .then((response) => {
-            // this.productListForReport = response.results
-            if (response && response.results) {
-              this.tableDataReport = response.results
-            } else {
-              this.tableDataReport = []
-            }
-          })
+      async getReport() {
+        let params = {
+          skip: this.start,
+          limit: this.pagesize,
+          where: {
+            // category: 'Evidence',
+            // nodeType: 1,
+          },
+          order: '-updatedAt', // -updatedAt  updatedAt
+        }
+        const { results = [] } = await queryProduct(params)
+        this.tableDataReport = results
+        this.productListForReport = results
       },
       handleSizeChange(val) {
         this.pagesize = val
@@ -556,7 +540,7 @@
         this.dialogVisible = true
       },
       // 添加报告模板
-      addReporttemp() {
+      async addReporttemp() {
         const exportData = {
           config: JSON.stringify({
             identifier: 'inspectionReportTemp',
@@ -567,19 +551,17 @@
           word: this.reportForm.word,
         }
         console.log(exportData, 'exportData')
-        this.$axiosWen
-          .post('/python_pump_reporttemp', exportData)
-          .then((response) => {
-            this.$message({ type: 'success', message: '报告创建成功!' })
-            console.log(response, 'success')
-            this.$refs['reportFormRef'].resetFields()
-            this.dialogVisible = false
-            this.getReport()
-          })
-          .catch((e) => {
-            this.$message({ type: 'error', message: `报告创建失败${e.error}` })
-            console.log(e.error)
-          })
+        const { results, error } = await cereteReport(exportData)
+        if (results) {
+          this.$message({ type: 'success', message: '报告创建成功!' })
+          console.log(response, 'success')
+          this.$refs['reportFormRef'].resetFields()
+          this.dialogVisible = false
+          this.getReport()
+        } else {
+          this.$message({ type: 'error', message: `报告创建失败${error}` })
+          console.log(error)
+        }
       },
       addReport(nodeTypeText) {
         // 添加质检项目
@@ -628,37 +610,28 @@
           this.putReportTemp('gatewayFlag', postData)
         }
       },
-      postReportTemp(formData) {
+      async postReportTemp(formData) {
         console.log(formData, 'formData')
         return false
         const loading = this.$loading({
           background: 'rgba(0, 0, 0, 0.6)',
         })
-        this.$axiosWen
-          .post('/reportTemp', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          })
-          .then((response) => {
-            loading.close()
-            if (response) {
-              this.$message({ type: 'success', message: `创建成功` })
-              this.$refs['reportFormRef'].resetFields()
-              this.dialogVisible = false
-              this.getReport()
-            } else {
-              this.$message({ type: 'error', message: `创建失败}` })
-            }
-          })
-          .catch((err) => {
-            loading.close()
-            this.$message({ type: 'error', message: `接口错误${e.error}` })
-          })
+        const res = await postReportFile(formData)
+        loading.close()
+        if (res) {
+          if (response) {
+            this.$message({ type: 'success', message: `创建成功` })
+            this.$refs['reportFormRef'].resetFields()
+            this.dialogVisible = false
+            this.getReport()
+          } else {
+            this.$message({ type: 'error', message: `创建失败}` })
+          }
+        }
       },
       putReportTemp(nodeTypeText, postData) {
         // 通过节点类型判断
-        this.$axiosWen.put('/reportTemp', postData).then((response) => {
+        putReportFile(postData).then((response) => {
           if (response) {
             if (nodeTypeText == 'deviceFlag') {
               this.$message({ type: 'success', message: `新增成功` })
@@ -673,32 +646,21 @@
           }
         })
       },
-      addReportChildren(row) {
+      async addReportChildren(row) {
         // 获取当前项目的子项数量
         this.currentDevType = row.devType
         this.currentNodeType = row.nodeType
-
-        //  const loading = this.$loading({text: 'Loading',spinner: 'el-icon-loading'})
-        this.$axiosWen
-          .get('/classes/Product', {
-            params: {
-              keys: 'count(*)',
-              where: {
-                devType: this.currentDevType,
-                nodeType: 0, // 去掉nodeType.不然有时候会报错
-              },
-              order: 'basedata.index',
-            },
-          })
-          .then((response) => {
-            // loading.close()
-            this.currentItemCount = response.count
-            this.dialogChildrenForm = true
-          })
-          .catch((res) => {
-            this.currentItemCount = res.count
-            this.dialogChildrenForm = true
-          })
+        let params = {
+          keys: 'count(*)',
+          where: {
+            devType: this.currentDevType,
+            nodeType: 0, // 去掉nodeType.不然有时候会报错
+          },
+          order: 'basedata.index',
+        }
+        const { count = 0, results } = await queryProduct(params)
+        this.currentItemCount = response.count
+        this.dialogChildrenForm = true
       },
       // 增加子模版
       addStandardChildren() {
@@ -732,7 +694,7 @@
 
         this.putReportTemp('deviceFlag', topoData)
       },
-      detailReportChildren(row) {
+      async detailReportChildren(row) {
         // const loading = this.$loading({text: 'Loading',spinner: 'el-icon-loading'})
         this.currentProduct = row
         var where = {
@@ -740,48 +702,30 @@
           devType: this.currentProduct.devType,
           nodeType: 0,
         }
-
-        this.$axiosWen
-          .get('/classes/Product', {
-            params: {
-              limit: this.productpagesize,
-              skip: this.productstart,
-              keys: 'count(*)',
-              where: JSON.stringify(where),
-              order: 'createdAt', // -updatedAt  updatedAt
-            },
-          })
-          .then((response) => {
-            // loading.close()
-            this.dialogTableVisible = true
-            this.producttable = response.results
-            this.producttotal = response.count
-          })
-          .catch((error) => {
-            // loading.close()
-            console.log(error)
-
-            this.$message({
-              type: 'error',
-              massage: error.msg,
-            })
-          })
+        let params = {
+          limit: this.productpagesize,
+          skip: this.productstart,
+          keys: 'count(*)',
+          where: JSON.stringify(where),
+          order: 'createdAt', // -updatedAt  updatedAt
+        }
+        const { count = 0, results } = await queryProduct(params)
+        this.dialogTableVisible = true
+        this.producttable = results
+        this.producttotal = count
       },
       deleteReport(id) {
         this.$confirm('此操作将永久删除该质检项目, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
-        }).then(() => {
-          this.$axiosWen.delete('/classes/Product/' + id).then((res) => {
-            if (res) {
-              this.$message({
-                type: 'success',
-                message: '删除成功!',
-              })
-              this.getReport()
-            }
+        }).then(async () => {
+          const res = await delProduct(id)
+          this.$message({
+            type: 'success',
+            message: '删除成功!',
           })
+          this.getReport()
         })
       },
       deleteImgsrc() {
@@ -806,15 +750,10 @@
         this.$confirm('确定要删除吗?', '提示', {
           confirmButtonText: '删除',
           cancelButtonText: '取消',
-        }).then(() => {
-          this.$axiosWen
-            .delete('/classes/Product/' + row.objectId)
-            .then((res) => {
-              if (res) {
-                this.$message({ type: 'success', message: `删除成功` })
-                this.detailReportChildren(this.currentProduct)
-              }
-            })
+        }).then(async () => {
+          const res = await delProduct(row.objectId)
+          this.$message({ type: 'success', message: `删除成功` })
+          this.detailReportChildren(this.currentProduct)
         })
       },
       // 图片上传
@@ -860,10 +799,10 @@
 </script>
 <style lang="scss" scoped>
   .modelmanamge {
+    box-sizing: border-box;
     width: 100%;
     height: 100%;
     padding: 20px;
-    box-sizing: border-box;
     background: #ffffff;
     ::v-deep .el-select {
       width: 100%;
@@ -882,30 +821,30 @@
     }
 
     .img-uploader-label {
+      position: relative;
       display: inline-block;
       width: 76px;
       height: 76px;
+      overflow: hidden;
       color: #ccc;
       border: 2px dashed;
-      position: relative;
-      overflow: hidden;
       transition: all 0.25s;
       &::before,
       &::after {
-        content: '';
         position: absolute;
         top: 50%;
         left: 50%;
+        content: '';
       }
       &::before {
         width: 20px;
-        border-top: 4px solid;
         margin: -2px 0 0 -10px;
+        border-top: 4px solid;
       }
       &::after {
         height: 20px;
-        border-left: 4px solid;
         margin: -10px 0 0 -2px;
+        border-left: 4px solid;
       }
       &:hover {
         color: skyblue;
@@ -918,37 +857,37 @@
     display: inline-block;
   }
   .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
   }
   .avatar-uploader .el-upload:hover {
     border-color: #409eff;
   }
   .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
     width: 150px;
     height: 150px;
+    font-size: 28px;
     line-height: 150px;
+    color: #8c939d;
     text-align: center;
     border: 1px dashed #cccccc;
   }
   .avatar {
+    display: block;
     width: 150px;
     height: 150px;
-    display: block;
   }
   .el-upload-list__item-thumbnail {
-    vertical-align: middle;
+    position: relative;
+    z-index: 1;
     display: inline-block;
     width: 70px;
     height: 70px;
-    position: relative;
-    z-index: 1;
     margin-left: -80px;
+    vertical-align: middle;
     background-color: #fff;
   }
   /* @media screen and (max-width: 1350px) {

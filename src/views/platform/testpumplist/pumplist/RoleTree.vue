@@ -41,6 +41,7 @@
 
 <script>
   import { eventBus } from '@/api/eventBus'
+  import { Roletree, getToken } from '@/api/Menu'
   export default {
     name: 'RoleTree',
     components: {},
@@ -90,21 +91,12 @@
         this.factoryName = parent0.data.depname
       } else {
         this.factoryName = parent.data.depname
-     
+
       }
       this.$store.commit('SET_factoryName', this.factoryName) */
       },
-      getFatherToken(name) {
-        this.$axiosWen.get('/token?name=' + name).then((res) => {
-          if (res) {
-            /*       this.$store.commit('set_userdata_req', {
-              type: 'currentFactoryData',
-              datas: {
-                access_token_father_factory: res.access_token
-              }
-            }) */
-          }
-        })
+      async getFatherToken(name) {
+        const { access_token = '' } = await getToken(name)
       },
       switchCompany(item) {
         this.$axiosWen
@@ -131,22 +123,10 @@
             console.log('err ###', err)
           })
       },
-      getRoletree() {
-        this.$axiosWen
-          .get('/roletree')
-          .then((res) => {
-            this.deptTreeData = this.formatList(res.results)
-            this.$nextTick().then(() => {
-              // document.querySelector('.factory-item').click()
-            })
-
-            console.log('this.deptTreeData ', this.deptTreeData)
-
-            this.getFatherToken(this.deptTreeData[0].name)
-          })
-          .catch((err) => {
-            console.log('roletree err ###', err)
-          })
+      async getRoletree() {
+        const { results = [] } = await Roletree()
+        this.deptTreeData = this.formatList(results)
+        this.getFatherToken(this.deptTreeData[0].name)
       },
       formatList(responseArr) {
         const tempArr = []
@@ -187,17 +167,17 @@
 
       li {
         height: 40px;
-        margin: 5px 0;
         padding: 10px 0 10px 10px;
-        cursor: pointer;
+        margin: 5px 0;
         color: #555;
-        transition: all 0.5s;
+        cursor: pointer;
         border-radius: 3px;
+        transition: all 0.5s;
       }
       li.selected {
+        color: #fff;
         // background: #ccc;
         background: #409eff;
-        color: #fff;
       }
       li:hover {
         background: #ccc;

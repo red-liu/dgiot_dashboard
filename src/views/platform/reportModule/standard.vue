@@ -426,7 +426,7 @@
 <script>
   // import Parse from 'parse'
   import { returnLogin } from '@/utils/return'
-  import Cookies from 'js-cookie'
+  import { queryDict } from '@/api/Dict'
   var reportChildrenList = []
   var formData = {}
   export default {
@@ -588,69 +588,57 @@
         this.formInline.name = ''
         this.getStandardFromDict()
       },
-      getStandardFromDict(start) {
+      async getStandardFromDict(start) {
         if (start == 0) {
           this.start = 0
         }
 
         /*       var InspectionStandard = Parse.Object.extend("InspectionStandard");
-      var reportmodule = new Parse.Query(InspectionStandard);
-      reportmodule.skip(this.start);
-      reportmodule.limit(this.pagesize);
-      reportmodule.equalTo("type", "pump_report");
-      if(this.formInline.name!=''){
-          reportmodule.equalTo('data.name',this.formInline.name)
-      }
-      if(this.formInline.standard!=''){
-          reportmodule.equalTo('data.standard',this.formInline.standard)
-      }
-      if(this.formInline.model!=''){
-          reportmodule.equalTo('data.model',this.formInline.model)
-      }
-      reportmodule.ascending("-updatedAt");
-      reportmodule.count().then(
-        count => {
-          this.total = count;
-          reportmodule.find().then(
-            response => {
-              this.standardList = response;
-            },
-            error => {
-              returnLogin(error);
-            }
-          );
-        },
-        error => {
-          returnLogin(error);
+        var reportmodule = new Parse.Query(InspectionStandard);
+        reportmodule.skip(this.start);
+        reportmodule.limit(this.pagesize);
+        reportmodule.equalTo("type", "pump_report");
+        if(this.formInline.name!=''){
+            reportmodule.equalTo('data.name',this.formInline.name)
         }
-      ); */
+        if(this.formInline.standard!=''){
+            reportmodule.equalTo('data.standard',this.formInline.standard)
+        }
+        if(this.formInline.model!=''){
+            reportmodule.equalTo('data.model',this.formInline.model)
+        }
+        reportmodule.ascending("-updatedAt");
+        reportmodule.count().then(
+          count => {
+            this.total = count;
+            reportmodule.find().then(
+              response => {
+                this.standardList = response;
+              },
+              error => {
+                returnLogin(error);
+              }
+            );
+          },
+          error => {
+            returnLogin(error);
+          }
+        ); */
 
         const loading = this.$loading({
           text: '加载中',
           spinner: 'el-icon-loading',
           background: 'rgba(0, 0, 0, 0.7)',
         })
-
-        this.$axiosWen
-          .get('classes/Dict', {
-            params: {
-              where: {
-                type: 'inspectionStandard',
-              },
-              order: '-updatedAt',
-            },
-          })
-          .then((res) => {
-            loading.close()
-            if (res && res.results) {
-              this.standardList = res.results
-            }
-          })
-          .catch((err) => {
-            loading.close()
-            console.log(err)
-            this.standardList = []
-          })
+        const params = {
+          where: {
+            type: 'inspectionStandard',
+          },
+          order: '-updatedAt',
+        }
+        const { results } = await queryDict(params)
+        loading.close()
+        this.standardList = results
       },
       // 表格多选
       handleSelectionChange(val) {

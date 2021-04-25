@@ -128,16 +128,7 @@
             </el-row>
 
             <div class="tasklist">
-              <el-table
-                :data="
-                  taskList.undoneData.slice(
-                    (currentPage - 1) * PageSize,
-                    currentPage * PageSize
-                  )
-                "
-                stripe
-                border
-              >
+              <el-table :data="taskList.undoneData" stripe border>
                 <el-table-column type="index" label="id" />
                 <!-- <el-table-column label="检验编号" align="center" prop="basedata.inspection_number" /> -->
 
@@ -331,16 +322,7 @@
           </el-tab-pane>
 
           <el-tab-pane :label="'审核完成(' + total1 + ')'">
-            <el-table
-              :data="
-                taskList.doneData.slice(
-                  (currentPage - 1) * PageSize,
-                  currentPage * PageSize
-                )
-              "
-              stripe
-              border
-            >
+            <el-table :data="taskList.doneData" stripe border>
               <el-table-column type="index" label="id" />
               <!-- <el-table-column label="检验编号" align="center" prop="basedata.inspection_number" /> -->
 
@@ -469,6 +451,6 @@
   </el-container>
 </template>
 
-<script src="./Inspection.js" lang="js"></script>
+<script src="./assets/Inspection.js" lang="js"></script>
 
-<style src="./Inspection.scss" lang="scss" scoped></style>
+<style src="./assets/Inspection.scss" lang="scss" scoped></style>

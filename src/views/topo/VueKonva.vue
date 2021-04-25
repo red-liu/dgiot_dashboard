@@ -111,7 +111,12 @@
       },
     },
     mounted() {
-      this.createKonva()
+      if (this.deviceid) {
+        console.log(this.deviceid)
+        this.createKonva()
+      } else {
+        this._initCreate()
+      }
     },
     methods: {
       // 订阅mqtt
@@ -125,46 +130,71 @@
       },
       // 处理mqtt信息
       handleMqttMsg(subdialogid) {
+        this.LayerData = []
         var submessage = ''
         var channeltopic = new RegExp('thing/' + subdialogid + '/post')
         Websocket.add_hook(channeltopic, (Msg) => {
-          console.log(Msg)
-          let defaultMsg = [
-            {
-              id: 'switch',
-              x: 368,
-              y: 837,
-              text: 20,
-              fontSize: 19,
-              fontFamily: 'Calibri',
-              fill: '#a6f279',
-              type: 'text',
-            },
-            {
-              id: 'Acrel',
-              x: 621,
-              y: 6,
-              text: 24,
-              fontSize: 28,
-              fontFamily: 'Calibri',
-              fill: '#f279c9',
-              type: 'text',
-            },
-          ]
+          let decodeMqtt = Base64.decode(Msg + '')
+          console.log(decodeMqtt, 'decodeMqtt')
           let LayerData = this.LayerData
           console.log(LayerData)
-          if (Msg) {
-            LayerData.forEach((item) => {
-              defaultMsg.forEach((msg) => {
-                if (item.id == msg.id) {
-                  alert('绘制新的konva')
-                  this._setText(item.id, item.text)
-                } else {
-                  console.log('exit')
-                }
-              })
-            })
-            this.stage.add(this.layer)
+          if (decodeMqtt) {
+            let _stateConfig = this.stageConfig
+            const {
+              konva = {
+                Group: { id: 'group_9c5930e565', rotation: 20, x: 120, y: 40 },
+                Layer: {
+                  fill: '#e579f2',
+                  fontFamily: 'Calibri',
+                  fontSize: 26,
+                  id: 'layer_9c5930e565',
+                  text: '16',
+                  x: 480,
+                  y: 21,
+                },
+                Shape: [
+                  {
+                    fill: '#e579f2',
+                    fontFamily: 'Calibri',
+                    fontSize: 26,
+                    id: 'Acrel',
+                    text: '16',
+                    x: 480,
+                    y: 21,
+                  },
+                ],
+                Stage: { height: 248, id: 'stage_9c5930e565', width: 1643 },
+              },
+            } = decodeMqtt
+            if (konva) {
+              console.log(konva)
+              _stateConfig = Object.assign(this.stageConfig, konva.Stage)
+              this.textConfig.push(konva.Layer)
+              this.layer.add(createText(konva.Layer))
+              this.stage = createStage(_stateConfig)
+              this.stage.add(this.layer)
+              console.log(this.stage.toJSON(), '绘制完成')
+            }
+            // this.LayerData.filter((item) => {
+            //   switch (item.type) {
+            //     case 'image':
+            //       this.imgConfig.push(item)
+            //       this.layer.add(createImg(item))
+            //       this.layer.batchDraw()
+            //       break
+            //     case 'text':
+            //       this.textConfig.push(item)
+            //       this.layer.add(createText(item))
+            //       break
+            //     case 'rect':
+            //       this.rectConfig.push(item)
+            //       this.layer.add(createRect(item))
+            //       break
+            //     default:
+            //       console.log(item.type, item)
+            //       break
+            //   }
+            // })
           }
         })
       },
@@ -259,20 +289,7 @@
       async _setText(id, text) {
         const { tween } = await setText(this.stage.find(`#${id}`)[0], text)
       },
-      // js 绘制
-      async createKonva() {
-        console.log('query info', this.$route.query)
-        let params = {
-          objectId: this.$route.query.deviceid,
-          type: this.$route.query.type,
-        }
-        // const { msg = '' } = await _getTopo(params)
-        const msg = await _getTopo(params)
-        if (msg == 'SUCCESS') {
-          this.subscribe(this.deviceid)
-          this.$message('订阅mqtt消息')
-        }
-        console.log(JSON.stringify(this.konva))
+      _initCreate() {
         let konvaConfig = this.konva
         console.log('konvaConfig', konvaConfig)
         let _stateConfig = this.stageConfig
@@ -283,30 +300,6 @@
         } else {
         }
         this.stage = createStage(_stateConfig)
-        var group = new Konva.Group({
-          x: 120,
-          y: 40,
-          id: '_index1',
-          rotation: 20,
-        })
-
-        var colors = ['red', 'orange', 'yellow']
-
-        for (var i = 0; i < 3; i++) {
-          var box = new Konva.Rect({
-            x: i * 120,
-            y: i * 40,
-            width: 100,
-            height: 50,
-            name: colors[i],
-            fill: colors[i],
-            stroke: 'black',
-            strokeWidth: 4,
-            id: colors[i],
-          })
-
-          group.add(box)
-        }
 
         this.LayerData.filter((item) => {
           switch (item.type) {
@@ -317,7 +310,6 @@
               break
             case 'text':
               this.textConfig.push(item)
-              group.add(createText(item))
               this.layer.add(createText(item))
               break
             case 'rect':
@@ -329,13 +321,25 @@
               break
           }
         })
-        this.layer.add(group)
-        // this._setText(
-        //   'switch',
-        //   'switchswitchswitchswitchswitchswitchswitchswitchswitchswitchswitchswitchswitchswitch'
-        // )
         this.stage.add(this.layer)
         console.log(this.stage.toJSON())
+      },
+      // js 绘制
+      async createKonva() {
+        console.log(this.$route.query)
+        const { deviceid, type } = this.$route.query
+        let params = {
+          objectId: deviceid,
+          type: type,
+        }
+        // const { msg = '' } = await _getTopo(params)
+        const { message = '' } = await _getTopo(params)
+        if (message == 'SUCCESS') {
+          this.subscribe(this.deviceid)
+          console.log('订阅mqtt消息')
+        } else {
+          this._initCreate()
+        }
       },
     },
   }

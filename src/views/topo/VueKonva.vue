@@ -14,7 +14,7 @@
       <el-collapse v-model="activeNames">
         <el-collapse-item name="1">
           <el-row :gutter="24">
-            <el-col :span="6">
+            <el-col :span="8">
               <el-button
                 type="success"
                 icon="el-icon-setting"
@@ -32,9 +32,15 @@
               <el-button
                 icon="el-icon-document-add"
                 :disabled="stop_Mqtt"
-                @click="handleCloseSub(LayerData)"
+                @click="handleCloseSub()"
               >
                 取消订阅mqtt
+              </el-button>
+              <el-button
+                icon="el-icon-document-brush"
+                @click="handleKonvaStyle()"
+              >
+                {{ !iskonvaBg ? '显示' : '隐藏' }}背景
               </el-button>
             </el-col>
             <el-col :span="4">
@@ -53,7 +59,7 @@
         </el-collapse-item>
       </el-collapse>
     </div>
-    <div class="konva">
+    <div ref="konva" :class="[activeClass, konvaBg]">
       <el-row :gutter="24">
         <el-col :span="24">
           <div id="container" ref="container"></div>
@@ -79,6 +85,9 @@
     },
     data() {
       return {
+        activeClass: 'konva',
+        konvaBg: 'konvaBg',
+        iskonvaBg: false,
         activeNames: [],
         productid: this.$route.query.productid || '',
         konva: konva,
@@ -120,11 +129,16 @@
       },
     },
     mounted() {
+      this.handleCloseSub()
       if (this.productid) {
-        this.createKonva()
+        this.subscribe(this.productid)
+        console.log('订阅mqtt消息')
       } else {
         this._initCreate()
       }
+    },
+    destroyed() {
+      this.handleCloseSub()
     },
     methods: {
       // 订阅mqtt
@@ -142,6 +156,7 @@
         var submessage = ''
         var channeltopic = new RegExp('thing/' + subdialogid + '/post')
         Websocket.add_hook(channeltopic, (Msg) => {
+          console.log('收到消息', Msg)
           let decodeMqtt = Base64.decode(Msg + '')
           console.log(decodeMqtt, 'decodeMqtt')
           let LayerData = this.LayerData
@@ -206,8 +221,13 @@
           }
         })
       },
+      // 显示隐藏背景图
+      handleKonvaStyle(iskonvaBg) {
+        this.iskonvaBg = !this.iskonvaBg
+        this.activeClass = this.iskonvaBg ? 'konva' : ''
+      },
       // 取消订阅mqtt
-      handleCloseSub(data) {
+      handleCloseSub() {
         this.stop_Mqtt = true
         var text0 = JSON.stringify({ action: 'stop_logger' })
         var sendInfo = {
@@ -216,9 +236,9 @@
           retained: true,
           qos: 2,
         }
-        Websocket.sendMessage(sendInfo)
-        window.clearInterval(this.subdialogtimer)
-        this.subdialogtimer = null
+        Websocket.unsubscribe(sendInfo, (res) => {
+          console.log('取消订阅mqtt', res.msg)
+        })
       },
       // 是否自动刷新mqtt消息
       stopsub(value) {
@@ -250,12 +270,11 @@
           qos: 2,
         }
         Websocket.subscribe(info, (res) => {
-          console.log(res)
           if (res.result) {
             // thing/9c5930e565/9CA525B343F0/post
             this.$message(`订阅成功 topic: ${info.topic}`, 'sussess')
             this.stop_Mqtt = false
-            this.handleMqttMsg(subdialogid)
+            this.createKonva()
           } else {
             this.$message('订阅失败,请手动订阅mqtt', 'error')
             this.subscribeMqtt([])
@@ -334,22 +353,19 @@
       },
       // js 绘制
       async createKonva() {
-        console.log(this.$route.query)
-        const { productid, devaddr = '' } = this.$route.query
+        const { productid, devaddr = undefined } = this.$route.query
         let params = {
           productid: productid,
           devaddr: devaddr,
         }
         // const { msg = '' } = await _getTopo(params)
         const { message = '' } = await _getTopo(params)
+        this.handleMqttMsg(this.productid)
         if (message == 'SUCCESS') {
           //
           if (this.$route.query.type == 'device') {
             this.productid = this.$route.query.deviceid
           }
-          console.log(this.productid)
-          this.subscribe(this.productid)
-          console.log('订阅mqtt消息')
         } else {
           this._initCreate()
         }
@@ -371,10 +387,13 @@
     }
     .konva {
       /* width: 100vh; */
-      height: 100%;
       background: url('http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/konva/assets/taiti.png')
         no-repeat;
       background-size: 100% 100%;
+    }
+
+    .konvaBg {
+      height: 100%;
     }
   }
 </style>

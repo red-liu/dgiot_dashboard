@@ -39,5 +39,5 @@ module.exports = {
   },
   // 服务器代理地址
   // proxyUrl: 'https://prod.iotn2n.com',
-  proxyUrl: 'http://192.168.1.23:5080',
+  proxyUrl: 'http://132.232.12.21',
 }

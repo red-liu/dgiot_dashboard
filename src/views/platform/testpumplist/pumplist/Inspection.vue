@@ -457,5 +457,67 @@
 </script>
 
 <style lang="scss" scoped>
-  @import '@/views/platform/testpumplist/pumplist/assets/Inspection/index.scss';
+  .inspection {
+    box-sizing: border-box;
+    min-height: 875px;
+    padding: 20px;
+    background-size: cover;
+  }
+
+  .inspection .el-dropdown-link {
+    cursor: pointer;
+    /* color: #409EFF; */
+  }
+
+  pre {
+    padding: 5px;
+    outline: 1px solid #ccc;
+  }
+  table.test-result {
+    width: 100%;
+    text-align: center;
+
+    tr {
+      line-height: 28px;
+    }
+  }
+
+  .inspection .el-select {
+    width: 100%;
+  }
+
+  .inspection .el-date-editor.el-input {
+    width: 100%;
+  }
+
+  .inspection .el-form--inline .el-date-editor.el-input {
+    width: 100%;
+  }
+
+  .inspection .el-cascader {
+    width: 100%;
+  }
+
+  .inspection .el-divider__text.is-left {
+    font-size: 16px;
+    color: blue;
+  }
+
+  a.report-link {
+    color: #409eff;
+  }
+
+  a.report-link:hover {
+    text-decoration: underline;
+  }
+
+  @media screen and (max-width: 1350px) {
+    .inspection .el-col {
+      width: 100%;
+    }
+  }
+
+  .inspection .el-dialog__body {
+    padding: 10px 20px;
+  }
 </style>

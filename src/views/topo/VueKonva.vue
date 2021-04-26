@@ -40,7 +40,7 @@
                 icon="el-icon-document-brush"
                 @click="handleKonvaStyle()"
               >
-                {{ !iskonvaBg ? '显示' : '隐藏' }}背景
+                {{ iskonvaBg ? '隐藏' : '显示' }}背景
               </el-button>
             </el-col>
             <el-col :span="4">
@@ -87,7 +87,7 @@
       return {
         activeClass: 'konva',
         konvaBg: 'konvaBg',
-        iskonvaBg: false,
+        iskonvaBg: true,
         activeNames: [],
         productid: this.$route.query.productid || '',
         konva: konva,
@@ -129,9 +129,9 @@
       },
     },
     mounted() {
+      this.createKonva()
       this.handleCloseSub()
       if (this.productid) {
-        this.subscribe(this.productid)
         console.log('订阅mqtt消息')
       } else {
         this._initCreate()
@@ -162,41 +162,27 @@
           let LayerData = this.LayerData
           console.log(LayerData)
           if (decodeMqtt) {
-            let _stateConfig = this.stageConfig
             const {
               konva = {
-                Group: { id: 'group_9c5930e565', rotation: 20, x: 120, y: 40 },
-                Layer: {
-                  fill: '#e579f2',
-                  fontFamily: 'Calibri',
-                  fontSize: 26,
-                  id: 'layer_9c5930e565',
-                  text: '16',
-                  x: 480,
-                  y: 21,
-                },
                 Shape: [
                   {
-                    fill: '#e579f2',
-                    fontFamily: 'Calibri',
-                    fontSize: 26,
-                    id: 'Acrel',
+                    id: 'shapeid',
                     text: '16',
-                    x: 480,
-                    y: 21,
+                  },
+                  {
+                    id: 'shapeid',
+                    text: '16',
                   },
                 ],
-                Stage: { height: 248, id: 'stage_9c5930e565', width: 1643 },
               },
             } = decodeMqtt
             if (konva) {
               console.log(konva)
-              _stateConfig = Object.assign(this.stageConfig, konva.Stage)
-              this.textConfig.push(konva.Layer)
-              this.layer.add(createText(konva.Layer))
-              this.stage = createStage(_stateConfig)
-              this.stage.add(this.layer)
-              console.log(this.stage.toJSON(), '绘制完成')
+              let Shape = konva.Shape
+              Shape.forEach((_item) => {
+                this._setText(_item.id, _item.text)
+                console.log(_item.id, '更新完成', _item.text)
+              })
             }
             // this.LayerData.filter((item) => {
             //   switch (item.type) {
@@ -274,7 +260,6 @@
             // thing/9c5930e565/9CA525B343F0/post
             this.$message(`订阅成功 topic: ${info.topic}`, 'sussess')
             this.stop_Mqtt = false
-            this.createKonva()
           } else {
             this.$message('订阅失败,请手动订阅mqtt', 'error')
             this.subscribeMqtt([])
@@ -359,13 +344,29 @@
           devaddr: devaddr,
         }
         // const { msg = '' } = await _getTopo(params)
-        const { message = '' } = await _getTopo(params)
+        const { message = '', data } = await _getTopo(params)
         this.handleMqttMsg(this.productid)
         if (message == 'SUCCESS') {
           //
           if (this.$route.query.type == 'device') {
             this.productid = this.$route.query.deviceid
           }
+          console.log(data)
+          let _stateConfig = Object.assign(this.stageConfig, data.Stage)
+          this.textConfig.push(data.Layer)
+          let Shape = data.Shape
+          Shape.forEach((_item) => {
+            console.log(data.Layer)
+            console.log(_item)
+            this.layer.add(createText(_item))
+          })
+          this.layer.add(createText(data.Layer))
+          this.stage = createStage(_stateConfig)
+          this.stage.add(this.layer)
+          console.log(this.stage.toJSON(), '绘制完成')
+          this.$nextTick(() => {
+            this.subscribe(this.productid)
+          })
         } else {
           this._initCreate()
         }

@@ -121,7 +121,6 @@
     },
     mounted() {
       if (this.productid) {
-        console.log(this.productid)
         this.createKonva()
       } else {
         this._initCreate()
@@ -344,6 +343,11 @@
         // const { msg = '' } = await _getTopo(params)
         const { message = '' } = await _getTopo(params)
         if (message == 'SUCCESS') {
+          //
+          if (this.$route.query.type == 'device') {
+            this.productid = this.$route.query.deviceid
+          }
+          console.log(this.productid)
           this.subscribe(this.productid)
           console.log('订阅mqtt消息')
         } else {

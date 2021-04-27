@@ -350,27 +350,11 @@
           this.stage = new Konva.Stage(Object.assign(this.stageConfig, Stage))
           let layer = new Konva.Layer(Layer)
           // create group
-          let group = new Konva.Group(Group)
+          let group = new Konva.Group(Object.assign(Group))
           // this.layer.add(createText(data.Layer))
           // create Shape
           let _Shape = createShape(group, Shape)
           layer.add(_Shape)
-          // 鼠标事件
-          group.on('mouseover', function on() {
-            document.body.style.cursor = 'pointer'
-          })
-          group.on('mouseout', function on() {
-            document.body.style.cursor = 'default'
-          })
-          group.on('click', function on(e) {
-            console.log('attrs', e.target.attrs)
-          })
-          // group.on('mousemove', function on(e) {
-          //   console.log('mousemove', e.target.attrs)
-          // })
-          group.on('mousedown ', function on(e) {
-            console.log('mousedown', e.target.attrs)
-          })
           layer.batchDraw()
           this.stage.add(layer)
           console.log('绘制完成')
@@ -381,6 +365,7 @@
           this._initCreate()
         }
       },
+      //
     },
   }
 </script>

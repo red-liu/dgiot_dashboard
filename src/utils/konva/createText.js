@@ -12,7 +12,6 @@
 // https://konvajs.org/api/Konva.Text.html
 // https://konvajs.org/docs/shapes/Text.html
 function createText(params) {
-  var simpleText = new Konva.Text(params)
-  return simpleText
+  return new Konva.Text(params)
 }
 export default createText

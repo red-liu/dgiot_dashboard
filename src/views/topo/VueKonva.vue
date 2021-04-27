@@ -1,5 +1,22 @@
 <template>
   <div class="_vuekonva">
+    <div class="_dialog">
+      <el-dialog
+        :title="Shapeconfig.id"
+        :visible.sync="ShapeVisible"
+        width="30%"
+      >
+        <span>
+          <vue-json-editor v-model="Shapeconfig" :mode="'code'" lang="zh" />
+        </span>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="ShapeVisible = false">取 消</el-button>
+          <el-button type="primary" @click="ShapeVisible = false">
+            确 定
+          </el-button>
+        </span>
+      </el-dialog>
+    </div>
     <div class="_drawer">
       <el-drawer
         :with-header="false"
@@ -54,16 +71,15 @@
       </el-collapse>
     </div>
     <div class="_mian">
-      <el-row :gutter="24" class="_row">
-        <el-col :span="3">
+      <el-row :gutter="gutter" class="_row">
+        <el-col :span="leftrow">
           <div class="_left">物模型</div>
         </el-col>
-        <el-col :span="18" class="_konvarow">
-          <div ref="konva" class="konva _center"></div>
-          <div class="_info">
+        <el-col :span="gutter - leftrow - rightrow" class="_konvarow">
+          <div ref="konva" :class="konvaClass"></div>
+          <div v-if="!isDevice" class="_info">
             <el-row :gutter="10">
-              <el-col :span="6"><span>已选{{}}</span></el-col>
-              <el-col :span="4">
+              <el-col :span="6">
                 <el-button
                   type="success"
                   plain
@@ -73,7 +89,7 @@
                   保存
                 </el-button>
               </el-col>
-              <el-col :span="4">
+              <el-col :span="6">
                 <el-button
                   type="primary"
                   :disabled="productid.length < 1"
@@ -83,7 +99,7 @@
                   当前数据
                 </el-button>
               </el-col>
-              <el-col :span="4">
+              <el-col :span="6">
                 <el-button type="info" plain @click="preview('search')">
                   分享
                 </el-button>
@@ -94,7 +110,7 @@
             </el-row>
           </div>
         </el-col>
-        <el-col :span="3">
+        <el-col :span="rightrow">
           <div class="_right">操作</div>
         </el-col>
       </el-row>
@@ -102,16 +118,17 @@
   </div>
 </template>
 <script>
+  import vueJsonEditor from 'vue-json-editor'
   import { createShape, updateShape, setText } from '@/utils/konva'
   import websocket from '@/views/tools/websocket'
   import { isBase64 } from '@/utils'
   import { Websocket, sendInfo } from '@/utils/wxscoket.js'
   import { _getTopo } from '@/api/Topo'
-  import { putDevice } from '@/api/Device'
   import { putProduct, queryProduct } from '@/api/Product'
   export default {
     components: {
       websocket,
+      vueJsonEditor,
     },
     data() {
       return {
@@ -119,13 +136,20 @@
         paramsconfig: {},
         productconfig: {},
         activeNames: [],
+        gutter: 24,
+        leftrow: 3,
+        rightrow: 3,
         productid: this.$route.query.productid || '',
+        isDevice: this.$route.query.type ? true : false,
         konva: [],
+        konvaClass: ['konva', '_center'],
         textConfig: [],
         imgConfig: [],
         rectConfig: [],
         LayerData: [],
         drawer: false,
+        ShapeVisible: false,
+        Shapeconfig: { id: '' },
         topic: '',
         stop_Mqtt: true,
         subdialogtimer: null,
@@ -348,13 +372,33 @@
           this.stagedefault = Shape
           // this.$refs.konva.style.backgroundImage = `url(${background})`
           this.stage = new Konva.Stage(Object.assign(this.stageConfig, Stage))
+          let _this = this
           let layer = new Konva.Layer(Layer)
           // create group
-          let group = new Konva.Group(Object.assign(Group))
+          let group = new Konva.Group(Group)
           // this.layer.add(createText(data.Layer))
           // create Shape
-          let _Shape = createShape(group, Shape)
-          layer.add(_Shape)
+          createShape(group, Shape)
+          // function
+          // 设置页面是从设备界面进入 则不添加以下事件
+          if (this.isDevice) {
+            this.konvaClass.push('isDevice')
+            this.leftrow = this.rightrow = 0
+          } else {
+            group.on('click', (e) => {
+              _this.ShapeVisible = true
+              console.log(e)
+              _this.Shapeconfig = e.target.attrs
+            })
+          }
+          group.on('mouseover', () => {
+            document.body.style.cursor = 'pointer'
+          })
+          group.on('mouseout', () => {
+            document.body.style.cursor = 'default'
+          })
+          // views
+          layer.add(group)
           layer.batchDraw()
           this.stage.add(layer)
           console.log('绘制完成')
@@ -371,12 +415,13 @@
 </script>
 <style lang="scss" scoped>
   ._vuekonva {
+    width: 100%;
+
+    background-size: 100% 100%;
     ::v-deep .el-drawer__body {
       overflow-x: auto;
       overflow-y: auto;
     }
-    width: 100%;
-    height: calc(100vh - 211px);
     ._drawer {
       width: 100%;
     }
@@ -391,16 +436,19 @@
           box-shadow: 0 1px 4px rgb(0 21 41 / 8%);
           .konva {
             min-width: 100vh;
-            min-height: calc(100vh - 260px);
+            min-height: calc(100vh - 262px);
             // background-image: url('http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/konva/assets/taiti.png');
             background-size: 100% 100%;
+            border-bottom: 1px solid #ebeef5;
+          }
+          .isDevice {
+            min-height: calc(100vh - 211px);
           }
         }
         ._info {
-          position: relative;
           height: 40px;
+          line-height: 40px;
           background-color: white;
-          border-top: 1px solid rgb(204, 204, 204);
         }
       }
     }

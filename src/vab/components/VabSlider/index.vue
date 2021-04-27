@@ -105,9 +105,10 @@
   }
   .slider {
     position: relative;
-    width: 100%;
+    width: 300px;
     height: 10px;
     margin: 20px 0;
+    line-height: 10px;
     cursor: pointer;
     background: #e4e7ed;
     border-radius: 5px;

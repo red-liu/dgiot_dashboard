@@ -1,15 +1,16 @@
 <template>
   <div class="_vuekonva">
     <div class="_dialog">
-      <el-dialog
-        :title="Shapeconfig.id"
-        :visible.sync="ShapeVisible"
-        width="30%"
-      >
-        <span>
-          <vue-json-editor v-model="Shapeconfig" :mode="'code'" lang="zh" />
-        </span>
-        <span slot="footer" class="dialog-footer">
+      <el-dialog :visible.sync="ShapeVisible" width="100vh" class="_shape">
+        <el-tabs v-model="tabsName">
+          <el-tab-pane label="用户管理" name="first">用户管理</el-tab-pane>
+          <el-tab-pane label="配置管理" name="ShapeJson">
+            <span>
+              <vue-json-editor v-model="Shapeconfig" :mode="'code'" lang="zh" />
+            </span>
+          </el-tab-pane>
+        </el-tabs>
+        <span v-if="tabsName == 'ShapeJson'" slot="footer">
           <el-button @click="ShapeVisible = false">取 消</el-button>
           <el-button type="primary" @click="ShapeVisible = false">
             确 定
@@ -42,7 +43,7 @@
               <el-button
                 icon="el-icon-document-add"
                 :disabled="productid.length < 0"
-                @click="subscribeMqtt(LayerData)"
+                @click="subscribe(productid)"
               >
                 订阅mqtt
               </el-button>
@@ -73,11 +74,11 @@
     <div class="_mian">
       <el-row :gutter="gutter" class="_row">
         <el-col :span="leftrow">
-          <div class="_left">物模型</div>
+          <div class="_left"><topo-allocation /></div>
         </el-col>
         <el-col :span="gutter - leftrow - rightrow" class="_konvarow">
           <div ref="konva" :class="konvaClass"></div>
-          <div v-if="!isDevice" class="_info">
+          <div v-if="!isDevice && !productconfig.length" class="_info">
             <el-row :gutter="10">
               <el-col :span="6">
                 <el-button
@@ -111,24 +112,31 @@
           </div>
         </el-col>
         <el-col :span="rightrow">
-          <div class="_right">操作</div>
+          <div class="_right"><topo-operation /></div>
         </el-col>
       </el-row>
     </div>
   </div>
 </template>
 <script>
+  const context = require.context('./components', true, /\.vue$/)
+  let res_components = {}
+  context.keys().forEach((fileName) => {
+    let comp = context(fileName)
+    res_components[fileName.replace(/^\.\/(.*)\.\w+$/, '$1')] = comp.default
+  })
   import vueJsonEditor from 'vue-json-editor'
   import { createShape, updateShape, setText } from '@/utils/konva'
   import websocket from '@/views/tools/websocket'
   import { isBase64 } from '@/utils'
-  import { Websocket, sendInfo } from '@/utils/wxscoket.js'
+  import { Websocket } from '@/utils/wxscoket.js'
   import { _getTopo } from '@/api/Topo'
   import { putProduct, queryProduct } from '@/api/Product'
   export default {
     components: {
       websocket,
       vueJsonEditor,
+      ...res_components,
     },
     data() {
       return {
@@ -137,8 +145,8 @@
         productconfig: {},
         activeNames: [],
         gutter: 24,
-        leftrow: 3,
-        rightrow: 3,
+        leftrow: 0,
+        rightrow: 0,
         productid: this.$route.query.productid || '',
         isDevice: this.$route.query.type ? true : false,
         konva: [],
@@ -158,6 +166,7 @@
           topic: [{ required: true, message: '请输入topic', trigger: 'blur' }],
         },
         subdialogid: 'subdialogid',
+        tabsName: 'ShapeJson',
         layer: {},
         group: {},
         stagedefault: [],
@@ -184,8 +193,8 @@
       },
     },
     mounted() {
-      this.handleCloseSub()
       if (this.productid) {
+        this.handleCloseSub()
         this.createKonva()
         console.log('订阅mqtt消息')
       } else {
@@ -223,18 +232,8 @@
         console.log(res)
         this.$message.success('产品组态更新成功')
       },
-      // 订阅mqtt
-      subscribeMqtt(data = []) {
-        this.subscribe(this.productid)
-        // data.forEach((item) => {
-        //   if (item.id) {
-        //     this.subscribe(item.id)
-        //   }
-        // })
-      },
       // 处理mqtt信息
       handleMqttMsg(subdialogid) {
-        var submessage = ''
         var channeltopic = new RegExp('thing/' + subdialogid + '/post')
         Websocket.add_hook(channeltopic, (Msg) => {
           console.log('收到消息', Msg)
@@ -276,10 +275,8 @@
       stopsub(value) {
         var text0
         if (value == false) {
-          // this.subaction = 'start'
           text0 = JSON.stringify({ action: 'stop_logger' })
         } else {
-          // this.subaction = 'stop'
           text0 = JSON.stringify({ action: 'start_logger' })
         }
         var sendInfo = {
@@ -298,7 +295,7 @@
       // mqtt订阅
       subscribe(subdialogid) {
         var info = {
-          topic: `thing/${this.productid}/post`,
+          topic: `thing/${subdialogid}/post`,
           qos: 2,
         }
         Websocket.subscribe(info, (res) => {
@@ -312,23 +309,9 @@
           }
         })
       },
-      handleClose() {},
-      // 新增文本
-      _addText() {
-        let text = createText({})
-        this.layer.add(text)
-        this.stage.add(this.layer)
-      },
-      // 设置文本
-      async _setText(id, text) {
-        console.log(this.stage.find(`#${id}`)[0])
-        const { tween } = await setText(this.stage.find(`#${id}`)[0], text)
-        console.log(tween)
-      },
       _initCreate() {
         let background =
           'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/konva/assets/taiti.png'
-        console.log(' this.$refs.konva', this.$refs.konva)
         this.$refs.konva.style.backgroundImage = `url(${background})`
       },
       // js 绘制
@@ -338,10 +321,9 @@
           productid: productid,
           devaddr: devaddr,
         }
-        // const { msg = '' } = await _getTopo(params)
         const { message = '', data } = await _getTopo(params)
         // 绘制前不光需要获取到组态数据，还需要获取产品数据
-        const { results } = await queryProduct({
+        const { results = [] } = await queryProduct({
           where: { objectId: this.productid },
         })
         this.productconfig = results[0]
@@ -370,7 +352,7 @@
           div.setAttribute('id', Stage.container)
           _konvarow.append(div)
           this.stagedefault = Shape
-          // this.$refs.konva.style.backgroundImage = `url(${background})`
+          this.$refs.konva.style.backgroundImage = `url(${background})`
           this.stage = new Konva.Stage(Object.assign(this.stageConfig, Stage))
           let _this = this
           let layer = new Konva.Layer(Layer)
@@ -381,10 +363,11 @@
           createShape(group, Shape)
           // function
           // 设置页面是从设备界面进入 则不添加以下事件
-          if (this.isDevice) {
+          if (this.isDevice && this.productconfig) {
             this.konvaClass.push('isDevice')
             this.leftrow = this.rightrow = 0
           } else {
+            this.leftrow = this.rightrow = 3
             group.on('click', (e) => {
               _this.ShapeVisible = true
               console.log(e)
@@ -409,18 +392,22 @@
           this._initCreate()
         }
       },
-      //
     },
   }
 </script>
 <style lang="scss" scoped>
   ._vuekonva {
     width: 100%;
-
     background-size: 100% 100%;
     ::v-deep .el-drawer__body {
       overflow-x: auto;
       overflow-y: auto;
+    }
+    ._dialog {
+      ::v-deep .el-dialog__footer {
+        margin: 0 auto;
+        text-align: center;
+      }
     }
     ._drawer {
       width: 100%;

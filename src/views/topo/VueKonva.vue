@@ -1,6 +1,6 @@
 <template>
-  <div class="grid-content">
-    <div class="drawer">
+  <div class="_vuekonva">
+    <div class="_drawer">
       <el-drawer
         :with-header="false"
         size="40%"
@@ -10,7 +10,7 @@
         <websocket :topic="topic" />
       </el-drawer>
     </div>
-    <div class="header">
+    <div class="_header">
       <el-collapse v-model="activeNames">
         <el-collapse-item name="1">
           <el-row :gutter="24">
@@ -36,12 +36,6 @@
               >
                 取消订阅mqtt
               </el-button>
-              <el-button
-                icon="el-icon-document-brush"
-                @click="handleKonvaStyle()"
-              >
-                {{ iskonvaBg ? '隐藏' : '显示' }}背景
-              </el-button>
             </el-col>
             <el-col :span="4">
               自动刷新
@@ -59,35 +53,71 @@
         </el-collapse-item>
       </el-collapse>
     </div>
-    <div ref="konva" class="konva">
-      <el-row :gutter="24">
-        <el-col :span="24">
-          <div id="container" ref="container"></div>
+    <div class="_mian">
+      <el-row :gutter="24" class="_row">
+        <el-col :span="3">
+          <div class="_left">物模型</div>
+        </el-col>
+        <el-col :span="18" class="_konvarow">
+          <div ref="konva" class="konva _center"></div>
+          <div class="_info">
+            <el-row :gutter="10">
+              <el-col :span="6"><span>已选{{}}</span></el-col>
+              <el-col :span="4">
+                <el-button
+                  type="success"
+                  plain
+                  :disabled="productid.length < 1"
+                  @click="preview('save')"
+                >
+                  保存
+                </el-button>
+              </el-col>
+              <el-col :span="4">
+                <el-button
+                  type="primary"
+                  :disabled="productid.length < 1"
+                  plain
+                  @click="preview('info')"
+                >
+                  当前数据
+                </el-button>
+              </el-col>
+              <el-col :span="4">
+                <el-button type="info" plain @click="preview('search')">
+                  分享
+                </el-button>
+              </el-col>
+              <el-col :span="6">
+                <vab-slider v-model="per" :min="0" :max="100" />
+              </el-col>
+            </el-row>
+          </div>
+        </el-col>
+        <el-col :span="3">
+          <div class="_right">操作</div>
         </el-col>
       </el-row>
     </div>
   </div>
 </template>
 <script>
-  import { Websocket, sendInfo } from '@/utils/wxscoket.js'
-  import createStage from '@/utils/konva/createStage'
-  import createGroup from '@/utils/konva/createGroup'
-  import createText from '@/utils/konva/createText'
-  import createRect from '@/utils/konva/createRect'
-  import createImg from '@/utils/konva/createImg'
-  import createShape from '@/utils/konva/createShape'
-  import updateShape from '@/utils/konva/updateShape'
-  import setText from '@/utils/konva/setText'
+  import { createShape, updateShape, setText } from '@/utils/konva'
   import websocket from '@/views/tools/websocket'
-  import { _getTopo } from '@/api/Topo'
   import { isBase64 } from '@/utils'
+  import { Websocket, sendInfo } from '@/utils/wxscoket.js'
+  import { _getTopo } from '@/api/Topo'
+  import { putDevice } from '@/api/Device'
+  import { putProduct, queryProduct } from '@/api/Product'
   export default {
     components: {
       websocket,
     },
     data() {
       return {
-        iskonvaBg: true,
+        per: '100',
+        paramsconfig: {},
+        productconfig: {},
         activeNames: [],
         productid: this.$route.query.productid || '',
         konva: [],
@@ -125,7 +155,7 @@
           width: el[0].clientWidth,
           height: el[0].clientHeight,
           container: 'container',
-          id: '_container',
+          id: 'container',
         }
       },
     },
@@ -142,6 +172,33 @@
       this.handleCloseSub()
     },
     methods: {
+      // 预览
+      preview(type) {
+        switch (type) {
+          case 'save':
+            this.updataProduct(this.$route.query.productid)
+            break
+          case 'info':
+            alert(this.stage.toJSON())
+            break
+          case 'search':
+            this.$message.success('开发中')
+            break
+        }
+      },
+      // 更新产品
+      async updataProduct(productid) {
+        console.log('updatatopo')
+        const { config } = this.productconfig
+        // 提交前需要先对数据进行合并
+        let upconfig = Object.assign(config, this.paramsconfig)
+        let params = {
+          config: upconfig,
+        }
+        let res = await putProduct(productid, params)
+        console.log(res)
+        this.$message.success('产品组态更新成功')
+      },
       // 订阅mqtt
       subscribeMqtt(data = []) {
         this.subscribe(this.productid)
@@ -176,11 +233,6 @@
               })
           }
         })
-      },
-      // 显示隐藏背景图
-      handleKonvaStyle(iskonvaBg) {
-        this.iskonvaBg = !this.iskonvaBg
-        this.activeClass = this.iskonvaBg ? 'konva' : ''
       },
       // 取消订阅mqtt
       handleCloseSub() {
@@ -252,39 +304,8 @@
       _initCreate() {
         let background =
           'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/konva/assets/taiti.png'
+        console.log(' this.$refs.konva', this.$refs.konva)
         this.$refs.konva.style.backgroundImage = `url(${background})`
-        // let konvaConfig = this.konva
-        // console.log('konvaConfig', konvaConfig)
-        // let _stateConfig = this.stageConfig
-        // if (konvaConfig) {
-        //   const { data } = konvaConfig
-        //   _stateConfig = Object.assign(this.stageConfig, data.Stage)
-        //   this.LayerData = data.Layer
-        // } else {
-        // }
-        // this.stage = createStage(_stateConfig)
-        // this.LayerData.filter((item) => {
-        //   switch (item.type) {
-        //     case 'image':
-        //       this.imgConfig.push(item)
-        //       this.layer.add(createImg(item))
-        //       this.layer.batchDraw()
-        //       break
-        //     case 'text':
-        //       this.textConfig.push(item)
-        //       this.layer.add(createText(item))
-        //       break
-        //     case 'rect':
-        //       this.rectConfig.push(item)
-        //       this.layer.add(createRect(item))
-        //       break
-        //     default:
-        //       console.log(item.type, item)
-        //       break
-        //   }
-        // })
-        // this.stage.add(this.layer)
-        // console.log(this.stage.toJSON())
       },
       // js 绘制
       async createKonva() {
@@ -295,7 +316,15 @@
         }
         // const { msg = '' } = await _getTopo(params)
         const { message = '', data } = await _getTopo(params)
+        // 绘制前不光需要获取到组态数据，还需要获取产品数据
+        const { results } = await queryProduct({
+          where: { objectId: this.productid },
+        })
+        this.productconfig = results[0]
+        console.log(this.productconfig)
         if (message == 'SUCCESS') {
+          console.log(data)
+          this.paramsconfig = { konva: data }
           //
           if (this.$route.query.type == 'device') {
             this.productid = this.$route.query.deviceid
@@ -310,8 +339,14 @@
             Layer = {},
             Stage = {},
           } = data
+          // 生成页面canvas组
+          console.log(Stage, 'container')
+          var _konvarow = document.querySelectorAll('._center')[0]
+          let div = document.createElement('div')
+          div.setAttribute('id', Stage.container)
+          _konvarow.append(div)
           this.stagedefault = Shape
-          this.$refs.konva.style.backgroundImage = `url(${background})`
+          // this.$refs.konva.style.backgroundImage = `url(${background})`
           this.stage = new Konva.Stage(Object.assign(this.stageConfig, Stage))
           let layer = new Konva.Layer(Layer)
           // create group
@@ -321,14 +356,20 @@
           let _Shape = createShape(group, Shape)
           layer.add(_Shape)
           // 鼠标事件
-          group.on('mouseover', function () {
+          group.on('mouseover', function on() {
             document.body.style.cursor = 'pointer'
           })
-          group.on('mouseout', function () {
+          group.on('mouseout', function on() {
             document.body.style.cursor = 'default'
           })
-          group.on('click', function (e) {
+          group.on('click', function on(e) {
             console.log('attrs', e.target.attrs)
+          })
+          // group.on('mousemove', function on(e) {
+          //   console.log('mousemove', e.target.attrs)
+          // })
+          group.on('mousedown ', function on(e) {
+            console.log('mousedown', e.target.attrs)
           })
           layer.batchDraw()
           this.stage.add(layer)
@@ -344,17 +385,39 @@
   }
 </script>
 <style lang="scss" scoped>
-  .grid-content {
+  ._vuekonva {
     ::v-deep .el-drawer__body {
       overflow-x: auto;
       overflow-y: auto;
     }
     width: 100%;
     height: calc(100vh - 211px);
-    .konva {
-      height: 100%;
-      /* background-image: url('http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/konva/assets/taiti.png'); */
-      background-size: 100% 100%;
+    ._drawer {
+      width: 100%;
+    }
+    ._header {
+      width: 100%;
+    }
+    ._mian {
+      ._row {
+        ._konvarow {
+          padding: 0 !important;
+          // border: 1px solid red;
+          box-shadow: 0 1px 4px rgb(0 21 41 / 8%);
+          .konva {
+            min-width: 100vh;
+            min-height: calc(100vh - 260px);
+            // background-image: url('http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/konva/assets/taiti.png');
+            background-size: 100% 100%;
+          }
+        }
+        ._info {
+          position: relative;
+          height: 40px;
+          background-color: white;
+          border-top: 1px solid rgb(204, 204, 204);
+        }
+      }
     }
   }
 </style>

@@ -18,66 +18,51 @@
         </span>
       </el-dialog>
     </div>
-    <div class="_drawer">
-      <el-drawer
-        :with-header="false"
-        size="40%"
-        :visible.sync="drawer"
-        direction="rtl"
-      >
-        <websocket :topic="topic" />
-      </el-drawer>
-    </div>
-    <div class="_header">
-      <el-collapse v-model="activeNames">
-        <el-collapse-item name="1">
-          <el-row :gutter="24">
-            <el-col :span="8">
-              <el-button
-                type="success"
-                icon="el-icon-setting"
-                @click="drawerFlag"
-              >
-                websocket
-              </el-button>
-              <el-button
-                icon="el-icon-document-add"
-                :disabled="productid.length < 0"
-                @click="subscribe(productid)"
-              >
-                订阅mqtt
-              </el-button>
-              <el-button
-                icon="el-icon-document-add"
-                :disabled="stop_Mqtt"
-                @click="handleCloseSub()"
-              >
-                取消订阅mqtt
-              </el-button>
-            </el-col>
-            <el-col :span="4">
-              自动刷新
-              <el-switch
-                v-model="value"
-                :disabled="productid.length < 0"
-                active-color="#13ce66"
-                inactive-color="#ff4949"
-                active-text="关闭"
-                inactive-text="开启"
-                @change="stopsub"
-              />
-            </el-col>
-          </el-row>
-        </el-collapse-item>
-      </el-collapse>
+    <div v-if="headevisible" class="_header">
+      <topo-header
+        ref="topoheader"
+        :productid="productid"
+        :drawerflag="drawer"
+        :stop-mqtt="stop_Mqtt"
+        :value="value"
+        @messageData="set_mqttflag"
+      />
     </div>
     <div class="_mian">
       <el-row :gutter="gutter" class="_row">
-        <el-col :span="leftrow">
-          <div class="_left"><topo-allocation /></div>
-        </el-col>
+        <transition name="fade">
+          <el-col :span="leftrow">
+            <div class="_left"><topo-allocation /></div>
+          </el-col>
+        </transition>
+
         <el-col :span="gutter - leftrow - rightrow" class="_konvarow">
-          <div ref="konva" :class="konvaClass"></div>
+          <div
+            ref="konva"
+            :class="konvaClass"
+            @mouseover="konvaMouseover(productid)"
+            @mouseleave="konvaMouseleave(productid)"
+          >
+            <i
+              v-show="arrowFlag != 0"
+              style="left: 1vh"
+              :class="[
+                leftrow == 3 ? 'el-icon-arrow-left' : 'el-icon-arrow-right',
+                arrowClass,
+              ]"
+              @click="toggleClass('leftrow')"
+            ></i>
+            <i
+              v-show="arrowFlag != 0"
+              style="right: 1vh"
+              :class="[
+                rightrow == 3 ? 'el-icon-arrow-right' : 'el-icon-arrow-left',
+                arrowClass,
+              ]"
+              @click="toggleClass('rightrow')"
+            ></i>
+          </div>
+
           <div v-if="!isDevice && !productconfig.length" class="_info">
             <el-row :gutter="10">
               <el-col :span="6">
@@ -90,18 +75,33 @@
                   保存
                 </el-button>
               </el-col>
-              <el-col :span="6">
+              <el-col :span="4">
                 <el-button
                   type="primary"
                   :disabled="productid.length < 1"
                   plain
                   @click="preview('info')"
                 >
-                  当前数据
+                  数据
                 </el-button>
               </el-col>
-              <el-col :span="6">
-                <el-button type="info" plain @click="preview('search')">
+              <el-col :span="4">
+                <el-button
+                  :disabled="productid.length < 1"
+                  type="warning"
+                  plain
+                  @click="preview('tools')"
+                >
+                  工具
+                </el-button>
+              </el-col>
+              <el-col :span="4">
+                <el-button
+                  type="info"
+                  plain
+                  :disabled="productid.length < 1"
+                  @click="preview('search')"
+                >
                   分享
                 </el-button>
               </el-col>
@@ -112,7 +112,9 @@
           </div>
         </el-col>
         <el-col :span="rightrow">
-          <div class="_right"><topo-operation /></div>
+          <transition name="fade">
+            <div class="_right"><topo-operation /></div>
+          </transition>
         </el-col>
       </el-row>
     </div>
@@ -127,14 +129,13 @@
   })
   import vueJsonEditor from 'vue-json-editor'
   import { createShape, updateShape, setText } from '@/utils/konva'
-  import websocket from '@/views/tools/websocket'
+
   import { isBase64 } from '@/utils'
   import { Websocket } from '@/utils/wxscoket.js'
   import { _getTopo } from '@/api/Topo'
   import { putProduct, queryProduct } from '@/api/Product'
   export default {
     components: {
-      websocket,
       vueJsonEditor,
       ...res_components,
     },
@@ -157,6 +158,9 @@
         LayerData: [],
         drawer: false,
         ShapeVisible: false,
+        arrowFlag: false,
+        headevisible: false,
+        arrowClass: 'arrowClass',
         Shapeconfig: { id: '' },
         topic: '',
         stop_Mqtt: true,
@@ -202,9 +206,15 @@
       }
     },
     destroyed() {
-      this.handleCloseSub()
+      //
+      console.log('取消订阅mqtt')
+      if (this.$refs.topoheader) this.handleCloseSub()
     },
     methods: {
+      // set_mqttflag
+      set_mqttflag(v) {
+        this.stop_Mqtt = v
+      },
       // 预览
       preview(type) {
         switch (type) {
@@ -214,9 +224,29 @@
           case 'info':
             alert(this.stage.toJSON())
             break
+          case 'tools':
+            this.headevisible = !this.headevisible
+            break
           case 'search':
             this.$message.success('开发中')
             break
+        }
+      },
+      toggleClass(type) {
+        if (type == 'rightrow') {
+          this.rightrow = this.rightrow == 3 ? 0 : 3
+        } else {
+          this.leftrow = this.leftrow == 3 ? 0 : 3
+        }
+      },
+      konvaMouseover(id) {
+        if (id) {
+          this.arrowFlag = true
+        }
+      },
+      konvaMouseleave(id) {
+        if (id) {
+          this.arrowFlag = false
         }
       },
       // 更新产品
@@ -267,47 +297,8 @@
           retained: true,
           qos: 2,
         }
-        Websocket.unsubscribe(sendInfo, (res) => {
-          console.log('取消订阅mqtt', res.msg)
-        })
-      },
-      // 是否自动刷新mqtt消息
-      stopsub(value) {
-        var text0
-        if (value == false) {
-          text0 = JSON.stringify({ action: 'stop_logger' })
-        } else {
-          text0 = JSON.stringify({ action: 'start_logger' })
-        }
-        var sendInfo = {
-          topic: 'thing/' + this.productid + '/post',
-          text: text0,
-          retained: true,
-          qos: 2,
-        }
-        Websocket.sendMessage(sendInfo)
-      },
-      // 打开websocket
-      drawerFlag() {
-        this.topic = `thing/${this.productid}/post`
-        this.drawer = true
-      },
-      // mqtt订阅
-      subscribe(subdialogid) {
-        var info = {
-          topic: `thing/${subdialogid}/post`,
-          qos: 2,
-        }
-        Websocket.subscribe(info, (res) => {
-          if (res.result) {
-            // thing/9c5930e565/9CA525B343F0/post
-            this.$message(`订阅成功 topic: ${info.topic}`, 'sussess')
-            this.stop_Mqtt = false
-          } else {
-            this.$message('订阅失败,请手动订阅mqtt', 'error')
-            this.subscribeMqtt([])
-          }
-        })
+        if (this.$refs.topoheader)
+          this.$refs.topoheader.handleCloseSub(sendInfo)
       },
       _initCreate() {
         let background =
@@ -385,9 +376,8 @@
           layer.batchDraw()
           this.stage.add(layer)
           console.log('绘制完成')
-          this.$nextTick(() => {
-            this.subscribe(this.productid)
-          })
+          if (this.$refs.topoheader)
+            this.$refs.topoheader.subscribe(this.productid)
         } else {
           this._initCreate()
         }
@@ -397,6 +387,15 @@
 </script>
 <style lang="scss" scoped>
   ._vuekonva {
+    /* 可以设置不同的进入和离开动画 */
+    /* 设置持续时间和动画函数 */
+    .fade-enter-active,
+    .fade-leave-active {
+      transition: opacity 2.5s;
+    }
+    .fade-enter, .fade-leave-to /* .fade-leave-active, 2.1.8 版本以下 */ {
+      opacity: 0;
+    }
     width: 100%;
     background-size: 100% 100%;
     ::v-deep .el-drawer__body {
@@ -422,6 +421,7 @@
           // border: 1px solid red;
           box-shadow: 0 1px 4px rgb(0 21 41 / 8%);
           .konva {
+            position: relative;
             min-width: 100vh;
             min-height: calc(100vh - 262px);
             // background-image: url('http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/konva/assets/taiti.png');
@@ -431,9 +431,17 @@
           .isDevice {
             min-height: calc(100vh - 211px);
           }
+          .arrowClass {
+            position: absolute;
+            top: 35vh;
+            z-index: 999;
+            font-size: 30px;
+            cursor: pointer;
+          }
         }
         ._info {
           height: 40px;
+          margin: 0 50px;
           line-height: 40px;
           background-color: white;
         }

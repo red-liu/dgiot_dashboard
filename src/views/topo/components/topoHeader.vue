@@ -27,25 +27,25 @@
               :disabled="productid.length < 0"
               @click="subscribe(productid)"
             >
-              订阅mqtt
+              {{ $translateTitle('leftbar.subscriptions') }} mqtt
             </el-button>
             <el-button
               icon="el-icon-document-add"
               :disabled="stopMqtt"
               @click="CloseSub()"
             >
-              取消订阅mqtt
+              {{ $translateTitle('leftbar. cancel') }} mqtt
             </el-button>
           </el-col>
           <el-col :span="4">
-            自动刷新
+            {{ $translateTitle('tagsView.refresh') }}
             <el-switch
               v-model="switchvalue"
               :disabled="productid.length < 0"
               active-color="#13ce66"
               inactive-color="#ff4949"
-              active-text="关闭"
-              inactive-text="开启"
+              :active-text="$translateTitle('tagsView.close')"
+              :inactive-text="$translateTitle('tagsView.open')"
               @change="stopsub"
             />
           </el-col>

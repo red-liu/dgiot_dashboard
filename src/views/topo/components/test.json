@@ -1,233 +1,244 @@
 {
-  "attrs": {
-    "width": 1667,
-    "height": 350,
-    "id": "container",
-    "draggable": true
-  },
-  "className": "Stage",
-  "children": [
-    {
-      "attrs": { "id": "layer_040a1c7933" },
-      "className": "Layer",
+  "konva": {
+    "Stage": {
+      "attrs": {
+        "id": "container",
+        "width": 1667,
+        "height": 800,
+        "draggable": true
+      },
       "children": [
         {
-          "attrs": { "height": 2000, "id": "Acrel", "width": 2000 },
-          "className": "Group",
+          "attrs": {
+            "id": "layer_040a1c7933"
+          },
           "children": [
             {
               "attrs": {
-                "draggable": true,
-                "fill": "#e579f2",
-                "fontFamily": "Calibri",
-                "fontSize": 20,
                 "id": "Acrel",
-                "text": "group.item.Acrel",
-                "type": "text",
-                "x": 100,
-                "y": 130
+                "width": 2000,
+                "height": 2000
               },
-              "className": "Text"
-            },
-            {
-              "attrs": {
-                "draggable": true,
-                "fill": "#e579f2",
-                "fontFamily": "Calibri",
-                "fontSize": 20,
-                "id": "current",
-                "text": "group.item.current",
-                "type": "text",
-                "x": 100,
-                "y": 160
-              },
-              "className": "Text"
-            },
-            {
-              "attrs": {
-                "draggable": true,
-                "fill": "#e579f2",
-                "fontFamily": "Calibri",
-                "fontSize": 20,
-                "id": "effect",
-                "text": "group.item.effect",
-                "type": "text",
-                "x": 100,
-                "y": 190
-              },
-              "className": "Text"
-            },
-            {
-              "attrs": {
-                "draggable": true,
-                "fill": "#e579f2",
-                "fontFamily": "Calibri",
-                "fontSize": 20,
-                "id": "factor",
-                "text": "group.item.factor",
-                "type": "text",
-                "x": 100,
-                "y": 220
-              },
-              "className": "Text"
-            },
-            {
-              "attrs": {
-                "draggable": true,
-                "fill": "#e579f2",
-                "fontFamily": "Calibri",
-                "fontSize": 20,
-                "id": "flow",
-                "text": "group.item.flow",
-                "type": "text",
-                "x": 100,
-                "y": 250
-              },
-              "className": "Text"
-            },
-            {
-              "attrs": {
-                "draggable": true,
-                "fill": "#e579f2",
-                "fontFamily": "Calibri",
-                "fontSize": 20,
-                "id": "head",
-                "text": "group.item.head",
-                "type": "text",
-                "x": 100,
-                "y": 280
-              },
-              "className": "Text"
-            },
-            {
-              "attrs": {
-                "draggable": true,
-                "fill": "#e579f2",
-                "fontFamily": "Calibri",
-                "fontSize": 20,
-                "id": "opening",
-                "text": "group.item.opening",
-                "type": "text",
-                "x": 100,
-                "y": 310
-              },
-              "className": "Text"
-            },
-            {
-              "attrs": {
-                "draggable": true,
-                "fill": "#e579f2",
-                "fontFamily": "Calibri",
-                "fontSize": 20,
-                "id": "power",
-                "text": "group.item.power",
-                "type": "text",
-                "x": 100,
-                "y": 340
-              },
-              "className": "Text"
-            },
-            {
-              "attrs": {
-                "draggable": true,
-                "fill": "#e579f2",
-                "fontFamily": "Calibri",
-                "fontSize": 20,
-                "id": "pressure_in",
-                "text": "group.item.pressure_in",
-                "type": "text",
-                "x": 100,
-                "y": 370
-              },
-              "className": "Text"
-            },
-            {
-              "attrs": {
-                "draggable": true,
-                "fill": "#e579f2",
-                "fontFamily": "Calibri",
-                "fontSize": 20,
-                "id": "pressure_out",
-                "text": "group.item.pressure_out",
-                "type": "text",
-                "x": 100,
-                "y": 400
-              },
-              "className": "Text"
-            },
-            {
-              "attrs": {
-                "draggable": true,
-                "fill": "#e579f2",
-                "fontFamily": "Calibri",
-                "fontSize": 20,
-                "id": "speed",
-                "text": "group.item.speed",
-                "type": "text",
-                "x": 100,
-                "y": 430
-              },
-              "className": "Text"
-            },
-            {
-              "attrs": {
-                "draggable": true,
-                "fill": "#e579f2",
-                "fontFamily": "Calibri",
-                "fontSize": 20,
-                "id": "switch",
-                "text": "group.item.switch",
-                "type": "text",
-                "x": 100,
-                "y": 460
-              },
-              "className": "Text"
-            },
-            {
-              "attrs": {
-                "draggable": true,
-                "fill": "#e579f2",
-                "fontFamily": "Calibri",
-                "fontSize": 20,
-                "id": "temperature",
-                "text": "group.item.temperature",
-                "type": "text",
-                "x": 100,
-                "y": 490
-              },
-              "className": "Text"
-            },
-            {
-              "attrs": {
-                "draggable": true,
-                "fill": "#e579f2",
-                "fontFamily": "Calibri",
-                "fontSize": 20,
-                "id": "torque",
-                "text": "group.item.torque",
-                "type": "text",
-                "x": 100,
-                "y": 520
-              },
-              "className": "Text"
-            },
-            {
-              "attrs": {
-                "draggable": true,
-                "fill": "#e579f2",
-                "fontFamily": "Calibri",
-                "fontSize": 20,
-                "id": "vol",
-                "text": "group.item.vol",
-                "type": "text",
-                "x": 100,
-                "y": 550
-              },
-              "className": "Text"
+              "children": [
+                {
+                  "attrs": {
+                    "x": 100,
+                    "y": 130,
+                    "id": "Acrel",
+                    "fill": "#000000",
+                    "text": "group.item.Acrel",
+                    "type": "text",
+                    "fontSize": 26,
+                    "draggable": true,
+                    "fontFamily": "Calibri"
+                  },
+                  "className": "Text"
+                },
+                {
+                  "attrs": {
+                    "x": 100,
+                    "y": 160,
+                    "id": "current",
+                    "fill": "#000000",
+                    "text": "group.item.current",
+                    "type": "text",
+                    "fontSize": 26,
+                    "draggable": true,
+                    "fontFamily": "Calibri"
+                  },
+                  "className": "Text"
+                },
+                {
+                  "attrs": {
+                    "x": 100,
+                    "y": 190,
+                    "id": "effect",
+                    "fill": "#000000",
+                    "text": "group.item.effect",
+                    "type": "text",
+                    "fontSize": 26,
+                    "draggable": true,
+                    "fontFamily": "Calibri"
+                  },
+                  "className": "Text"
+                },
+                {
+                  "attrs": {
+                    "x": 100,
+                    "y": 220,
+                    "id": "factor",
+                    "fill": "#000000",
+                    "text": "group.item.factor",
+                    "type": "text",
+                    "fontSize": 26,
+                    "draggable": true,
+                    "fontFamily": "Calibri"
+                  },
+                  "className": "Text"
+                },
+                {
+                  "attrs": {
+                    "x": 100,
+                    "y": 250,
+                    "id": "flow",
+                    "fill": "#000000",
+                    "text": "group.item.flow",
+                    "type": "text",
+                    "fontSize": 26,
+                    "draggable": true,
+                    "fontFamily": "Calibri"
+                  },
+                  "className": "Text"
+                },
+                {
+                  "attrs": {
+                    "x": 100,
+                    "y": 280,
+                    "id": "head",
+                    "fill": "#000000",
+                    "text": "group.item.head",
+                    "type": "text",
+                    "fontSize": 26,
+                    "draggable": true,
+                    "fontFamily": "Calibri"
+                  },
+                  "className": "Text"
+                },
+                {
+                  "attrs": {
+                    "x": 100,
+                    "y": 310,
+                    "id": "opening",
+                    "fill": "#000000",
+                    "text": "group.item.opening",
+                    "type": "text",
+                    "fontSize": 26,
+                    "draggable": true,
+                    "fontFamily": "Calibri"
+                  },
+                  "className": "Text"
+                },
+                {
+                  "attrs": {
+                    "x": 100,
+                    "y": 340,
+                    "id": "power",
+                    "fill": "#000000",
+                    "text": "group.item.power",
+                    "type": "text",
+                    "fontSize": 26,
+                    "draggable": true,
+                    "fontFamily": "Calibri"
+                  },
+                  "className": "Text"
+                },
+                {
+                  "attrs": {
+                    "x": 100,
+                    "y": 370,
+                    "id": "pressure_in",
+                    "fill": "#000000",
+                    "text": "group.item.pressure_in",
+                    "type": "text",
+                    "fontSize": 26,
+                    "draggable": true,
+                    "fontFamily": "Calibri"
+                  },
+                  "className": "Text"
+                },
+                {
+                  "attrs": {
+                    "x": 100,
+                    "y": 400,
+                    "id": "pressure_out",
+                    "fill": "#000000",
+                    "text": "group.item.pressure_out",
+                    "type": "text",
+                    "fontSize": 26,
+                    "draggable": true,
+                    "fontFamily": "Calibri"
+                  },
+                  "className": "Text"
+                },
+                {
+                  "attrs": {
+                    "x": 100,
+                    "y": 430,
+                    "id": "speed",
+                    "fill": "#000000",
+                    "text": "group.item.speed",
+                    "type": "text",
+                    "fontSize": 26,
+                    "draggable": true,
+                    "fontFamily": "Calibri"
+                  },
+                  "className": "Text"
+                },
+                {
+                  "attrs": {
+                    "x": 100,
+                    "y": 460,
+                    "id": "switch",
+                    "fill": "#000000",
+                    "text": "group.item.switch",
+                    "type": "text",
+                    "fontSize": 26,
+                    "draggable": true,
+                    "fontFamily": "Calibri"
+                  },
+                  "className": "Text"
+                },
+                {
+                  "attrs": {
+                    "x": 100,
+                    "y": 490,
+                    "id": "temperature",
+                    "fill": "#000000",
+                    "text": "group.item.temperature",
+                    "type": "text",
+                    "fontSize": 26,
+                    "draggable": true,
+                    "fontFamily": "Calibri"
+                  },
+                  "className": "Text"
+                },
+                {
+                  "attrs": {
+                    "x": 100,
+                    "y": 520,
+                    "id": "torque",
+                    "fill": "#000000",
+                    "text": "group.item.torque",
+                    "type": "text",
+                    "fontSize": 26,
+                    "draggable": true,
+                    "fontFamily": "Calibri"
+                  },
+                  "className": "Text"
+                },
+                {
+                  "attrs": {
+                    "x": 100,
+                    "y": 550,
+                    "id": "vol",
+                    "fill": "#000000",
+                    "text": "group.item.vol",
+                    "type": "text",
+                    "fontSize": 26,
+                    "draggable": true,
+                    "fontFamily": "Calibri"
+                  },
+                  "className": "Text"
+                }
+              ],
+              "className": "Group"
             }
-          ]
+          ],
+          "className": "Layer"
         }
-      ]
-    }
-  ]
+      ],
+      "className": "Stage"
+    },
+    "background": "http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/konva/assets/taiti.png"
+  }
 }

@@ -3,17 +3,21 @@
     <div class="_dialog">
       <el-dialog :visible.sync="ShapeVisible" width="100vh" class="_shape">
         <el-tabs v-model="tabsName">
-          <el-tab-pane label="用户管理" name="first">用户管理</el-tab-pane>
-          <el-tab-pane label="配置管理" name="ShapeJson">
+          <el-tab-pane
+            :label="$translateTitle('product.config')"
+            name="ShapeJson"
+          >
             <span>
               <vue-json-editor v-model="Shapeconfig" :mode="'code'" lang="zh" />
             </span>
           </el-tab-pane>
         </el-tabs>
         <span v-if="tabsName == 'ShapeJson'" slot="footer">
-          <el-button @click="ShapeVisible = false">取 消</el-button>
-          <el-button type="primary" @click="ShapeVisible = false">
-            确 定
+          <el-button @click="ShapeVisible = false">
+            {{ $translateTitle('developer.cancel') }}
+          </el-button>
+          <el-button type="primary" @click="saveKonvaitem(Shapeconfig)">
+            {{ $translateTitle('developer.determine') }}
           </el-button>
         </span>
       </el-dialog>
@@ -78,7 +82,7 @@
                   :disabled="productid.length < 1"
                   @click="preview('save')"
                 >
-                  保存
+                  {{ $translateTitle('product.preservation') }}
                 </el-button>
               </el-col>
               <el-col :span="4">
@@ -88,7 +92,7 @@
                   plain
                   @click="preview('info')"
                 >
-                  数据
+                  {{ $translateTitle('task.data') }}
                 </el-button>
               </el-col>
               <el-col :span="4">
@@ -98,7 +102,7 @@
                   plain
                   @click="preview('tools')"
                 >
-                  工具
+                  {{ $translateTitle('leftbar.tools') }}
                 </el-button>
               </el-col>
               <el-col :span="4">
@@ -108,7 +112,7 @@
                   :disabled="productid.length < 1"
                   @click="preview('search')"
                 >
-                  分享
+                  {{ $translateTitle('product.share') }}
                 </el-button>
               </el-col>
               <el-col :span="6">
@@ -265,6 +269,19 @@
       set_mqttflag(v) {
         this.stop_Mqtt = v
       },
+      // saveKonvaitem
+      saveKonvaitem(config) {
+        const id = config.id
+        // console.log(e, 'mouseout')
+        // find item in the data
+        //  bug
+        // const item = this.stage.find((i) => i.id === id)
+        // for (var k in config) {
+        //   console.log()
+        //   item[`${k}`] = config[`${k}`]
+        // }
+        this.ShapeVisible = false
+      },
       // 预览
       preview(type) {
         switch (type) {
@@ -308,6 +325,9 @@
       },
       // 更新产品
       async updataProduct(productid) {
+        if (!this.stage.toJSON()) {
+          return
+        }
         console.log('updatatopo')
         let config = this.productconfig.config
         config.konva.Stage = JSON.parse(this.stage.toJSON())
@@ -318,7 +338,7 @@
         }
         let res = await putProduct(productid, params)
         console.log(res)
-        this.$message.success('产品组态更新成功')
+        this.$message.success(this.$translateTitle('产品组态更新成功'))
       },
       // 处理mqtt信息
       handleMqttMsg(subdialogid) {
@@ -446,7 +466,6 @@
               // console.log(e, 'mouseout')
               // find item in the data
               const item = _this.stage.find((i) => i.id === id)
-              console.log(item)
               // save to data
               item.x = e.target.x()
               item.y = e.target.y()
@@ -501,7 +520,7 @@
           .konva {
             position: relative;
             min-width: 100vh;
-            min-height: calc(100vh - 262px);
+            min-height: calc(100vh - 212px);
             // background-image: url('http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/konva/assets/taiti.png');
             background-size: 100% 100%;
             border-bottom: 1px solid #ebeef5;

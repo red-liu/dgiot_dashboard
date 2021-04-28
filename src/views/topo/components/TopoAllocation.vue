@@ -25,7 +25,13 @@
           </el-col>
 
           <el-col v-for="(item, index) in queryIcon" :key="index" :span="8">
-            <el-card shadow="hover" @click.native="handleIcon(item)">
+            <el-card
+              shadow="hover"
+              @click.native="handleIcon('ri-' + item)"
+              @mousedown.native="mousedown('ri-' + item)"
+              @mousemove.native="mousemove('ri-' + item)"
+              @mouseup.native="mouseup('ri-' + item)"
+            >
               <vab-icon :icon="item" />
             </el-card>
           </el-col>
@@ -45,7 +51,13 @@
       <el-collapse-item title="其他" name="2">
         <el-row :gutter="20">
           <el-col v-for="item in eleicon" :key="item" :span="8">
-            <el-card shadow="hover" @click.native="handleIcon(item)">
+            <el-card
+              shadow="hover"
+              @click.native="handleIcon('el-icon-' + item)"
+              @mousedown.native="mousedown('el-icon-' + item)"
+              @mousemove.native="mousemove('el-icon-' + item)"
+              @mouseup.native="mouseup('el-icon-' + item)"
+            >
               <i :class="'el-icon-' + item"></i>
             </el-card>
           </el-col>
@@ -372,6 +384,17 @@
     destroyed() {}, //生命周期 - 销毁完成
     activated() {},
     methods: {
+      mousedown(item) {
+        this.$emit('fatherMousedown', item)
+      },
+      mousemove(item) {
+        this.$emit('fatherMousemove', item)
+        // console.log(item)
+      },
+      mouseup(item) {
+        this.$emit('fatherMouseup', item)
+      },
+
       async fetchData() {
         const { data, totalCount } = await getIconList(this.queryForm)
         this.queryIcon = data

@@ -1,0 +1,233 @@
+{
+  "attrs": {
+    "width": 1667,
+    "height": 350,
+    "id": "container",
+    "draggable": true
+  },
+  "className": "Stage",
+  "children": [
+    {
+      "attrs": { "id": "layer_040a1c7933" },
+      "className": "Layer",
+      "children": [
+        {
+          "attrs": { "height": 2000, "id": "Acrel", "width": 2000 },
+          "className": "Group",
+          "children": [
+            {
+              "attrs": {
+                "draggable": true,
+                "fill": "#e579f2",
+                "fontFamily": "Calibri",
+                "fontSize": 20,
+                "id": "Acrel",
+                "text": "group.item.Acrel",
+                "type": "text",
+                "x": 100,
+                "y": 130
+              },
+              "className": "Text"
+            },
+            {
+              "attrs": {
+                "draggable": true,
+                "fill": "#e579f2",
+                "fontFamily": "Calibri",
+                "fontSize": 20,
+                "id": "current",
+                "text": "group.item.current",
+                "type": "text",
+                "x": 100,
+                "y": 160
+              },
+              "className": "Text"
+            },
+            {
+              "attrs": {
+                "draggable": true,
+                "fill": "#e579f2",
+                "fontFamily": "Calibri",
+                "fontSize": 20,
+                "id": "effect",
+                "text": "group.item.effect",
+                "type": "text",
+                "x": 100,
+                "y": 190
+              },
+              "className": "Text"
+            },
+            {
+              "attrs": {
+                "draggable": true,
+                "fill": "#e579f2",
+                "fontFamily": "Calibri",
+                "fontSize": 20,
+                "id": "factor",
+                "text": "group.item.factor",
+                "type": "text",
+                "x": 100,
+                "y": 220
+              },
+              "className": "Text"
+            },
+            {
+              "attrs": {
+                "draggable": true,
+                "fill": "#e579f2",
+                "fontFamily": "Calibri",
+                "fontSize": 20,
+                "id": "flow",
+                "text": "group.item.flow",
+                "type": "text",
+                "x": 100,
+                "y": 250
+              },
+              "className": "Text"
+            },
+            {
+              "attrs": {
+                "draggable": true,
+                "fill": "#e579f2",
+                "fontFamily": "Calibri",
+                "fontSize": 20,
+                "id": "head",
+                "text": "group.item.head",
+                "type": "text",
+                "x": 100,
+                "y": 280
+              },
+              "className": "Text"
+            },
+            {
+              "attrs": {
+                "draggable": true,
+                "fill": "#e579f2",
+                "fontFamily": "Calibri",
+                "fontSize": 20,
+                "id": "opening",
+                "text": "group.item.opening",
+                "type": "text",
+                "x": 100,
+                "y": 310
+              },
+              "className": "Text"
+            },
+            {
+              "attrs": {
+                "draggable": true,
+                "fill": "#e579f2",
+                "fontFamily": "Calibri",
+                "fontSize": 20,
+                "id": "power",
+                "text": "group.item.power",
+                "type": "text",
+                "x": 100,
+                "y": 340
+              },
+              "className": "Text"
+            },
+            {
+              "attrs": {
+                "draggable": true,
+                "fill": "#e579f2",
+                "fontFamily": "Calibri",
+                "fontSize": 20,
+                "id": "pressure_in",
+                "text": "group.item.pressure_in",
+                "type": "text",
+                "x": 100,
+                "y": 370
+              },
+              "className": "Text"
+            },
+            {
+              "attrs": {
+                "draggable": true,
+                "fill": "#e579f2",
+                "fontFamily": "Calibri",
+                "fontSize": 20,
+                "id": "pressure_out",
+                "text": "group.item.pressure_out",
+                "type": "text",
+                "x": 100,
+                "y": 400
+              },
+              "className": "Text"
+            },
+            {
+              "attrs": {
+                "draggable": true,
+                "fill": "#e579f2",
+                "fontFamily": "Calibri",
+                "fontSize": 20,
+                "id": "speed",
+                "text": "group.item.speed",
+                "type": "text",
+                "x": 100,
+                "y": 430
+              },
+              "className": "Text"
+            },
+            {
+              "attrs": {
+                "draggable": true,
+                "fill": "#e579f2",
+                "fontFamily": "Calibri",
+                "fontSize": 20,
+                "id": "switch",
+                "text": "group.item.switch",
+                "type": "text",
+                "x": 100,
+                "y": 460
+              },
+              "className": "Text"
+            },
+            {
+              "attrs": {
+                "draggable": true,
+                "fill": "#e579f2",
+                "fontFamily": "Calibri",
+                "fontSize": 20,
+                "id": "temperature",
+                "text": "group.item.temperature",
+                "type": "text",
+                "x": 100,
+                "y": 490
+              },
+              "className": "Text"
+            },
+            {
+              "attrs": {
+                "draggable": true,
+                "fill": "#e579f2",
+                "fontFamily": "Calibri",
+                "fontSize": 20,
+                "id": "torque",
+                "text": "group.item.torque",
+                "type": "text",
+                "x": 100,
+                "y": 520
+              },
+              "className": "Text"
+            },
+            {
+              "attrs": {
+                "draggable": true,
+                "fill": "#e579f2",
+                "fontFamily": "Calibri",
+                "fontSize": 20,
+                "id": "vol",
+                "text": "group.item.vol",
+                "type": "text",
+                "x": 100,
+                "y": 550
+              },
+              "className": "Text"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

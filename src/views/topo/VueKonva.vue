@@ -32,7 +32,13 @@
       <el-row :gutter="gutter" class="_row">
         <transition name="fade">
           <el-col :span="leftrow">
-            <div class="_left"><topo-allocation /></div>
+            <div class="_left">
+              <topo-allocation
+                @fatherMousedown="mousedown"
+                @fatherMousemove="mousemove"
+                @fatherMouseup="mouseup"
+              />
+            </div>
           </el-col>
         </transition>
 
@@ -113,7 +119,9 @@
         </el-col>
         <el-col :span="rightrow">
           <transition name="fade">
-            <div class="_right"><topo-operation /></div>
+            <div class="_right">
+              <topo-operation :img="konvaBg" @upImg="upProduct" />
+            </div>
           </transition>
         </el-col>
       </el-row>
@@ -128,12 +136,20 @@
     res_components[fileName.replace(/^\.\/(.*)\.\w+$/, '$1')] = comp.default
   })
   import vueJsonEditor from 'vue-json-editor'
-  import { createShape, updateShape, setText } from '@/utils/konva'
+  import testjson from '@/views/topo/components/test'
+  import {
+    createShape,
+    updateShape,
+    setText,
+    Position,
+    dragBox,
+  } from '@/utils/konva'
 
-  import { isBase64 } from '@/utils'
+  import { isBase64, isImage } from '@/utils'
   import { Websocket } from '@/utils/wxscoket.js'
   import { _getTopo } from '@/api/Topo'
   import { putProduct, queryProduct } from '@/api/Product'
+  import { json } from 'body-parser'
   export default {
     components: {
       vueJsonEditor,
@@ -153,6 +169,7 @@
         konva: [],
         konvaClass: ['konva', '_center'],
         textConfig: [],
+        konvaBg: '',
         imgConfig: [],
         rectConfig: [],
         LayerData: [],
@@ -211,6 +228,39 @@
       if (this.$refs.topoheader) this.handleCloseSub()
     },
     methods: {
+      // @click//单击
+      // @mousedown//按下
+      // @mouseup//抬起
+      // @dblclick//双击
+      // @mousemove//移动
+      // @mouseleave//离开
+      // @mouseout //移出
+      // @mouseenter//进入
+      // @mouseover//在
+      mousedown(item) {
+        console.log(item)
+        var _center = document.querySelectorAll('._center')[0]
+        let oElement = document.querySelectorAll(`.${item}`)[0]
+        console.log(Position(oElement))
+
+        // dragBox(
+        //   document.querySelectorAll(`.${item}`)[0],
+        //   document.querySelectorAll('.konvajs-content')[0]
+        // )
+      },
+      mousemove(item) {
+        // let oElement = document.querySelectorAll(`.${item}`)[0]
+        // console.log(Position(oElement))
+      },
+      mouseup(item) {
+        // dragBox(
+        //   document.querySelectorAll(`.${item}`)[0],
+        //   document.querySelectorAll('.konvajs-content')[0]
+        // )
+        var _center = document.querySelectorAll('._center')[0]
+        let oElement = document.querySelectorAll(`.${item}`)[0]
+        console.log(Position(oElement))
+      },
       // set_mqttflag
       set_mqttflag(v) {
         this.stop_Mqtt = v
@@ -249,14 +299,22 @@
           this.arrowFlag = false
         }
       },
+      upProduct(img) {
+        if (isImage(img)) {
+          // 执行上传
+        } else {
+          // updataProduct
+        }
+      },
       // 更新产品
       async updataProduct(productid) {
         console.log('updatatopo')
-        const { config } = this.productconfig
+        let config = this.productconfig.config
+        config.konva.Stage = JSON.parse(this.stage.toJSON())
         // 提交前需要先对数据进行合并
-        let upconfig = Object.assign(config, this.paramsconfig)
+        // let upconfig = Object.assign(config, this.paramsconfig)
         let params = {
-          config: upconfig,
+          config: config,
         }
         let res = await putProduct(productid, params)
         console.log(res)
@@ -307,7 +365,8 @@
       },
       // js 绘制
       async createKonva() {
-        const { productid, devaddr = undefined } = this.$route.query
+        let _this = this
+        const { productid, devaddr = undefined } = _this.$route.query
         let params = {
           productid: productid,
           devaddr: devaddr,
@@ -315,71 +374,90 @@
         const { message = '', data } = await _getTopo(params)
         // 绘制前不光需要获取到组态数据，还需要获取产品数据
         const { results = [] } = await queryProduct({
-          where: { objectId: this.productid },
+          where: { objectId: _this.productid },
         })
-        this.productconfig = results[0]
-        console.log(this.productconfig)
+        _this.productconfig = results[0]
+        console.log(_this.productconfig)
         if (message == 'SUCCESS') {
           console.log(data)
-          this.paramsconfig = { konva: data }
+          _this.paramsconfig = { konva: data }
           //
-          if (this.$route.query.type == 'device') {
-            this.productid = this.$route.query.deviceid
+          if (_this.$route.query.type == 'device') {
+            _this.productid = _this.$route.query.deviceid
           }
-          this.handleMqttMsg(this.productid)
+          _this.handleMqttMsg(_this.productid)
           // set backgroundImage
-          console.log(data)
-          const {
-            background = '',
-            Shape = [],
-            Group = {},
-            Layer = {},
-            Stage = {},
-          } = data
-          // 生成页面canvas组
-          console.log(Stage, 'container')
+          const { background = '', Stage = {} } = data
+          _this.konvaBg = background
+          console.log(Stage, '387')
           var _konvarow = document.querySelectorAll('._center')[0]
           let div = document.createElement('div')
-          div.setAttribute('id', Stage.container)
-          _konvarow.append(div)
-          this.stagedefault = Shape
-          this.$refs.konva.style.backgroundImage = `url(${background})`
-          this.stage = new Konva.Stage(Object.assign(this.stageConfig, Stage))
-          let _this = this
-          let layer = new Konva.Layer(Layer)
-          // create group
-          let group = new Konva.Group(Group)
-          // this.layer.add(createText(data.Layer))
-          // create Shape
-          createShape(group, Shape)
-          // function
+          _konvarow.appendChild(div)
+          let Stageid = Stage.attrs.id
+
+          div.setAttribute('id', Stageid)
+          _this.$refs.konva.style.backgroundImage = `url(${background})`
+          console.log(Stage)
+          _this.stage = Konva.Node.create(Stage, Stageid)
+          var tweens = []
+          var Text = _this.stage.find('Text')
+          var Group = _this.stage.find('Group')
+          console.log('Group', Group)
+          for (var n = 0; n < tweens.length; n++) {
+            tweens[n].destroy()
+          }
+
+          // apply transition to all nodes in the array
+          Text.each(function (shape) {
+            shape.on('mouseup', (shape) => {
+              console.log(shape, 'mouseup')
+              document.body.style.cursor = 'pointer'
+            })
+            tweens.push(
+              new Konva.Tween({
+                node: shape,
+                duration: 1,
+                easing: Konva.Easings.ElasticEaseOut,
+              }).play()
+            )
+          })
           // 设置页面是从设备界面进入 则不添加以下事件
-          if (this.isDevice && this.productconfig) {
-            this.konvaClass.push('isDevice')
-            this.leftrow = this.rightrow = 0
+          if (_this.isDevice && _this.productconfig) {
+            _this.konvaClass.push('isDevice')
+            _this.leftrow = _this.rightrow = 0
           } else {
-            this.leftrow = this.rightrow = 3
-            group.on('click', (e) => {
+            _this.leftrow = _this.rightrow = 3
+          }
+          Group.each(function (_G) {
+            console.log(_G, '_G')
+            _G.on('click', (e) => {
               _this.ShapeVisible = true
-              console.log(e)
               _this.Shapeconfig = e.target.attrs
             })
-          }
-          group.on('mouseover', () => {
-            document.body.style.cursor = 'pointer'
+            _G.on('mouseup', (e) => {
+              console.log(e, 'mouseup')
+              document.body.style.cursor = 'pointer'
+            })
+            _G.on('mouseover', (e) => {
+              document.body.style.cursor = 'pointer'
+            })
+            _G.on('mouseout', (e) => {
+              const id = e.target.id()
+              // console.log(e, 'mouseout')
+              // find item in the data
+              const item = _this.stage.find((i) => i.id === id)
+              console.log(item)
+              // save to data
+              item.x = e.target.x()
+              item.y = e.target.y()
+              // console.log(_this.stage.toJSON())
+              document.body.style.cursor = 'default'
+            })
           })
-          group.on('mouseout', () => {
-            document.body.style.cursor = 'default'
-          })
-          // views
-          layer.add(group)
-          layer.batchDraw()
-          this.stage.add(layer)
+
           console.log('绘制完成')
           if (this.$refs.topoheader)
-            this.$refs.topoheader.subscribe(this.productid)
-        } else {
-          this._initCreate()
+            this.$refs.topoheader.subscribe(_this.productid)
         }
       },
     },

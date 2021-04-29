@@ -325,11 +325,21 @@
           this.arrowFlag = false
         }
       },
-      upProduct(img) {
+      async upProduct(img) {
         if (isImage(img)) {
-          // 执行上传
+          let config = this.productconfig.config
+          config.konva.background = img
+          let params = {
+            config: config,
+          }
+          this.$refs.konva.style.backgroundImage = `url(${img})`
+          let res = await putProduct(this.productid, params)
+          console.log(res)
+          if (res) {
+            this.$message.success(this.$translateTitle('组态背景更新成功'))
+          }
         } else {
-          // updataProduct
+          this.$message.error(this.$translateTitle('非图片类型'))
         }
       },
       // 更新产品
@@ -447,9 +457,10 @@
           // set backgroundImage
           const { background = '', Stage = {} } = data
           _this.konvaBg = background
-          console.log(Stage.attrs.height, Stage.attrs.width, '387')
+          console.log(Stage.attrs.height, Stage.attrs.width, '450')
           Stage.attrs.height = this.stageConfig.height
           Stage.attrs.width = this.stageConfig.width
+          console.log(Stage.attrs.height, Stage.attrs.width, '453')
           var _konvarow = document.querySelectorAll('._center')[0]
           let div = document.createElement('div')
           _konvarow.appendChild(div)

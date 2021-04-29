@@ -22,7 +22,12 @@
         </span>
       </el-dialog>
     </div>
-    <div v-if="headevisible" class="_header">
+    <div
+      :style="{
+        display: headevisible ? 'block' : 'none',
+      }"
+      class="_header"
+    >
       <topo-header
         ref="topoheader"
         :productid="productid"
@@ -73,7 +78,12 @@
             ></i>
           </div>
 
-          <div v-if="!isDevice && !productconfig.length" class="_info">
+          <div
+            :style="{
+              display: !isDevice && !productconfig.length ? 'block' : 'none',
+            }"
+            class="_info"
+          >
             <el-row :gutter="10">
               <el-col :span="6">
                 <el-button
@@ -219,9 +229,8 @@
     },
     mounted() {
       if (this.productid) {
-        this.handleCloseSub()
         this.createKonva()
-        console.log('订阅mqtt消息')
+        this.handleCloseSub()
       } else {
         this._initCreate()
       }
@@ -351,18 +360,45 @@
           }
           let decodeMqtt = JSON.parse(Base64.decode(Msg))
           console.log(decodeMqtt.konva)
-          const Shape = decodeMqtt.konva.Shape
-          const stagedefault = this.stagedefault
-          if (Shape) {
-            updateShape(Shape)
-              .then((result) => {
-                console.log(result)
-                console.log('konva数据更新成功')
-              })
-              .catch((err) => {
-                console.log('konva数据更新失败', err)
-              })
-          }
+          const Shape = decodeMqtt.konva
+          // apply transition to all nodes in the array
+          // Text.each(function (shape) {
+          Shape.forEach((_Shape) => {
+            console.log(this.stage)
+            let shape = this.stage.find(`#{_Shape.id}`)
+            console.log(shape)
+            var text = shape.text()
+            shape.text(_Shape.text)
+            var tween
+            if (tween) {
+              tween.destroy()
+            }
+
+            tween = new Konva.Tween({
+              node: shape,
+              duration: 1,
+            }).play()
+            // start tween after 2 seconds
+            setTimeout(function () {
+              tween.play()
+              console.log('修改成功')
+            }, 2000)
+            console.log(_Shape)
+            text.text(_Shape.text)
+          })
+          console.log()
+          // })
+          // const stagedefault = this.stagedefault
+          // if (Shape) {
+          //   updateShape(Shape)
+          //     .then((result) => {
+          //       console.log(result)
+          //       console.log('konva数据更新成功')
+          //     })
+          //     .catch((err) => {
+          //       console.log('konva数据更新失败', err)
+          //     })
+          // }
         })
       },
       // 取消订阅mqtt
@@ -375,8 +411,10 @@
           retained: true,
           qos: 2,
         }
-        if (this.$refs.topoheader)
+        if (this.$refs.topoheader) {
+          console.log('订阅mqtt')
           this.$refs.topoheader.handleCloseSub(sendInfo)
+        }
       },
       _initCreate() {
         let background =
@@ -409,7 +447,9 @@
           // set backgroundImage
           const { background = '', Stage = {} } = data
           _this.konvaBg = background
-          console.log(Stage, '387')
+          console.log(Stage.attrs.height, Stage.attrs.width, '387')
+          Stage.attrs.height = this.stageConfig.height
+          Stage.attrs.width = this.stageConfig.width
           var _konvarow = document.querySelectorAll('._center')[0]
           let div = document.createElement('div')
           _konvarow.appendChild(div)

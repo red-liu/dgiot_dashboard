@@ -38,6 +38,24 @@
       />
     </div>
     <div class="_mian">
+      <i
+        v-show="arrowFlag"
+        style="top: 1vh; right: 100vh"
+        :class="[
+          headevisible ? 'el-icon-arrow-up' : 'el-icon-arrow-down',
+          arrowClass,
+        ]"
+        @click="headevisible = !headevisible"
+      ></i>
+      <i
+        v-show="arrowFlag"
+        style="right: 100vh; bottom: 1vh"
+        :class="[
+          infoFlag ? 'el-icon-arrow-down' : 'el-icon-arrow-up',
+          arrowClass,
+        ]"
+        @click="infoFlag = !infoFlag"
+      ></i>
       <el-row :gutter="gutter" class="_row">
         <transition name="fade">
           <el-col :span="leftrow">
@@ -59,8 +77,8 @@
             @mouseleave="konvaMouseleave(productid)"
           >
             <i
-              v-show="arrowFlag != 0"
-              style="left: 1vh"
+              v-show="arrowFlag"
+              style="top: 35vh; left: 1vh"
               :class="[
                 leftrow == 3 ? 'el-icon-arrow-left' : 'el-icon-arrow-right',
                 arrowClass,
@@ -68,8 +86,8 @@
               @click="toggleClass('leftrow')"
             ></i>
             <i
-              v-show="arrowFlag != 0"
-              style="right: 1vh"
+              v-show="arrowFlag"
+              style="top: 35vh; right: 1vh"
               :class="[
                 rightrow == 3 ? 'el-icon-arrow-right' : 'el-icon-arrow-left',
                 arrowClass,
@@ -80,7 +98,7 @@
 
           <div
             :style="{
-              display: !isDevice && !productconfig.length ? 'block' : 'none',
+              display: infoFlag ? 'block' : 'none',
             }"
             class="_info"
           >
@@ -95,7 +113,7 @@
                   {{ $translateTitle('product.preservation') }}
                 </el-button>
               </el-col>
-              <el-col :span="4">
+              <el-col :span="6">
                 <el-button
                   type="primary"
                   :disabled="productid.length < 1"
@@ -105,17 +123,7 @@
                   {{ $translateTitle('task.data') }}
                 </el-button>
               </el-col>
-              <el-col :span="4">
-                <el-button
-                  :disabled="productid.length < 1"
-                  type="warning"
-                  plain
-                  @click="preview('tools')"
-                >
-                  {{ $translateTitle('leftbar.tools') }}
-                </el-button>
-              </el-col>
-              <el-col :span="4">
+              <el-col :span="6">
                 <el-button
                   type="info"
                   plain
@@ -179,7 +187,7 @@
         leftrow: 0,
         rightrow: 0,
         productid: this.$route.query.productid || '',
-        isDevice: this.$route.query.type ? true : false,
+        isDevice: this.$route.query.type == 'device' ? true : false,
         konva: [],
         konvaClass: ['konva', '_center'],
         textConfig: [],
@@ -191,6 +199,7 @@
         ShapeVisible: false,
         arrowFlag: false,
         headevisible: false,
+        infoFlag: false,
         arrowClass: 'arrowClass',
         Shapeconfig: { id: '' },
         topic: '',
@@ -300,9 +309,6 @@
           case 'info':
             alert(this.stage.toJSON())
             break
-          case 'tools':
-            this.headevisible = !this.headevisible
-            break
           case 'search':
             this.$message.success('开发中')
             break
@@ -316,12 +322,12 @@
         }
       },
       konvaMouseover(id) {
-        if (id) {
+        if (id && !this.isDevice) {
           this.arrowFlag = true
         }
       },
       konvaMouseleave(id) {
-        if (id) {
+        if (id && !this.isDevice) {
           this.arrowFlag = false
         }
       },
@@ -373,29 +379,32 @@
           const Shape = decodeMqtt.konva
           // apply transition to all nodes in the array
           // Text.each(function (shape) {
-          Shape.forEach((_Shape) => {
-            console.log(this.stage)
-            let shape = this.stage.find(`#{_Shape.id}`)
-            console.log(shape)
-            var text = shape.text()
-            shape.text(_Shape.text)
-            var tween
-            if (tween) {
-              tween.destroy()
-            }
+          var Text = this.stage.find('Text')
+          console.log(Text)
+          var tweens = []
+          for (var n = 0; n < tweens.length; n++) {
+            tweens[n].destroy()
+          }
 
-            tween = new Konva.Tween({
-              node: shape,
-              duration: 1,
-            }).play()
-            // start tween after 2 seconds
-            setTimeout(function () {
-              tween.play()
-              console.log('修改成功')
-            }, 2000)
-            console.log(_Shape)
-            text.text(_Shape.text)
+          Shape.forEach((i) => {
+            Text.each((shape) => {
+              if (i.id == shape.attrs.id) {
+                console.log(i)
+                console.log(shape)
+                shape.text(i.text)
+                tweens.push(
+                  new Konva.Tween({
+                    node: shape,
+                    duration: 1,
+                    easing: Konva.Easings.ElasticEaseOut,
+                  }).play()
+                )
+              }
+            })
           })
+          let toJSON = this.stage.toJSON()
+          Konva.Node.create(toJSON)
+          console.log(Konva.Node.create(toJSON))
           console.log()
           // })
           // const stagedefault = this.stagedefault
@@ -428,7 +437,7 @@
       },
       _initCreate() {
         let background =
-          'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/konva/assets/taiti.png'
+          'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/blog/study/opc/nf_taiti.png'
         this.$refs.konva.style.backgroundImage = `url(${background})`
       },
       // js 绘制
@@ -471,27 +480,11 @@
           console.log(Stage)
           _this.stage = Konva.Node.create(Stage, Stageid)
           var tweens = []
-          var Text = _this.stage.find('Text')
           var Group = _this.stage.find('Group')
           console.log('Group', Group)
           for (var n = 0; n < tweens.length; n++) {
             tweens[n].destroy()
           }
-
-          // apply transition to all nodes in the array
-          Text.each(function (shape) {
-            shape.on('mouseup', (shape) => {
-              console.log(shape, 'mouseup')
-              document.body.style.cursor = 'pointer'
-            })
-            tweens.push(
-              new Konva.Tween({
-                node: shape,
-                duration: 1,
-                easing: Konva.Easings.ElasticEaseOut,
-              }).play()
-            )
-          })
           // 设置页面是从设备界面进入 则不添加以下事件
           if (_this.isDevice && _this.productconfig) {
             _this.konvaClass.push('isDevice')
@@ -563,6 +556,23 @@
       width: 100%;
     }
     ._mian {
+      position: relative;
+      .arrowClass {
+        position: absolute;
+        z-index: 999;
+        width: 40px;
+        height: 40px;
+        padding: 7px;
+        font-size: 24px;
+        font-weight: 700;
+        color: #1890ff;
+        color: #fff;
+        cursor: pointer;
+        background: #e8f4ff;
+        background-color: #409eff;
+        border-color: #409eff;
+        border-radius: 50%;
+      }
       ._row {
         ._konvarow {
           padding: 0 !important;
@@ -571,20 +581,29 @@
           .konva {
             position: relative;
             min-width: 100vh;
-            min-height: calc(100vh - 212px);
-            // background-image: url('http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/konva/assets/taiti.png');
+            min-height: calc(100vh - 163px);
+            // background-image: url('http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/blog/study/opc/nf_taiti.png');
             background-size: 100% 100%;
             border-bottom: 1px solid #ebeef5;
           }
           .isDevice {
-            min-height: calc(100vh - 211px);
+            min-height: calc(100vh - 163px);
           }
           .arrowClass {
             position: absolute;
-            top: 35vh;
             z-index: 999;
-            font-size: 30px;
+            width: 40px;
+            height: 40px;
+            padding: 7px;
+            font-size: 24px;
+            font-weight: 700;
+            color: #1890ff;
+            color: #fff;
             cursor: pointer;
+            background: #e8f4ff;
+            background-color: #409eff;
+            border-color: #409eff;
+            border-radius: 50%;
           }
         }
         ._info {

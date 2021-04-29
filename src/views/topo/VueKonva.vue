@@ -182,19 +182,13 @@
         per: '100',
         paramsconfig: {},
         productconfig: {},
-        activeNames: [],
         gutter: 24,
         leftrow: 0,
         rightrow: 0,
         productid: this.$route.query.productid || '',
         isDevice: this.$route.query.type == 'device' ? true : false,
-        konva: [],
         konvaClass: ['konva', '_center'],
-        textConfig: [],
         konvaBg: '',
-        imgConfig: [],
-        rectConfig: [],
-        LayerData: [],
         drawer: false,
         ShapeVisible: false,
         arrowFlag: false,
@@ -204,25 +198,9 @@
         Shapeconfig: { id: '' },
         topic: '',
         stop_Mqtt: true,
-        subdialogtimer: null,
-        rules: {
-          url: [{ required: true, message: '请输入url', trigger: 'blur' }],
-          topic: [{ required: true, message: '请输入topic', trigger: 'blur' }],
-        },
-        subdialogid: 'subdialogid',
         tabsName: 'ShapeJson',
-        layer: {},
-        group: {},
-        stagedefault: [],
-        simpleText: {},
-        text: '',
-        stopValue: '',
-        form: {
-          url: '',
-          topic: '',
-        },
+        globalStageid: '',
         value: false,
-        formLabelWidth: '80px',
       }
     },
     computed: {
@@ -238,7 +216,6 @@
     },
     mounted() {
       if (this.productid) {
-        this.createKonva()
         this.handleCloseSub()
       } else {
         this._initCreate()
@@ -289,7 +266,6 @@
       },
       // saveKonvaitem
       saveKonvaitem(config) {
-        const id = config.id
         // console.log(e, 'mouseout')
         // find item in the data
         //  bug
@@ -298,7 +274,36 @@
         //   console.log()
         //   item[`${k}`] = config[`${k}`]
         // }
-        this.ShapeVisible = false
+        let _this = this
+        var Text = _this.stage.find('Text')
+        console.log(Text)
+        var tweens = []
+        for (var n = 0; n < tweens.length; n++) {
+          tweens[n].destroy()
+        }
+
+        Text.each((shape) => {
+          if (shape.attrs.id == config.id) {
+            console.log(config)
+            console.log(shape)
+            shape.text(config.text)
+            tweens.push(
+              new Konva.Tween({
+                node: shape,
+                Opacity: 0.8,
+                duration: 1,
+                easing: Konva.Easings.ElasticEaseOut,
+              }).play()
+            )
+          }
+        })
+        let toJSON = _this.stage.toJSON()
+        console.log(toJSON)
+        _this.ShapeVisible = false
+        _this.createKonva(JSON.parse(toJSON), _this.globalStageid, 'update')
+        console.log('konva数据更新成功')
+        console.log(Konva.Node.create(toJSON))
+        console.log('konva数据更新成功')
       },
       // 预览
       preview(type) {
@@ -395,6 +400,7 @@
                 tweens.push(
                   new Konva.Tween({
                     node: shape,
+                    Opacity: 0.8,
                     duration: 1,
                     easing: Konva.Easings.ElasticEaseOut,
                   }).play()
@@ -403,9 +409,8 @@
             })
           })
           let toJSON = this.stage.toJSON()
-          Konva.Node.create(toJSON)
-          console.log(Konva.Node.create(toJSON))
-          console.log()
+          _this.createKonva(JSON.parse(toJSON), _this.globalStageid, 'edit')
+          console.log('konva数据更新成功')
           // })
           // const stagedefault = this.stagedefault
           // if (Shape) {
@@ -421,28 +426,20 @@
         })
       },
       // 取消订阅mqtt
-      handleCloseSub() {
-        this.stop_Mqtt = true
+      async handleCloseSub() {
+        let _this = this
+        _this.stop_Mqtt = true
         var text0 = JSON.stringify({ action: 'stop_logger' })
         var sendInfo = {
-          topic: 'thing/' + this.productid + '/post',
+          topic: 'thing/' + _this.productid + '/post',
           text: text0,
           retained: true,
           qos: 2,
         }
-        if (this.$refs.topoheader) {
+        if (_this.$refs.topoheader) {
           console.log('订阅mqtt')
-          this.$refs.topoheader.handleCloseSub(sendInfo)
+          _this.$refs.topoheader.handleCloseSub(sendInfo)
         }
-      },
-      _initCreate() {
-        let background =
-          'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/blog/study/opc/nf_taiti.png'
-        this.$refs.konva.style.backgroundImage = `url(${background})`
-      },
-      // js 绘制
-      async createKonva() {
-        let _this = this
         const { productid, devaddr = undefined } = _this.$route.query
         let params = {
           productid: productid,
@@ -455,8 +452,11 @@
         })
         _this.productconfig = results[0]
         console.log(_this.productconfig)
+
         if (message == 'SUCCESS') {
-          console.log(data)
+          console.log(data.Stage.attrs.id)
+          _this.globalStageid = data.Stage.attrs.id
+          _this.createKonva(data, _this.globalStageid, 'create')
           _this.paramsconfig = { konva: data }
           //
           if (_this.$route.query.type == 'device') {
@@ -464,64 +464,73 @@
           }
           _this.handleMqttMsg(_this.productid)
           // set backgroundImage
-          const { background = '', Stage = {} } = data
-          _this.konvaBg = background
-          console.log(Stage.attrs.height, Stage.attrs.width, '450')
-          Stage.attrs.height = this.stageConfig.height
-          Stage.attrs.width = this.stageConfig.width
-          console.log(Stage.attrs.height, Stage.attrs.width, '453')
-          var _konvarow = document.querySelectorAll('._center')[0]
-          let div = document.createElement('div')
-          _konvarow.appendChild(div)
-          let Stageid = Stage.attrs.id
-
-          div.setAttribute('id', Stageid)
-          _this.$refs.konva.style.backgroundImage = `url(${background})`
-          console.log(Stage)
-          _this.stage = Konva.Node.create(Stage, Stageid)
-          var tweens = []
-          var Group = _this.stage.find('Group')
-          console.log('Group', Group)
-          for (var n = 0; n < tweens.length; n++) {
-            tweens[n].destroy()
-          }
-          // 设置页面是从设备界面进入 则不添加以下事件
-          if (_this.isDevice && _this.productconfig) {
-            _this.konvaClass.push('isDevice')
-            _this.leftrow = _this.rightrow = 0
-          } else {
-            _this.leftrow = _this.rightrow = 3
-          }
-          Group.each(function (_G) {
-            console.log(_G, '_G')
-            _G.on('click', (e) => {
-              _this.ShapeVisible = true
-              _this.Shapeconfig = e.target.attrs
-            })
-            _G.on('mouseup', (e) => {
-              console.log(e, 'mouseup')
-              document.body.style.cursor = 'pointer'
-            })
-            _G.on('mouseover', (e) => {
-              document.body.style.cursor = 'pointer'
-            })
-            _G.on('mouseout', (e) => {
-              const id = e.target.id()
-              // console.log(e, 'mouseout')
-              // find item in the data
-              const item = _this.stage.find((i) => i.id === id)
-              // save to data
-              item.x = e.target.x()
-              item.y = e.target.y()
-              // console.log(_this.stage.toJSON())
-              document.body.style.cursor = 'default'
-            })
-          })
-
-          console.log('绘制完成')
-          if (this.$refs.topoheader)
-            this.$refs.topoheader.subscribe(_this.productid)
         }
+      },
+      _initCreate() {
+        let background =
+          'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/blog/study/opc/nf_taiti.png'
+        this.$refs.konva.style.backgroundImage = `url(${background})`
+      },
+      // js 绘制
+      createKonva(data, globalStageid, type) {
+        console.log('type', type)
+        let Stage, background
+        let _this = this
+        if (type != 'create') {
+          Stage = data
+          background = _this.productconfig.config.konva.background
+        } else {
+          background = data.background
+          Stage = data.Stage
+        }
+        console.log(data)
+        _this.konvaBg = background
+        console.log(Stage)
+        console.log(Stage.attrs.height, Stage.attrs.width, '450')
+        Stage.attrs.height = _this.stageConfig.height
+        Stage.attrs.width = _this.stageConfig.width
+        console.log(Stage.attrs.height, Stage.attrs.width, '453')
+        var _konvarow = document.querySelectorAll('._center')[0]
+        let div = document.createElement('div')
+        _konvarow.appendChild(div)
+
+        div.setAttribute('id', globalStageid)
+        _this.$refs.konva.style.backgroundImage = `url(${background})`
+        console.log(Stage)
+        _this.stage = Konva.Node.create(Stage, globalStageid)
+        var Group = _this.stage.find('Group')
+        // 设置页面是从设备界面进入 则不添加以下事件
+        if (_this.isDevice && _this.productconfig) {
+          _this.konvaClass.push('isDevice')
+          _this.leftrow = _this.rightrow = 0
+        } else {
+          _this.leftrow = _this.rightrow = 3
+        }
+        Group.each(function (_G) {
+          console.log(_G, '_G')
+          _G.on('click', (e) => {
+            _this.ShapeVisible = true
+            _this.Shapeconfig = e.target.attrs
+          })
+          _G.on('mouseup', (e) => {
+            console.log(e, 'mouseup')
+            document.body.style.cursor = 'pointer'
+          })
+          _G.on('mouseover', (e) => {
+            document.body.style.cursor = 'pointer'
+          })
+          _G.on('mouseout', (e) => {
+            const id = e.target.id()
+            const item = _this.stage.find((i) => i.id === id)
+            item.x = e.target.x()
+            item.y = e.target.y()
+            document.body.style.cursor = 'default'
+          })
+        })
+
+        console.log('绘制完成')
+        if (this.$refs.topoheader)
+          this.$refs.topoheader.subscribe(_this.productid)
       },
     },
   }

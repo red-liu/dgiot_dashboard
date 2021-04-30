@@ -232,17 +232,50 @@
         //  bug
         // const item = this.stage.find((i) => i.id === id)
         // for (var k in config) {
-        //   console.log()
-        //   item[`${k}`] = config[`${k}`]
+        //   console.log(config[`${k}`])
         // }
         let _this = this
+        console.log(_this.stage.find(`#${config.id}`))
+        console.log('config.idconfig.id')
+
         var Text = _this.stage.find('Text')
         console.log(Text)
         var tweens = []
         for (var n = 0; n < tweens.length; n++) {
           tweens[n].destroy()
         }
-
+        var Imgage = _this.stage.find('Imgage')
+        Imgage.each((shape) => {
+          if (shape.attrs.id == config.id) {
+            console.log(config)
+            console.log(shape)
+            shape.text(config.text)
+            tweens.push(
+              new Konva.Tween({
+                node: shape,
+                Opacity: 0.8,
+                duration: 1,
+                easing: Konva.Easings.ElasticEaseOut,
+              }).play()
+            )
+          }
+        })
+        var Group = _this.stage.find('Group')
+        Group.each((shape) => {
+          if (shape.attrs.id == config.id) {
+            console.log(config)
+            console.log(shape)
+            shape.text(config.text)
+            tweens.push(
+              new Konva.Tween({
+                node: shape,
+                Opacity: 0.8,
+                duration: 1,
+                easing: Konva.Easings.ElasticEaseOut,
+              }).play()
+            )
+          }
+        })
         Text.each((shape) => {
           if (shape.attrs.id == config.id) {
             console.log(config)
@@ -261,9 +294,9 @@
         let toJSON = _this.stage.toJSON()
         console.log(toJSON)
         _this.ShapeVisible = false
-        _this.createKonva(JSON.parse(toJSON), _this.globalStageid, 'update')
+        _this.stage.batchDraw()
         console.log('konva数据更新成功')
-        console.log(Konva.Node.create(toJSON))
+        _this.updataProduct(_this.productid)
         // _this.updataProduct(_this.productid)
       },
       // 预览
@@ -303,7 +336,6 @@
         }
         console.log(isVisible)
         console.log(this.backgroundImage)
-        this.$refs.konva.style.backgroundImage = `url(${img})`
         this.$refs['operation'].bachgroundurl = img
       },
       async upProduct(img) {
@@ -313,7 +345,6 @@
           let params = {
             config: config,
           }
-          this.$refs.konva.style.backgroundImage = `url(${img})`
           let res = await putProduct(this.productid, params)
           console.log(res)
           if (res) {
@@ -336,9 +367,13 @@
         let params = {
           config: config,
         }
-        let res = await putProduct(productid, params)
-        console.log(res)
-        this.$message.success(this.$translateTitle('产品组态更新成功'))
+        const { updatedAt, error } = await putProduct(productid, params)
+        if (updatedAt) {
+          this.handleCloseSub()
+          this.$message.success(this.$translateTitle('产品组态更新成功'))
+        } else {
+          this.$message.error(this.$translateTitle(`error`))
+        }
       },
       // 处理mqtt信息
       handleMqttMsg(subdialogid) {
@@ -379,20 +414,9 @@
             })
           })
           let toJSON = this.stage.toJSON()
-          this.createKonva(JSON.parse(toJSON), this.globalStageid, 'edit')
+          _this.stage.batchDraw()
           console.log('konva数据更新成功')
-          // })
-          // const stagedefault = this.stagedefault
-          // if (Shape) {
-          //   updateShape(Shape)
-          //     .then((result) => {
-          //       console.log(result)
-          //       console.log('konva数据更新成功')
-          //     })
-          //     .catch((err) => {
-          //       console.log('konva数据更新失败', err)
-          //     })
-          // }
+          _this.updataProduct(this.productid)
         })
       },
       // 取消订阅mqtt
@@ -436,11 +460,6 @@
           // set backgroundImage
         }
       },
-      _initCreate() {
-        let background =
-          'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/blog/study/opc/nf_taiti.png'
-        this.$refs.konva.style.backgroundImage = `url(${background})`
-      },
       // js 绘制
       createKonva(data, globalStageid, type) {
         console.log('type', type)
@@ -455,7 +474,6 @@
         }
         console.log(data)
         _this.$refs['operation'].bachgroundurl = background
-        console.log(Stage)
         console.log(Stage.attrs.height, Stage.attrs.width, '450')
         Stage.attrs.height = _this.stageConfig.height
         Stage.attrs.width = _this.stageConfig.width
@@ -465,15 +483,23 @@
         _konvarow.appendChild(div)
 
         div.setAttribute('id', globalStageid)
-        _this.$refs.konva.style.backgroundImage = `url(${background})`
-        _this.backgroundImage = background
-        console.log(Stage)
         _this.stage = Konva.Node.create(Stage, globalStageid)
+        _this.stage.find('Image').each((node) => {
+          const img = new Image()
+          img.src = node.getAttr('source')
+          _this.backgroundImage = img.src
+          this.$refs['operation'].bachgroundurl = img.src
+          img.onload = () => {
+            node.image(img)
+            _this.stage.batchDraw()
+          }
+        })
         _this.stage.on('click', (e) => {
           // _this.ShapeVisible = true
           console.log(e.target.attrs)
           let Shapeconfig = e.target.attrs
           Shapeconfig['container'] = '' // 这里为dom 对象 临时解决方式是将其赋值为空。否则json解析会报错
+          if (!_this.rightrow) _this.rightrow = 6
           _this.$refs['operation'].Shapeconfig = Shapeconfig
           console.log(_this.Shapeconfig)
         })
@@ -490,6 +516,7 @@
           console.log(_G, '_G')
           _G.on('click', (e) => {
             // _this.ShapeVisible = true
+            if (!_this.rightrow) _this.rightrow = 6
             _this.$refs['operation'].Shapeconfig = e.target.attrs
             _this.Shapeconfig = e.target.attrs
           })
@@ -508,7 +535,6 @@
             document.body.style.cursor = 'default'
           })
         })
-
         console.log('绘制完成')
         if (this.$refs.topoheader)
           this.$refs.topoheader.subscribe(_this.productid)

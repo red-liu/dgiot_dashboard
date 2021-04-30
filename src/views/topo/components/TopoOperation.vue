@@ -20,7 +20,7 @@
         </el-upload>
       </div>
       <el-tab-pane label="配置" name="setting">
-        <el-input v-model="bachgroundurl" placeholder="">
+        <!-- <el-input v-model="bachgroundurl" placeholder="">
           <el-button
             slot="append"
             type="primary"
@@ -28,14 +28,19 @@
             style="cursor: pointer"
             @click="upload"
           />
-        </el-input>
-        <el-button size="mini" type="primary" @click="updataImg(bachgroundurl)">
+        </el-input> -->
+        <!-- <el-button size="mini" type="primary" @click="updataImg(bachgroundurl)">
           更新背景
         </el-button>
         <el-button size="mini" type="primary" @click="clearImg()">
           {{ isVisible ? '隐藏' : '显示' }}背景
-        </el-button>
-        <el-form size="mini" label-width="80px" :model="Shapeconfig">
+        </el-button> -->
+        <el-form
+          style="color: black"
+          size="mini"
+          label-width="80px"
+          :model="Shapeconfig"
+        >
           <el-form-item
             v-for="(item, index) in Shapeconfig"
             v-show="isShowItem(`${index}`)"
@@ -178,5 +183,6 @@
     margin-left: 10px;
     overflow-x: hidden;
     overflow-y: scroll;
+    color: wheat;
   }
 </style>

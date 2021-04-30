@@ -2,24 +2,7 @@
   <div class="_vuekonva">
     <div class="_dialog">
       <el-dialog :visible.sync="ShapeVisible" width="100vh" class="_shape">
-        <el-tabs v-model="tabsName">
-          <el-tab-pane
-            :label="$translateTitle('product.config')"
-            name="ShapeJson"
-          >
-            <span>
-              <vue-json-editor v-model="Shapeconfig" :mode="'code'" lang="zh" />
-            </span>
-          </el-tab-pane>
-        </el-tabs>
-        <span v-if="tabsName == 'ShapeJson'" slot="footer">
-          <el-button @click="ShapeVisible = false">
-            {{ $translateTitle('developer.cancel') }}
-          </el-button>
-          <el-button type="primary" @click="saveKonvaitem(Shapeconfig)">
-            {{ $translateTitle('developer.determine') }}
-          </el-button>
-        </span>
+        <span v-if="tabsName == 'ShapeJson'" slot="footer"></span>
       </el-dialog>
     </div>
     <div
@@ -61,51 +44,56 @@
             }"
             class="_info"
           >
-            <el-row :gutter="10">
-              <el-col :span="8">
+            <el-row :gutter="10" style="text-align: center">
+              <el-col :span="24">
                 <el-button
                   type="success"
                   plain
                   :disabled="productid.length < 1"
+                  icon="el-icon-s-management"
                   @click="regulate('save')"
                 >
-                  保存数据
+                  {{ $translateTitle('konva.save') }}
                 </el-button>
 
-                <el-button type="success" plain @click="regulate('top')">
-                  {{ headevisible ? '隐藏顶部' : '显示顶部' }}
-                </el-button>
-
-                <el-button type="success" plain @click="regulate('right')">
-                  {{ rightrow ? '隐藏右侧' : '显示右侧' }}
-                </el-button>
-
-                <el-button type="success" plain @click="regulate('left')">
-                  {{ leftrow ? '隐藏左侧' : '显示左侧' }}
-                </el-button>
-              </el-col>
-              <el-col :span="4">
                 <el-button
-                  type="primary"
-                  :disabled="productid.length < 1"
+                  type="success"
+                  icon="el-icon-arrow-up"
                   plain
-                  @click="regulate('info')"
+                  @click="regulate('top')"
                 >
-                  {{ $translateTitle('task.data') }}
+                  {{
+                    headevisible
+                      ? $translateTitle('konva.hide')
+                      : $translateTitle('konva.show')
+                  }}{{ $translateTitle('konva.top') }}
                 </el-button>
-              </el-col>
-              <el-col :span="6">
+
                 <el-button
-                  type="info"
+                  type="success"
+                  icon="el-icon-arrow-right"
                   plain
-                  :disabled="productid.length < 1"
-                  @click="regulate('search')"
+                  @click="regulate('right')"
                 >
-                  {{ $translateTitle('product.share') }}
+                  {{
+                    rightrow
+                      ? $translateTitle('konva.hide')
+                      : $translateTitle('konva.show')
+                  }}{{ $translateTitle('konva.right') }}
                 </el-button>
-              </el-col>
-              <el-col :span="6">
-                <vab-slider v-model="per" :min="0" :max="100" />
+
+                <el-button
+                  type="success"
+                  icon="el-icon-arrow-left"
+                  plain
+                  @click="regulate('left')"
+                >
+                  {{
+                    leftrow
+                      ? $translateTitle('konva.hide')
+                      : $translateTitle('konva.show')
+                  }}{{ $translateTitle('konva.left') }}
+                </el-button>
               </el-col>
             </el-row>
           </div>
@@ -116,6 +104,7 @@
               <topo-operation
                 ref="operation"
                 @upImg="upProduct"
+                @upconfig="saveKonvaitem"
                 @clearImg="clearImg"
               />
             </div>
@@ -132,8 +121,7 @@
     let comp = context(fileName)
     res_components[fileName.replace(/^\.\/(.*)\.\w+$/, '$1')] = comp.default
   })
-  import vueJsonEditor from 'vue-json-editor'
-  import testjson from '@/views/topo/components/test'
+
   import {
     createShape,
     updateShape,
@@ -146,10 +134,8 @@
   import { Websocket } from '@/utils/wxscoket.js'
   import { _getTopo } from '@/api/Topo'
   import { putProduct, queryProduct } from '@/api/Product'
-  import { json } from 'body-parser'
   export default {
     components: {
-      vueJsonEditor,
       ...res_components,
     },
     data() {
@@ -278,7 +264,7 @@
         _this.createKonva(JSON.parse(toJSON), _this.globalStageid, 'update')
         console.log('konva数据更新成功')
         console.log(Konva.Node.create(toJSON))
-        console.log('konva数据更新成功')
+        // _this.updataProduct(_this.productid)
       },
       // 预览
       regulate(type) {
@@ -305,7 +291,7 @@
       },
       toggleClass(type) {
         if (type == 'rightrow') {
-          this.rightrow = this.rightrow == 3 ? 0 : 3
+          this.rightrow = this.rightrow == 6 ? 0 : 6
         } else {
           this.leftrow = this.leftrow == 3 ? 0 : 3
         }
@@ -489,12 +475,14 @@
           _this.konvaClass.push('isDevice')
           _this.leftrow = _this.rightrow = 0
         } else {
-          _this.leftrow = _this.rightrow = 3
+          _this.leftrow = 3
+          _this.rightrow = 6
         }
         Group.each(function (_G) {
           console.log(_G, '_G')
           _G.on('click', (e) => {
-            _this.ShapeVisible = true
+            // _this.ShapeVisible = true
+            _this.$refs['operation'].Shapeconfig = e.target.attrs
             _this.Shapeconfig = e.target.attrs
           })
           _G.on('mouseup', (e) => {

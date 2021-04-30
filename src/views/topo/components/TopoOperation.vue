@@ -38,14 +38,15 @@
         <el-form size="mini" label-width="80px" :model="Shapeconfig">
           <el-form-item
             v-for="(item, index) in Shapeconfig"
+            v-show="isShowItem(`${index}`)"
             :key="index"
             :label="index"
           >
             <el-input
-              v-if="index != 'draggable'"
+              v-if="isShowLable(`${index}`)"
               v-model="Shapeconfig[index]"
               style="width: 80%"
-              :disabled="index == 'id'"
+              :disabled="isdisabled(`${index}`)"
             />
             <el-radio
               v-else
@@ -96,6 +97,9 @@
     },
     data() {
       return {
+        disableLable: ['id'],
+        hideLable: ['draggable'],
+        ShowItem: ['container'],
         isVisible: true,
         showJson: false,
         fileList: [
@@ -125,6 +129,15 @@
     destroyed() {}, //生命周期 - 销毁完成
     activated() {},
     methods: {
+      isShowItem(lable) {
+        return !this.ShowItem.includes(lable)
+      },
+      isdisabled(lable) {
+        return this.disableLable.includes(lable)
+      },
+      isShowLable(disabled) {
+        return !this.hideLable.includes(disabled)
+      },
       updataImg(img) {
         // 触发父组件更新事件
         this.$emit('upImg', img)

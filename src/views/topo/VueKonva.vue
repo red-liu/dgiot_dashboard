@@ -469,6 +469,14 @@
         _this.backgroundImage = background
         console.log(Stage)
         _this.stage = Konva.Node.create(Stage, globalStageid)
+        _this.stage.on('click', (e) => {
+          // _this.ShapeVisible = true
+          console.log(e.target.attrs)
+          let Shapeconfig = e.target.attrs
+          Shapeconfig['container'] = '' // 这里为dom 对象 临时解决方式是将其赋值为空。否则json解析会报错
+          _this.$refs['operation'].Shapeconfig = Shapeconfig
+          console.log(_this.Shapeconfig)
+        })
         var Group = _this.stage.find('Group')
         // 设置页面是从设备界面进入 则不添加以下事件
         if (_this.isDevice && _this.productconfig) {

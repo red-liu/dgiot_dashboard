@@ -1369,7 +1369,8 @@
           params: [],
         }
         this.title_temp_dialog = '创建字典模板'
-        if (config.basedate.name) {
+        console.log(config)
+        if (config.basedate && config.basedate.name) {
           this.title_temp_dialog = '修改字典模板'
           this.dictTempForm = config.basedate
         }

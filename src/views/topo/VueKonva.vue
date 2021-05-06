@@ -208,6 +208,11 @@
         //   document.querySelectorAll('.konvajs-content')[0]
         // )
       },
+      _initCreate() {
+        let background =
+          'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/blog/study/opc/nf_taiti.png'
+        this.$refs.konva.style.backgroundImage = `url(${background})`
+      },
       mousemove(item) {
         // let oElement = document.querySelectorAll(`.${item}`)[0]
         // console.log(Position(oElement))

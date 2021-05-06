@@ -1,8 +1,5 @@
 <template>
   <el-container>
-    <el-aside v-show="treeState" width="300px">
-      <RoleTree ref="roleTreeRef" />
-    </el-aside>
     <el-main>
       <div class="modelmanamge">
         <div class="mdoeltop">
@@ -17,16 +14,24 @@
                 <el-form-item label="质检项目">
                   <el-input
                     v-model="formInline.name"
+                    clearable
                     placeholder="请输入项目名称"
                   />
                 </el-form-item>
                 <el-form-item>
-                  <el-button type="primary">查询</el-button>
-                  <el-button type="primary">重置</el-button>
+                  <el-button
+                    type="primary"
+                    :disabled="formInline.name.length == 0"
+                    @click="searchProduct(formInline.name)"
+                  >
+                    查询
+                  </el-button>
+                  <el-button type="primary" size="small" @click="addStandard">
+                    新增质检项目
+                  </el-button>
                 </el-form-item>
               </el-form>
             </el-col>
-
             <el-col :span="12">
               <div style="text-align: right">
                 <el-button
@@ -40,12 +45,6 @@
               </div>
             </el-col>
           </el-row>
-
-          <div class="adddevices">
-            <el-button type="primary" size="small" @click="addStandard">
-              新增质检项目
-            </el-button>
-          </div>
         </div>
         <!--表格-->
         <div class="tableblock">
@@ -125,45 +124,35 @@
           width="60%"
         >
           <div class="addContent">
-            <el-form ref="reportFormRef" :model="reportForm">
+            <el-form ref="reportForm" :rules="rules" :model="reportForm">
               <el-row :gutter="12">
                 <el-col :span="12">
                   <el-form-item
+                    prop="value"
                     :label-width="formLabelWidth"
-                    label="报告模版名称"
+                    label="报告模版字典"
                   >
-                    <el-input
-                      v-model="reportForm.name"
-                      autocomplete="off"
-                      placeholder="报告模版名称"
-                    />
+                    <el-select
+                      v-model="reportForm.value"
+                      placeholder="请选择"
+                      @change="changev"
+                    >
+                      <el-option
+                        v-for="item in dictoptions"
+                        :key="item.key"
+                        :label="item.key"
+                        :value="item.objectId"
+                      />
+                    </el-select>
                   </el-form-item>
                 </el-col>
+
                 <el-col :span="12">
-                  <!-- label="产品分组类型" -->
                   <el-form-item
                     :label-width="formLabelWidth"
-                    label="报告模版类型"
+                    prop="client"
+                    label="适用产品"
                   >
-                    <el-input
-                      v-model="reportForm.devTypeText"
-                      autocomplete="off"
-                      placeholder="报告模版类型"
-                    />
-
-                    <!--   <el-select @change="devTypeSelectChange" v-model="reportForm.devType" placeholder="产品分组类型">
-                  <el-option
-                    v-for="(item) in productListForReport"
-                    :label="item.devType"
-                    :value="index"
-                    :key="index"
-                  ></el-option>
-                    </el-select>-->
-                  </el-form-item>
-                </el-col>
-
-                <el-col :span="12">
-                  <el-form-item :label-width="formLabelWidth" label="适用产品">
                     <el-select
                       v-model="reportForm.client"
                       multiple
@@ -176,6 +165,30 @@
                         :value="item"
                       />
                     </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col
+                  v-for="(item, index) in arrlist"
+                  :key="index"
+                  :span="12"
+                >
+                  <el-form-item
+                    :label-width="formLabelWidth"
+                    :label="item.title.zh"
+                    :prop="item.name"
+                    :required="item.required"
+                  >
+                    <el-select
+                      v-if="item.type == 'Boolean'"
+                      v-model="reportForm[item.name]"
+                      style="width: 100%"
+                      class="notauto"
+                      readonly
+                    >
+                      <el-option :value="true" label="是" />
+                      <el-option :value="false" label="否" />
+                    </el-select>
+                    <el-input v-else v-model="reportForm[item.name]" />
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -214,7 +227,9 @@
           <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">取 消</el-button>
             <!-- <el-button type="primary" @click="addReport">确 定</el-button> -->
-            <el-button type="primary" @click="addReporttemp">确 定</el-button>
+            <el-button type="primary" @click="addReporttemp('reportForm')">
+              确 定
+            </el-button>
           </span>
         </el-dialog>
         <!--标准模版添加-->
@@ -359,17 +374,42 @@
   </el-container>
 </template>
 <script>
-  import RoleTree from '@/views/platform/testpumplist/pumplist/RoleTree'
-  import { mapGetters } from 'vuex'
   import { queryProduct, delProduct } from '@/api/Product'
+  import { getDictCount } from '@/api/Dict'
   import { cereteReport, postReportFile, putReportFile } from '@/api/Platform'
+  import { json } from 'body-parser'
   export default {
     name: 'ModelManamge',
-    components: {
-      RoleTree,
-    },
+    components: {},
     data() {
       return {
+        rules: {
+          value: [
+            {
+              type: 'string',
+              required: true,
+              message: '请选择报告模板',
+              trigger: 'change',
+            },
+          ],
+          client: [
+            {
+              type: 'array',
+              required: true,
+              message: '请选择适用产品',
+              trigger: 'change',
+            },
+          ],
+          name: [
+            { required: true, message: '请填写报告模板名称', trigger: 'blur' },
+          ],
+          devTypeText: [
+            { required: true, message: '请填写报告模版类型', trigger: 'blur' },
+          ],
+        },
+        arrlist: {},
+        dictoptions: [],
+        value: '',
         action: 'http://file.iotn2n.com/shapes/upload',
         pumpmodel: [
           '离心泵',
@@ -440,12 +480,31 @@
       fileDomain: function () {
         return 'http://file.iotn2n.com'
       },
-      ...mapGetters(['treeState']),
     },
     mounted() {
+      this.quertDict()
       this.getReport()
     },
     methods: {
+      // 查询报告模板字典
+      async quertDict() {
+        let params = {
+          order: '-createdAt',
+          limit: 10,
+          skip: 0,
+          where: { 'data.cType': 'report_type' },
+        }
+        const { results = [] } = await getDictCount(params)
+        this.dictoptions = results
+      },
+      changev(v) {
+        console.log(v)
+        var result = this.dictoptions.filter((i) => {
+          return i.objectId == v
+        })
+        this.arrlist = result[0].data.params
+        console.log(JSON.stringify(this.arrlist))
+      },
       async getIotHubProduct() {
         const loading = this.$loading({
           background: 'rgba(0, 0, 0, 0.5)',
@@ -466,6 +525,8 @@
           skip: this.start,
           limit: this.pagesize,
           where: {
+            ' config.identifier': 'inspectionReportTemp',
+
             // category: 'Evidence',
             // nodeType: 1,
           },
@@ -510,15 +571,18 @@
       uploadDocx(file) {
         var formdata = new FormData()
         formdata.append('file', file)
-        formdata.append('output', 'json')
-        formdata.append('path', this.$Cookies.get('appids'))
-        formdata.append('scene', this.$Cookies.get('appids'))
-        formdata.append('auth_token', this.$Cookies.get('access_token_pump')) // 下面是要传递的参数
-        this.$http
-          .post(this.$Cookies.get('fileserver'), formdata)
+        let config = {
+          // 配置请求头
+
+          headers: {
+            'content-type': 'multipart/form-data',
+          },
+        }
+        axios
+          .post('/iotapi/dgiotproxy/fileUpload', formdata, config)
           .then((res) => {
             if (res) {
-              console.log(res.body.src)
+              console.log(res)
               this.reportForm.word = res.body.src
             }
           })
@@ -539,8 +603,12 @@
       addStandard() {
         this.dialogVisible = true
       },
+      // 按照名称查询
+      searchProduct(name) {
+        console.log(name)
+      },
       // 添加报告模板
-      async addReporttemp() {
+      addReporttemp(type) {
         const exportData = {
           config: JSON.stringify({
             identifier: 'inspectionReportTemp',
@@ -551,17 +619,24 @@
           word: this.reportForm.word,
         }
         console.log(exportData, 'exportData')
-        const { results, error } = await cereteReport(exportData)
-        if (results) {
-          this.$message({ type: 'success', message: '报告创建成功!' })
-          console.log(response, 'success')
-          this.$refs['reportFormRef'].resetFields()
-          this.dialogVisible = false
-          this.getReport()
-        } else {
-          this.$message({ type: 'error', message: `报告创建失败${error}` })
-          console.log(error)
-        }
+        this.$refs[type].validate(async (valid) => {
+          if (valid) {
+            const { results, error } = await cereteReport(exportData)
+            if (results) {
+              this.$message({ type: 'success', message: '报告创建成功!' })
+              console.log(response, 'success')
+              this.$refs['reportForm'].resetFields()
+              this.dialogVisible = false
+              this.getReport()
+            } else {
+              this.$message({ type: 'error', message: `报告创建失败${error}` })
+              console.log(error)
+            }
+          } else {
+            console.log('error submit!!')
+            return false
+          }
+        })
       },
       addReport(nodeTypeText) {
         // 添加质检项目
@@ -570,14 +645,14 @@
         // 如果用户上传了文件,就调用 post
         if (this.selected_file && this.selected_file.size) {
           /*         postData = {
-          devType: this.reportForm.devTypeText,
-          name: this.reportForm.name,
-          config: {
-            identifier: "inspectionReportTemp",
-            client: this.reportForm.client
-          },
-          file: this.selected_file
-        }; */
+            devType: this.reportForm.devTypeText,
+            name: this.reportForm.name,
+            config: {
+              identifier: "inspectionReportTemp",
+              client: this.reportForm.client
+            },
+            file: this.selected_file
+          }; */
 
           const formData = new FormData()
 
@@ -621,7 +696,7 @@
         if (res) {
           if (response) {
             this.$message({ type: 'success', message: `创建成功` })
-            this.$refs['reportFormRef'].resetFields()
+            this.$refs['reportForm'].resetFields()
             this.dialogVisible = false
             this.getReport()
           } else {
@@ -639,7 +714,7 @@
               this.dialogChildrenForm = false
             } else {
               this.$message({ type: 'success', message: `创建成功` })
-              this.$refs['reportFormRef'].resetFields()
+              this.$refs['reportForm'].resetFields()
               this.dialogVisible = false
             }
             this.getReport()
@@ -777,22 +852,20 @@
         var formdata = new FormData()
         formdata.append('file', file)
         formdata.append('output', 'json')
-        formdata.append('path', this.$Cookies.get('appids'))
-        formdata.append('scene', this.$Cookies.get('appids'))
-        formdata.append('auth_token', this.$Cookies.get('access_token_pump')) // 下面是要传递的参数
+        formdata.append('path', Cookies.get('appids'))
+        formdata.append('scene', Cookies.get('appids'))
+        formdata.append('auth_token', Cookies.get('access_token_pump')) // 下面是要传递的参数
         // 此处必须设置为  multipart/form-data
         const config = {
           headers: {
             'Content-Type': 'multipart/form-data', // 之前说的以表单传数据的格式来传递fromdata
           },
         }
-        this.$http
-          .post(this.$Cookies.get('fileserver'), formdata)
-          .then((res) => {
-            if (res) {
-              this.childrenform.imageSrc = res.body.src
-            }
-          })
+        this.$http.post(Cookies.get('fileserver'), formdata).then((res) => {
+          if (res) {
+            this.childrenform.imageSrc = res.body.src
+          }
+        })
       },
     },
   }

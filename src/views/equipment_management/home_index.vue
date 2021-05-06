@@ -73,21 +73,6 @@
                 </p>
                 <span>{{ devicetotal }}</span>
               </li>
-              <!--        <li>-->
-              <!--          <p>-->
-              <!--            <span class="svg-container">-->
-              <!--              <vab-icon icon="numbers-fill" />-->
-              <!--            </span>-->
-              <!--            {{ $translateTitle('equipment.activationdevice') }}-->
-              <!--            <el-tooltip-->
-              <!--              :content="$translateTitle('equipment.totalactive')"-->
-              <!--              placement="top"-->
-              <!--            >-->
-              <!--              <i class="el-icon-question" />-->
-              <!--            </el-tooltip>-->
-              <!--          </p>-->
-              <!--          <span>{{ activeall }}</span>-->
-              <!--        </li>-->
               <li>
                 <p>
                   <span class="svg-container">
@@ -1259,7 +1244,7 @@
         // 点击的公司名
         const { name, objectId } = data
         this.curDepartmentId = objectId
-        this.Company = name
+        // this.Company = name
         this.getDevices(0)
       },
       async queryYysId() {
@@ -1822,6 +1807,9 @@
           auth: basedata.auth,
           yysId: basedata.yysId,
         }
+        for (var key in basedata) {
+          this.deviceform[key] = basedata[key]
+        }
         this.bmapform = {
           address: detail.address,
         }
@@ -1956,6 +1944,7 @@
             this.$delete(obj, 'nodeType')
             this.$delete(obj, 'productName')
             this.$delete(obj, 'status')
+            this.$delete(obj, 'productid')
             getProduct(this.deviceform.productName).then((response) => {
               if (response) {
                 if (this.deviceid != '') {

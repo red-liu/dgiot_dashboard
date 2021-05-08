@@ -85,11 +85,11 @@ export async function dev_online_count(params) {
  */
 export async function cereteReport(data) {
   return request({
-    url: '/pump_reporttemp',
+    url: '/reportTemp',
     method: 'post',
     headers: {
       accept: 'application/json',
-      'Content-Type': 'application/json',
+      'Content-Type': 'multipart/form-data',
     },
     data: data,
   })

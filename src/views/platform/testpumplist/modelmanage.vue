@@ -128,7 +128,7 @@
               <el-row :gutter="12">
                 <el-col :span="12">
                   <el-form-item
-                    prop="value"
+                    prop="name"
                     :label-width="formLabelWidth"
                     label="报告模版字典"
                   >
@@ -146,8 +146,25 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-
                 <el-col :span="12">
+                  <el-form-item
+                    prop="name"
+                    :label-width="formLabelWidth"
+                    label="报告模板名称"
+                  >
+                    <el-input v-model="reportForm.name" placeholder="" />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item
+                    prop="devTypeText"
+                    :label-width="formLabelWidth"
+                    label="报告模版类型"
+                  >
+                    <el-input v-model="reportForm.devTypeText" placeholder="" />
+                  </el-form-item>
+                </el-col>
+                <!-- <el-col :span="12">
                   <el-form-item
                     :label-width="formLabelWidth"
                     prop="client"
@@ -166,8 +183,8 @@
                       />
                     </el-select>
                   </el-form-item>
-                </el-col>
-                <el-col
+                </el-col> -->
+                <!-- <el-col
                   v-for="(item, index) in arrlist"
                   :key="index"
                   :span="12"
@@ -190,7 +207,7 @@
                     </el-select>
                     <el-input v-else v-model="reportForm[item.name]" />
                   </el-form-item>
-                </el-col>
+                </el-col> -->
               </el-row>
 
               <el-row>
@@ -374,10 +391,10 @@
   </el-container>
 </template>
 <script>
-  import { queryProduct, delProduct } from '@/api/Product'
+  import { queryProduct, delProduct, postProduct } from '@/api/Product'
+  import { fileUpload, deleteFile } from '@/api/Proxy'
   import { getDictCount } from '@/api/Dict'
   import { cereteReport, postReportFile, putReportFile } from '@/api/Platform'
-  import { json } from 'body-parser'
   export default {
     name: 'ModelManamge',
     components: {},
@@ -502,7 +519,7 @@
         var result = this.dictoptions.filter((i) => {
           return i.objectId == v
         })
-        this.arrlist = result[0].data.params
+        this.arrlist = result[0]
         console.log(JSON.stringify(this.arrlist))
       },
       async getIotHubProduct() {
@@ -525,7 +542,7 @@
           skip: this.start,
           limit: this.pagesize,
           where: {
-            ' config.identifier': 'inspectionReportTemp',
+            'config.identifier': 'inspectionReportTemp',
 
             // category: 'Evidence',
             // nodeType: 1,
@@ -568,24 +585,11 @@
           })
         }
       },
-      uploadDocx(file) {
+      async uploadDocx(file) {
         var formdata = new FormData()
         formdata.append('file', file)
-        let config = {
-          // 配置请求头
-
-          headers: {
-            'content-type': 'multipart/form-data',
-          },
-        }
-        axios
-          .post('/iotapi/dgiotproxy/fileUpload', formdata, config)
-          .then((res) => {
-            if (res) {
-              console.log(res)
-              this.reportForm.word = res.body.src
-            }
-          })
+        const res = await fileUpload(formdata)
+        console.log(res)
       },
       fileRead(file) {
         const reader = new FileReader()
@@ -610,10 +614,15 @@
       // 添加报告模板
       addReporttemp(type) {
         const exportData = {
-          config: JSON.stringify({
-            identifier: 'inspectionReportTemp',
-            client: this.reportForm.client,
-          }),
+          config: JSON.stringify(
+            Object.assign(
+              {
+                identifier: 'inspectionReportTemp',
+                dictid: this.arrlist.objectId,
+              },
+              this.reportForm
+            )
+          ),
           name: this.reportForm.name,
           type: this.reportForm.devTypeText,
           word: this.reportForm.word,

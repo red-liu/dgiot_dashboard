@@ -7,7 +7,7 @@
     </div>
     <div
       :style="{
-        display: headevisible ? 'block' : 'none',
+        display: headevisible ? 'block' : 'block',
       }"
       class="_header"
     >
@@ -23,7 +23,7 @@
     <div class="_mian">
       <el-row :gutter="gutter" class="_row">
         <transition name="fade">
-          <el-col :span="leftrow">
+          <!-- <el-col :span="leftrow">
             <div class="_left">
               <topo-allocation
                 @fatherMousedown="mousedown"
@@ -31,7 +31,7 @@
                 @fatherMouseup="mouseup"
               />
             </div>
-          </el-col>
+          </el-col> -->
         </transition>
 
         <el-col :span="gutter - leftrow - rightrow" class="_konvarow">
@@ -128,8 +128,10 @@
     setText,
     Position,
     dragBox,
+    stageMousemove,
+    stageMousedown,
   } from '@/utils/konva'
-
+  import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
   import { isBase64, isImage } from '@/utils'
   import { Websocket } from '@/utils/wxscoket.js'
   import { _getTopo } from '@/api/Topo'
@@ -137,6 +139,14 @@
   export default {
     components: {
       ...res_components,
+      ...mapGetters({
+        graphColor: 'konva/graphColor',
+        drawing: 'konva/drawing',
+        graphNow: 'konva/graphNow',
+        pointStart: 'konva/pointStart',
+        draw: 'konva/draw',
+        flag: 'konva/flag',
+      }),
     },
     data() {
       return {
@@ -188,6 +198,14 @@
       if (this.$refs.topoheader) this.handleCloseSub()
     },
     methods: {
+      ...mapMutations({
+        setDrawing: 'konva/setDrawing',
+        setPointStart: 'konva/setPointStart',
+        setDraw: 'konva/setDraw',
+        setFlag: 'konva/setFlag',
+        setGraphNow: 'konva/setGraphNow',
+        setGraphColor: 'konva/setGraphColor',
+      }),
       // @click//单击
       // @mousedown//按下
       // @mouseup//抬起
@@ -331,7 +349,7 @@
         if (type == 'rightrow') {
           this.rightrow = this.rightrow == 6 ? 0 : 6
         } else {
-          this.leftrow = this.leftrow == 3 ? 0 : 3
+          // this.leftrow = this.leftrow == 3 ? 0 : 3
         }
       },
       clearImg(isVisible) {
@@ -486,9 +504,11 @@
         var _konvarow = document.querySelectorAll('._center')[0]
         let div = document.createElement('div')
         _konvarow.appendChild(div)
-
         div.setAttribute('id', globalStageid)
         _this.stage = Konva.Node.create(Stage, globalStageid)
+        // 2 create layer
+        const layer = new Konva.Layer()
+        _this.stage.add(layer)
         _this.stage.find('Image').each((node) => {
           const img = new Image()
           img.src = node.getAttr('source')
@@ -508,13 +528,63 @@
           _this.$refs['operation'].Shapeconfig = Shapeconfig
           console.log(_this.Shapeconfig)
         })
+        _this.stage.on('mousedown', function (e) {
+          // 如果点击空白处 移除图形选择框
+
+          if (e.target === _this.stage) {
+            stageMousedown(_this.flag, e)
+
+            // 移除图形选择框
+            _this.stage.find('Transformer').destroy()
+            layer.draw()
+            return
+          }
+          // 如果没有匹配到就终止往下执行
+          if (
+            !e.target.hasName('line') &&
+            !e.target.hasName('ellipse') &&
+            !e.target.hasName('rect') &&
+            !e.target.hasName('circle')
+          ) {
+            return
+          }
+          // 移除图形选择框
+          _this.stage.find('Transformer').destroy()
+
+          // 当前点击的对象赋值给graphNow
+          this.setGraphNow(e.target)
+          // 创建图形选框事件
+          const tr = new Konva.Transformer({
+            borderStroke: '#000', // 虚线颜色
+            borderStrokeWidth: 1, //虚线大小
+            borderDash: [5], // 虚线间距
+            keepRatio: false, // 不等比缩放
+          })
+          layer.add(tr)
+          tr.attachTo(e.target)
+          layer.draw()
+        })
+        // 鼠标移动
+        _this.stage.on('mousemove', function (e) {
+          console.log(_this.graphNow, _this.flag, _this.drawing)
+          if (_this.graphNow && _this.flag && _this.drawing) {
+            stageMousemove(_this.flag, e)
+            console.log(e, 'eeeeeeeeeeeee', _this.flag, e)
+          }
+        })
+
+        // 鼠标放开
+        _this.stage.on('mouseup', function () {
+          _this.drawing = false
+          if (_this.flag === 'text') _this.flag = null
+        })
         var Group = _this.stage.find('Group')
         // 设置页面是从设备界面进入 则不添加以下事件
         if (_this.isDevice && _this.productconfig) {
           _this.konvaClass.push('isDevice')
           _this.leftrow = _this.rightrow = 0
         } else {
-          _this.leftrow = 3
+          // _this.leftrow = 3
           _this.rightrow = 6
         }
         Group.each(function (_G) {

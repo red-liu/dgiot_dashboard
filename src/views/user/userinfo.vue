@@ -24,29 +24,27 @@
                 :src="avatar"
                 @click.native="uploadCkick"
               />
-              <div class="personal-center-user-info-full-name">
-                {{ userinfo.username }}
-              </div>
-              <div class="personal-center-user-info-description">
-                {{ userinfo.description }}
-              </div>
 
               <ul class="personal-center-user-info-list">
                 <li>
-                  <vab-icon icon="user-3-line" />
-                  {{ userinfo.nick }}
+                  <vab-icon icon="user-2-line" />
+                  {{ userinfo.username }}
                 </li>
                 <li>
-                  <vab-icon icon="magic-line" />
-                  {{ userinfo.objectId }}
+                  <vab-icon icon="user-3-line" />
+                  {{ userinfo.nick }}
                 </li>
                 <li>
                   <vab-icon icon="women-line" />
                   {{ userinfo.sex }}
                 </li>
                 <li>
-                  <vab-icon icon="women-line" />
+                  <vab-icon icon="phone-line" />
                   {{ userinfo.phone }}
+                </li>
+                <li>
+                  <vab-icon icon="file-text-line" />
+                  {{ userinfo.description }}
                 </li>
               </ul>
             </div>
@@ -74,14 +72,14 @@
                         <el-option label="女" value="女" />
                       </el-select>
                     </el-form-item>
+                    <el-form-item label="绑定手机">
+                      <el-input v-model="userinfo.phone" />
+                    </el-form-item>
                     <el-form-item label="个人简介">
                       <el-input
                         v-model="userinfo.description"
                         type="textarea"
                       />
-                    </el-form-item>
-                    <el-form-item label="绑定手机">
-                      <el-input v-model="userinfo.phone" />
                     </el-form-item>
                     <el-form-item>
                       <el-button type="primary" @click="onSubmit">
@@ -93,7 +91,7 @@
               </el-tab-pane>
               <el-tab-pane label="平台设置" name="second">
                 <div class="personal-center-item">
-                  <vab-icon icon="qq-line" style="color: #3492ed" />
+                  <vab-icon icon="community-fill" style="color: #3492ed" />
                   <div class="personal-center-item-content">
                     <div>企业名称</div>
                     <div class="personal-center-item-content-second"></div>
@@ -102,7 +100,7 @@
                 </div>
                 <el-divider />
                 <div class="personal-center-item">
-                  <vab-icon icon="wechat-line" style="color: #4daf29" />
+                  <vab-icon icon="remixicon-fill" style="color: #4daf29" />
                   <div class="personal-center-item-content">
                     <div>企业logo</div>
                     <div class="personal-center-item-content-second"></div>
@@ -111,7 +109,7 @@
                 </div>
                 <el-divider />
                 <div class="personal-center-item">
-                  <vab-icon icon="alipay-line" style="color: #1476fe" />
+                  <vab-icon icon="text" style="color: #1476fe" />
                   <div class="personal-center-item-content">
                     <div>登录提示欢迎语</div>
                     <div class="personal-center-item-content-second"></div>
@@ -120,7 +118,7 @@
                 </div>
                 <el-divider />
                 <div class="personal-center-item">
-                  <vab-icon icon="weibo-line" style="color: #ffd440" />
+                  <vab-icon icon="copyright-fill" style="color: #ffd440" />
                   <div class="personal-center-item-content">
                     <div>企业版权信息</div>
                     <div class="personal-center-item-content-second"></div>
@@ -129,7 +127,7 @@
                 </div>
                 <el-divider />
                 <div class="personal-center-item">
-                  <vab-icon icon="github-line" />
+                  <vab-icon icon="bank-card-line" />
                   <div class="personal-center-item-content">
                     <div>首页背景图</div>
                     <div class="personal-center-item-content-second"></div>
@@ -138,7 +136,7 @@
                 </div>
                 <el-divider />
                 <div class="personal-center-item">
-                  <vab-icon icon="paypal-line" style="color: #012e85" />
+                  <vab-icon icon="qq-fill" style="color: #012e85" />
                   <div class="personal-center-item-content">
                     <div>绑定qq</div>
                     <div class="personal-center-item-content-second"></div>
@@ -147,7 +145,7 @@
                 </div>
                 <el-divider />
                 <div class="personal-center-item">
-                  <vab-icon icon="paypal-line" style="color: #012e85" />
+                  <vab-icon icon="wechat-fill" style="color: #012e85" />
                   <div class="personal-center-item-content">
                     <div>绑定微信</div>
                     <div class="personal-center-item-content-second"></div>

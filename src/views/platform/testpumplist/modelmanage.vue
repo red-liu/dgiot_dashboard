@@ -60,50 +60,54 @@
               align="center"
               width="50"
             />
-            <el-table-column label="检验项目ID" align="center" width="200">
+            <el-table-column label="ID" align="center" width="200">
               <template slot-scope="scope">
                 <span>{{ scope.row.objectId }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="检验项目名称" align="center">
+            <el-table-column label="项目名称" align="center">
               <template slot-scope="scope">{{ scope.row.name }}</template>
             </el-table-column>
 
-            <el-table-column label="产品分组类型" align="center">
-              <template slot-scope="scope">{{ scope.row.devType }}</template>
+            <el-table-column label="类型" align="center">
+              <template slot-scope="scope">
+                <el-tag type="success">{{ scope.row.devType }}</el-tag>
+              </template>
             </el-table-column>
 
             <el-table-column
-              label="适用产品"
+              label="关联词典"
               align="center"
               show-overflow-tooltip
             >
               <template slot-scope="scope">
-                {{ (scope.row.config && scope.row.config.client) || '无' }}
+                <el-tag type="warning" @click="goDict(scope.row.config.dictid)">
+                  {{ scope.row.config.dictid }}
+                </el-tag>
               </template>
             </el-table-column>
             <el-table-column label="检测标准管理" align="center" width="300">
               <template slot-scope="scope">
                 <el-button
-                  type="primary"
-                  size="small"
-                  @click="addReportChildren(scope.row)"
-                >
-                  新增模版
-                </el-button>
-                <el-button
                   type="danger"
                   size="small"
-                  @click="deleteReport(scope.row.objectId)"
+                  @click="detailReportChildren(scope.row, 'delete')"
                 >
                   删 除
                 </el-button>
                 <el-button
                   type="primary"
                   size="small"
-                  @click="detailReportChildren(scope.row)"
+                  @click="detailReportChildren(scope.row, 'template')"
                 >
                   模版管理
+                </el-button>
+                <el-button
+                  type="info"
+                  size="small"
+                  @click="productView(scope.row.objectId)"
+                >
+                  绘图
                 </el-button>
               </template>
             </el-table-column>
@@ -323,10 +327,15 @@
             </el-table-column>
             <el-table-column label="内容" align="center">
               <template slot-scope="scope">
-                <img
-                  :src="fileDomain + scope.row.icon"
-                  alt
-                  class="el-upload-list__item-thumbnail"
+                <el-image
+                  style="z-index: 9999; width: 100px; height: 100px"
+                  :src="
+                    scope.row.config.konva.Stage.children[0].children[0].attrs
+                      .source
+                  "
+                  :preview-src-list="[
+                    `${scope.row.config.konva.Stage.children[0].children[0].attrs.source}`,
+                  ]"
                 />
               </template>
             </el-table-column>
@@ -391,6 +400,7 @@
   </el-container>
 </template>
 <script>
+  import { batch } from '@/api/Batch/index'
   import { queryProduct, delProduct, postProduct } from '@/api/Product'
   import { fileUpload, deleteFile } from '@/api/Proxy'
   import { getDictCount } from '@/api/Dict'
@@ -467,6 +477,7 @@
           name: '',
           product: '',
           model: '',
+          file: '',
           nodeType: '',
           devTypeText: '',
           word: '',
@@ -503,6 +514,15 @@
       this.getReport()
     },
     methods: {
+      goDict(id) {
+        this.$router.push({
+          path: '/dashboard/dict',
+          query: {
+            dictid: id,
+            type: 'device',
+          },
+        })
+      },
       // 查询报告模板字典
       async quertDict() {
         let params = {
@@ -543,7 +563,7 @@
           limit: this.pagesize,
           where: {
             'config.identifier': 'inspectionReportTemp',
-
+            desc: '0',
             // category: 'Evidence',
             // nodeType: 1,
           },
@@ -577,7 +597,8 @@
         console.log(regx.test(file.name))
         if (regx.test(file.name)) {
           this.fileRead(file)
-          this.uploadDocx(file)
+          // this.uploadDocx(file)
+          this.reportForm.file = file
         } else {
           this.$message({
             type: 'error',
@@ -613,27 +634,21 @@
       },
       // 添加报告模板
       addReporttemp(type) {
-        const exportData = {
-          config: JSON.stringify(
-            Object.assign(
-              {
-                identifier: 'inspectionReportTemp',
-                dictid: this.arrlist.objectId,
-              },
-              this.reportForm
-            )
-          ),
-          name: this.reportForm.name,
-          type: this.reportForm.devTypeText,
-          word: this.reportForm.word,
-        }
-        console.log(exportData, 'exportData')
+        var config = JSON.stringify({
+          identifier: 'inspectionReportTemp',
+          dictid: this.arrlist.objectId,
+        })
+        var formdata = new FormData()
+        formdata.append('name', this.reportForm.name)
+        formdata.append('devType', this.reportForm.devTypeText)
+        formdata.append('config', config)
+        formdata.append('file', this.reportForm.file)
+        console.log(formdata, 'formdata')
         this.$refs[type].validate(async (valid) => {
           if (valid) {
-            const { results, error } = await cereteReport(exportData)
-            if (results) {
+            const { result, error } = await cereteReport(formdata)
+            if (result) {
               this.$message({ type: 'success', message: '报告创建成功!' })
-              console.log(response, 'success')
               this.$refs['reportForm'].resetFields()
               this.dialogVisible = false
               this.getReport()
@@ -730,22 +745,6 @@
           }
         })
       },
-      async addReportChildren(row) {
-        // 获取当前项目的子项数量
-        this.currentDevType = row.devType
-        this.currentNodeType = row.nodeType
-        let params = {
-          keys: 'count(*)',
-          where: {
-            devType: this.currentDevType,
-            nodeType: 0, // 去掉nodeType.不然有时候会报错
-          },
-          order: 'basedata.index',
-        }
-        const { count = 0, results } = await queryProduct(params)
-        this.currentItemCount = response.count
-        this.dialogChildrenForm = true
-      },
       // 增加子模版
       addStandardChildren() {
         if (this.childrenform.imageSrc == '') {
@@ -778,13 +777,10 @@
 
         this.putReportTemp('deviceFlag', topoData)
       },
-      async detailReportChildren(row) {
-        // const loading = this.$loading({text: 'Loading',spinner: 'el-icon-loading'})
+      async detailReportChildren(row, type) {
         this.currentProduct = row
         var where = {
-          // devType: { $in: row.product }
-          devType: this.currentProduct.devType,
-          nodeType: 0,
+          'config.id': row.objectId,
         }
         let params = {
           limit: this.productpagesize,
@@ -794,23 +790,35 @@
           order: 'createdAt', // -updatedAt  updatedAt
         }
         const { count = 0, results } = await queryProduct(params)
-        this.dialogTableVisible = true
+
         this.producttable = results
         this.producttotal = count
-      },
-      deleteReport(id) {
-        this.$confirm('此操作将永久删除该质检项目, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-        }).then(async () => {
-          const res = await delProduct(id)
+        if (type == 'template') {
+          this.dialogTableVisible = true
+        } else {
+          let batchParams = []
+          results.forEach((i) => {
+            batchParams.push({
+              method: 'DELETE',
+              path: `/classes/Product/${i.objectId}`,
+              body: {},
+            })
+          })
+          console.log(batchParams)
+          batch(batchParams)
+            .then((res) => {
+              console.log(res)
+            })
+            .catch((e) => {
+              console.log(e)
+            })
           this.$message({
             type: 'success',
             message: '删除成功!',
           })
           this.getReport()
-        })
+        }
+        // const loading = this.$loading({text: 'Loading',spinner: 'el-icon-loading'})
       },
       deleteImgsrc() {
         event.stopPropagation()
@@ -818,15 +826,13 @@
       },
       productView(id) {
         // #topoUrl
-        if (this.$globalConfig.serverURL.substr(0, 1) == '/') {
-          var topoUrl = window.location.origin + '/spa'
-        } else {
-          var topoUrl = this.$globalConfig.localTopoUrl
-        }
-        // 绘制
-
-        var url = `${topoUrl}/#/?drawProudctid=${id}`
-        window.open(url, '__blank')
+        this.$router.push({
+          path: '/Topo/VueKonva',
+          query: {
+            productid: id,
+            type: 'product',
+          },
+        })
       },
       // 删除产品
       deleteProduct(row) {
@@ -935,6 +941,9 @@
   }
 </style>
 <style>
+  .el-image-viewer__wrapper {
+    z-index: 999999999 !important;
+  }
   .avatar-uploader {
     display: inline-block;
   }

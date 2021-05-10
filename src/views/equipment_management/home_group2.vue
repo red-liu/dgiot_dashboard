@@ -729,7 +729,6 @@
   import { getHashClass } from '@/api/Hash'
   import vueJsonEditor from 'vue-json-editor'
   import Category from '@/api/Mock/Category'
-
   export default {
     components: { vueJsonEditor },
     data() {
@@ -1290,7 +1289,9 @@
           order: '-updatedAt',
           limit: this.length,
           skip: this.start,
-          where: {},
+          where: {
+            category: 'IotHub',
+          },
         }
         if (this.formInline.productname != '') {
           parsms.where.name = this.formInline.productname

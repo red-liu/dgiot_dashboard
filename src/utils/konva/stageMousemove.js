@@ -1,3 +1,15 @@
+import store from '@/store'
+function getKonva(type) {
+  return store.getters[`konva/${type}`]
+}
+function Setkonva(key, value) {
+  return store.commit(`konva/${key}`, value)
+}
+let graphNow = getKonva('graphNow')
+let graphColor = getKonva('graphColor')
+let draw = getKonva('draw')
+let pointStart = getKonva('pointStart')
+let flag = getKonva('flag')
 /**
  * 铅笔
  * @param points 点数组
@@ -15,9 +27,8 @@ function drawPencil(points, stroke, strokeWidth) {
     tension: 0.5,
     draggable: true,
   })
-  graphNow = line
-  layer.add(line)
-  layer.draw()
+  // layer.add(line)
+  // layer.draw()
 
   line.on('mouseenter', function () {
     stage.container().style.cursor = 'move'
@@ -31,8 +42,10 @@ function drawPencil(points, stroke, strokeWidth) {
     // 双击删除自己
     this.remove()
     stage.find('Transformer').destroy()
-    layer.draw()
+    // layer.draw()
   })
+  Setkonva('setGraphNow', line)
+  return line
 }
 
 /**
@@ -55,9 +68,9 @@ function drawEllipse(x, y, rx, ry, stroke, strokeWidth) {
     strokeWidth: strokeWidth,
     draggable: true,
   })
-  graphNow = ellipse
-  layer.add(ellipse)
-  layer.draw()
+  // graphNow = ellipse
+  // layer.add(ellipse)
+  // layer.draw()
 
   ellipse.on('mouseenter', function () {
     stage.container().style.cursor = 'move'
@@ -73,6 +86,8 @@ function drawEllipse(x, y, rx, ry, stroke, strokeWidth) {
     stage.find('Transformer').destroy()
     layer.draw()
   })
+  Setkonva('setGraphNow', ellipse)
+  return ellipse
 }
 
 /**
@@ -97,9 +112,9 @@ function drawRect(x, y, w, h, c, sw) {
     opacity: sw === 0 ? 0.5 : 1,
     draggable: true,
   })
-  graphNow = rect
-  layer.add(rect)
-  layer.draw()
+  // graphNow = rect
+  // layer.add(rect)
+  // layer.draw()
 
   rect.on('mouseenter', function () {
     stage.container().style.cursor = 'move'
@@ -113,8 +128,10 @@ function drawRect(x, y, w, h, c, sw) {
     // 双击删除自己
     this.remove()
     stage.find('Transformer').destroy()
-    layer.draw()
+    // layer.draw()
   })
+  Setkonva('setGraphNow', rect)
+  return rect
 }
 
 /**
@@ -134,9 +151,9 @@ function drawText(x, y, fill, fs) {
     width: 300,
     draggable: true,
   })
-  graphNow = text
-  layer.add(text)
-  layer.draw()
+  // graphNow = text
+  // layer.add(text)
+  // layer.draw()
 
   text.on('mouseenter', function () {
     stage.container().style.cursor = 'move'
@@ -187,12 +204,12 @@ function drawText(x, y, fill, fs) {
     textarea.focus()
 
     this.setAttr('text', '')
-    layer.draw()
+    // layer.draw()
 
     // 确定输入的文字
     let confirm = (val) => {
       this.text(val ? val : '双击编辑文字')
-      layer.draw()
+      // layer.draw()
       // 隐藏在输入
       if (textarea) document.body.removeChild(textarea)
     }
@@ -212,6 +229,8 @@ function drawText(x, y, fill, fs) {
     textarea.addEventListener('keydown', keydown)
     textarea.addEventListener('blur', blur)
   })
+  Setkonva('setGraphNow', text)
+  return text
 }
 
 /**
@@ -247,5 +266,5 @@ export default function stageMousemove(flag, ev) {
     default:
       break
   }
-  layer.draw()
+  // layer.draw()
 }

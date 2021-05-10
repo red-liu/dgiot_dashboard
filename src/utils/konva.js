@@ -11,7 +11,6 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
   const moduleName = modulePath.replace(/^.\/(.*)\.js/, '$1')
   const value = modulesFiles(modulePath)
   modules[moduleName] = value.default
-  console.log(modules[moduleName])
   return modules
 }, {})
 module.exports = {

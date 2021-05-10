@@ -106,14 +106,14 @@
         draw: 'konva/draw',
         flag: 'konva/flag',
       }),
-      ...mapGetters({
-        graphColor: 'konva/graphColor',
-        drawing: 'konva/drawing',
-        graphNow: 'konva/graphNow',
-        pointStart: 'konva/pointStart',
-        draw: 'konva/draw',
-        flag: 'konva/flag',
-      }),
+      // ...mapGetters({
+      //   graphColor: 'konva/graphColor',
+      //   drawing: 'konva/drawing',
+      //   graphNow: 'konva/graphNow',
+      //   pointStart: 'konva/pointStart',
+      //   draw: 'konva/draw',
+      //   flag: 'konva/flag',
+      // }),
     },
     mounted() {},
     beforeCreate() {}, //生命周期 - 创建之前

@@ -139,14 +139,6 @@
   export default {
     components: {
       ...res_components,
-      ...mapGetters({
-        graphColor: 'konva/graphColor',
-        drawing: 'konva/drawing',
-        graphNow: 'konva/graphNow',
-        pointStart: 'konva/pointStart',
-        draw: 'konva/draw',
-        flag: 'konva/flag',
-      }),
     },
     data() {
       return {
@@ -175,6 +167,29 @@
       }
     },
     computed: {
+      ...mapState({
+        graphColor: 'konva/graphColor',
+        // drawing: 'konva/drawing',
+        //   graphNow: 'konva/graphNow',
+        pointStart: 'konva/pointStart',
+        draw: 'konva/draw',
+        //   flag: 'konva/flag',
+      }),
+      flag: {
+        get() {
+          return this.$store.state.konva.flag
+        },
+      },
+      graphNow: {
+        get() {
+          return this.$store.state.konva.graphNow
+        },
+      },
+      drawing: {
+        get() {
+          return this.$store.state.konva.drawing
+        },
+      },
       stageConfig() {
         let el = document.getElementsByClassName('konva')
         return {
@@ -185,6 +200,7 @@
         }
       },
     },
+    watch: {},
     mounted() {
       if (this.productid) {
         this.handleCloseSub()
@@ -193,8 +209,6 @@
       }
     },
     destroyed() {
-      //
-      console.log('取消订阅mqtt')
       if (this.$refs.topoheader) this.handleCloseSub()
     },
     methods: {
@@ -505,10 +519,11 @@
         let div = document.createElement('div')
         _konvarow.appendChild(div)
         div.setAttribute('id', globalStageid)
+        console.log('globalStageid', globalStageid)
+        console.log(Stage, 'Stage')
         _this.stage = Konva.Node.create(Stage, globalStageid)
         // 2 create layer
         const layer = new Konva.Layer()
-        _this.stage.add(layer)
         _this.stage.find('Image').each((node) => {
           const img = new Image()
           img.src = node.getAttr('source')
@@ -521,18 +536,22 @@
         })
         _this.stage.on('click', (e) => {
           // _this.ShapeVisible = true
-          console.log(e.target.attrs)
           let Shapeconfig = e.target.attrs
+          console.log('click stage info', e.target.attrs)
           Shapeconfig['container'] = '' // 这里为dom 对象 临时解决方式是将其赋值为空。否则json解析会报错
           if (!_this.rightrow) _this.rightrow = 6
           _this.$refs['operation'].Shapeconfig = Shapeconfig
-          console.log(_this.Shapeconfig)
         })
         _this.stage.on('mousedown', function (e) {
           // 如果点击空白处 移除图形选择框
-
           if (e.target === _this.stage) {
-            stageMousedown(_this.flag, e)
+            stageMousedown(_this.flag, e, _this.graphColor)
+              .then((res) => {
+                console.log('resresresresresresresresresresresres', res)
+              })
+              .catch((e) => {
+                console.log('e', e)
+              })
 
             // 移除图形选择框
             _this.stage.find('Transformer').destroy()
@@ -566,17 +585,18 @@
         })
         // 鼠标移动
         _this.stage.on('mousemove', function (e) {
-          console.log(_this.graphNow, _this.flag, _this.drawing)
+          // console.log('_this.flag', _this.$store.state.konva.flag)
           if (_this.graphNow && _this.flag && _this.drawing) {
+            console.log(' mousemove evt', e.evt)
             stageMousemove(_this.flag, e)
-            console.log(e, 'eeeeeeeeeeeee', _this.flag, e)
           }
         })
 
         // 鼠标放开
         _this.stage.on('mouseup', function () {
-          _this.drawing = false
-          if (_this.flag === 'text') _this.flag = null
+          // _this.drawing = false
+          _this.setDrawing(false)
+          if (_this.flag === 'text') _this.setFlag(null)
         })
         var Group = _this.stage.find('Group')
         // 设置页面是从设备界面进入 则不添加以下事件
@@ -611,6 +631,7 @@
           })
         })
         console.log('绘制完成')
+        _this.stage.add(layer)
         if (this.$refs.topoheader)
           this.$refs.topoheader.subscribe(_this.productid)
       },

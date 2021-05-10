@@ -1,9 +1,22 @@
+import store from '@/store'
+function getKonva(type) {
+  return store.getters[`konva/${type}`]
+}
+function Setkonva(key, value) {
+  return store.commit(`konva/${key}`, value)
+}
+let graphNow = getKonva('graphNow')
+let graphColor = getKonva('graphColor')
+let draw = getKonva('draw')
+let pointStart = getKonva('pointStart')
+let flag = getKonva('flag')
 /**
  * 铅笔
  * @param points 点数组
  * @param stroke 颜色
  * @param strokeWidth 线粗细
  */
+
 function drawPencil(points, stroke, strokeWidth) {
   const line = new Konva.Line({
     name: 'line',
@@ -15,9 +28,9 @@ function drawPencil(points, stroke, strokeWidth) {
     tension: 0.5,
     draggable: true,
   })
-  graphNow = line
-  layer.add(line)
-  layer.draw()
+  Setkonva('setGraphNow', line)
+  // layer.add(line)
+  // layer.draw()
 
   line.on('mouseenter', function () {
     stage.container().style.cursor = 'move'
@@ -33,6 +46,7 @@ function drawPencil(points, stroke, strokeWidth) {
     stage.find('Transformer').destroy()
     layer.draw()
   })
+  return line
 }
 
 /**
@@ -55,7 +69,6 @@ function drawEllipse(x, y, rx, ry, stroke, strokeWidth) {
     strokeWidth: strokeWidth,
     draggable: true,
   })
-  graphNow = ellipse
   layer.add(ellipse)
   layer.draw()
 
@@ -73,6 +86,8 @@ function drawEllipse(x, y, rx, ry, stroke, strokeWidth) {
     stage.find('Transformer').destroy()
     layer.draw()
   })
+  Setkonva('setGraphNow', ellipse)
+  return ellipse
 }
 
 /**
@@ -97,9 +112,8 @@ function drawRect(x, y, w, h, c, sw) {
     opacity: sw === 0 ? 0.5 : 1,
     draggable: true,
   })
-  graphNow = rect
-  layer.add(rect)
-  layer.draw()
+  // layer.add(rect)
+  // layer.draw()
 
   rect.on('mouseenter', function () {
     stage.container().style.cursor = 'move'
@@ -115,6 +129,9 @@ function drawRect(x, y, w, h, c, sw) {
     stage.find('Transformer').destroy()
     layer.draw()
   })
+
+  Setkonva('setGraphNow', rect)
+  return rect
 }
 
 /**
@@ -134,7 +151,6 @@ function drawText(x, y, fill, fs) {
     width: 300,
     draggable: true,
   })
-  graphNow = text
   layer.add(text)
   layer.draw()
 
@@ -212,6 +228,8 @@ function drawText(x, y, fill, fs) {
     textarea.addEventListener('keydown', keydown)
     textarea.addEventListener('blur', blur)
   })
+  Setkonva('setGraphNow', text)
+  return text
 }
 
 /**
@@ -224,7 +242,7 @@ export default function stageMousedown(flag, ev) {
   if (flag) {
     let x = ev.evt.offsetX,
       y = ev.evt.offsetY
-    pointStart = [x, y]
+    Setkonva('setPointStart', [x, y])
 
     switch (flag) {
       case 'pencil':
@@ -246,6 +264,6 @@ export default function stageMousedown(flag, ev) {
       default:
         break
     }
-    drawing = true
+    Setkonva('setDrawing', true)
   }
 }

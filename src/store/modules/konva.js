@@ -18,8 +18,8 @@ const mutations = {
   setGraphColor(state, color) {
     state.graphColor = color
   },
-  setDrawing(state, flag) {
-    state.drawing = flag
+  setDrawing(state, draw) {
+    state.drawing = draw
   },
   setPointStart(state, point) {
     state.pointStart = point
@@ -38,8 +38,8 @@ const actions = {
   setGraphColor({ commit }, color) {
     commit('setGraphColor', color)
   },
-  setDrawing({ commit }, flag) {
-    commit('setDrawing', flag)
+  setDrawing({ commit }, draw) {
+    commit('setDrawing', draw)
   },
   setPointStart({ commit }, point) {
     commit('setPointStart', point)
@@ -50,7 +50,7 @@ const actions = {
   setDraw({ commit }, draw) {
     commit('setDraw', draw)
   },
-  setFlag({ commit }, colflagor) {
+  setFlag({ commit }, flag) {
     commit('setFlag', flag)
   },
 }

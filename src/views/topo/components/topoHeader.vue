@@ -50,6 +50,7 @@
               <el-button @click="flagFn('rect')">矩形</el-button>
               <el-button @click="flagFn('rectH')">矩形-空心</el-button>
               <el-button @click="flagFn('text')">文字</el-button>
+              <el-button @click="flagFn('image')">图片</el-button>
               <el-button @click="removeFn()">删除</el-button>
               <el-color-picker
                 v-model="graphColor"
@@ -99,13 +100,21 @@
     },
     computed: {
       ...mapState({
-        graphColor: 'konva/graphColor',
+        // graphColor: 'konva/graphColor',
         drawing: 'konva/drawing',
         graphNow: 'konva/graphNow',
         pointStart: 'konva/pointStart',
         draw: 'konva/draw',
         flag: 'konva/flag',
       }),
+      graphColor: {
+        get() {
+          return this.$store.state.konva.graphColor
+        },
+        set(val) {
+          this.$store.commit('konva/setGraphColor', val)
+        },
+      },
       // ...mapGetters({
       //   graphColor: 'konva/graphColor',
       //   drawing: 'konva/drawing',
@@ -132,7 +141,6 @@
         setGraphColor: 'konva/setGraphColor',
       }),
       setColor(v) {
-        console.log(v)
         this.setGraphColor(v)
       },
       // flagFn
@@ -160,6 +168,7 @@
       },
       flagFn(v) {
         this.setFlag(v)
+        this.$emit('createShape', v, this.graphColor)
       },
       removeFn() {
         if (this.graphNow) {

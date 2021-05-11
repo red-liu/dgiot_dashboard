@@ -18,6 +18,7 @@
         :stop-mqtt="stop_Mqtt"
         :value="value"
         @messageData="set_mqttflag"
+        @createShape="createShape"
       />
     </div>
     <div class="_mian">
@@ -261,6 +262,96 @@
       // set_mqttflag
       set_mqttflag(v) {
         this.stop_Mqtt = v
+      },
+      // 创建图层
+      createShape(v, color) {
+        console.log('类型', v)
+        var state
+        var _group = this.stage.find('Group')[0]
+        var Layer = this.stage.find('Layer')[0]
+        switch (v) {
+          case 'pencil':
+            state = new Konva.Line({
+              name: 'line',
+              id: `line_${Mock.mock('@string')}`,
+              points: [5, 70, 140, 23, 250, 60, 300, 20],
+              stroke: color,
+              strokeWidth: 15,
+              lineCap: 'round',
+              lineJoin: 'round',
+              tension: 0.5,
+              draggable: true,
+            })
+            break
+          case 'ellipse':
+            // 椭圆
+            state = new Konva.Ellipse({
+              name: 'ellipse',
+              id: `ellipse_${Mock.mock('@string')}`,
+              x: 40,
+              y: 40,
+              radiusX: 20,
+              radiusY: 20,
+              stroke: color,
+              strokeWidth: 4,
+              draggable: true,
+            })
+            break
+          case 'rect':
+          case 'rectH':
+            state = new Konva.Rect({
+              name: 'rect',
+              x: 20,
+              id: `rect_${Mock.mock('@string')}`,
+              y: 20,
+              width: 100,
+              height: 50,
+              fill: color,
+              stroke: 'black',
+              strokeWidth: 4,
+              opacity: 1,
+              draggable: true,
+            })
+            break
+          case 'text':
+            state = new Konva.Text({
+              text: '双击编辑文字',
+              id: `text_${Mock.mock('@string')}`,
+              x: 20,
+              y: 20,
+              fill: color,
+              fontSize: 12,
+              width: 300,
+              draggable: true,
+            })
+            break
+          case 'image':
+            let imgsrc =
+              'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2234238213,2776120128&fm=26&gp=0.jpg'
+            var imageObj = new Image()
+            state = new Konva.Image({
+              x: 50,
+              y: 50,
+              source: imgsrc,
+              id: `image_${Mock.mock('@string')}`,
+              image: imageObj,
+              width: 106,
+              height: 118,
+              draggable: true,
+            })
+
+            imageObj.src = imgsrc
+            imageObj.crossOrigin = 'Anonymous'
+            // alternative API:
+            break
+          default:
+            break
+        }
+
+        _group.add(state)
+        Layer.draw()
+        Layer.batchDraw()
+        this.stage.add(Layer)
       },
       // saveKonvaitem
       saveKonvaitem(config) {
@@ -523,7 +614,6 @@
         console.log(Stage, 'Stage')
         _this.stage = Konva.Node.create(Stage, globalStageid)
         // 2 create layer
-        const layer = new Konva.Layer()
         _this.stage.find('Image').each((node) => {
           const img = new Image()
           img.src = node.getAttr('source')
@@ -537,66 +627,10 @@
         _this.stage.on('click', (e) => {
           // _this.ShapeVisible = true
           let Shapeconfig = e.target.attrs
-          console.log('click stage info', e.target.attrs)
-          Shapeconfig['container'] = '' // 这里为dom 对象 临时解决方式是将其赋值为空。否则json解析会报错
+          console.log('click stage info', e.target.attrs) // 这里为dom 对象 临时解决方式是将其赋值为空。否则json解析会报错
+          Shapeconfig['container'] = ''
           if (!_this.rightrow) _this.rightrow = 6
           _this.$refs['operation'].Shapeconfig = Shapeconfig
-        })
-        _this.stage.on('mousedown', function (e) {
-          // 如果点击空白处 移除图形选择框
-          if (e.target === _this.stage) {
-            stageMousedown(_this.flag, e, _this.graphColor)
-              .then((res) => {
-                console.log('resresresresresresresresresresresres', res)
-              })
-              .catch((e) => {
-                console.log('e', e)
-              })
-
-            // 移除图形选择框
-            _this.stage.find('Transformer').destroy()
-            layer.draw()
-            return
-          }
-          // 如果没有匹配到就终止往下执行
-          if (
-            !e.target.hasName('line') &&
-            !e.target.hasName('ellipse') &&
-            !e.target.hasName('rect') &&
-            !e.target.hasName('circle')
-          ) {
-            return
-          }
-          // 移除图形选择框
-          _this.stage.find('Transformer').destroy()
-
-          // 当前点击的对象赋值给graphNow
-          this.setGraphNow(e.target)
-          // 创建图形选框事件
-          const tr = new Konva.Transformer({
-            borderStroke: '#000', // 虚线颜色
-            borderStrokeWidth: 1, //虚线大小
-            borderDash: [5], // 虚线间距
-            keepRatio: false, // 不等比缩放
-          })
-          layer.add(tr)
-          tr.attachTo(e.target)
-          layer.draw()
-        })
-        // 鼠标移动
-        _this.stage.on('mousemove', function (e) {
-          // console.log('_this.flag', _this.$store.state.konva.flag)
-          if (_this.graphNow && _this.flag && _this.drawing) {
-            console.log(' mousemove evt', e.evt)
-            stageMousemove(_this.flag, e)
-          }
-        })
-
-        // 鼠标放开
-        _this.stage.on('mouseup', function () {
-          // _this.drawing = false
-          _this.setDrawing(false)
-          if (_this.flag === 'text') _this.setFlag(null)
         })
         var Group = _this.stage.find('Group')
         // 设置页面是从设备界面进入 则不添加以下事件
@@ -631,7 +665,6 @@
           })
         })
         console.log('绘制完成')
-        _this.stage.add(layer)
         if (this.$refs.topoheader)
           this.$refs.topoheader.subscribe(_this.productid)
       },

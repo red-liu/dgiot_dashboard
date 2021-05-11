@@ -239,26 +239,27 @@ function drawText(x, y, fill, fs) {
  * @param ev 传入的event对象
  */
 
-export default function stageMousemove(flag, ev) {
+export default function stageMousemove(flag, ev, layer) {
   console.log('stageMousemove', flag, ev)
+  let res
   switch (flag) {
     case 'pencil':
       // 铅笔
       pointStart.push(ev.evt.offsetX, ev.evt.offsetY)
-      graphNow.setAttrs({
+      res = layer.setAttrs({
         points: pointStart,
       })
       break
     case 'ellipse':
       // 椭圆
-      graphNow.setAttrs({
+      res = layer.setAttrs({
         radiusX: Math.abs(ev.evt.offsetX - pointStart[0]),
         radiusY: Math.abs(ev.evt.offsetY - pointStart[1]),
       })
       break
     case 'rect':
     case 'rectH':
-      graphNow.setAttrs({
+      res = layer.setAttrs({
         width: ev.evt.offsetX - pointStart[0],
         height: ev.evt.offsetY - pointStart[1],
       })
@@ -266,5 +267,8 @@ export default function stageMousemove(flag, ev) {
     default:
       break
   }
-  // layer.draw()
+
+  layer.add(res)
+  layer.draw()
+  return layer
 }

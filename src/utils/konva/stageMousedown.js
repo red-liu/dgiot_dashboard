@@ -69,23 +69,7 @@ function drawEllipse(x, y, rx, ry, stroke, strokeWidth) {
     strokeWidth: strokeWidth,
     draggable: true,
   })
-  layer.add(ellipse)
-  layer.draw()
 
-  ellipse.on('mouseenter', function () {
-    stage.container().style.cursor = 'move'
-  })
-
-  ellipse.on('mouseleave', function () {
-    stage.container().style.cursor = 'default'
-  })
-
-  ellipse.on('dblclick', function () {
-    // 双击删除自己
-    this.remove()
-    stage.find('Transformer').destroy()
-    layer.draw()
-  })
   Setkonva('setGraphNow', ellipse)
   return ellipse
 }
@@ -243,27 +227,28 @@ export default function stageMousedown(flag, ev) {
     let x = ev.evt.offsetX,
       y = ev.evt.offsetY
     Setkonva('setPointStart', [x, y])
-
+    let res
     switch (flag) {
       case 'pencil':
-        drawPencil(pointStart, graphColor, 2)
+        res = drawPencil(pointStart, graphColor, 2)
         break
       case 'ellipse':
         // 椭圆
-        drawEllipse(x, y, 0, 0, graphColor, 2)
+        res = drawEllipse(x, y, 0, 0, graphColor, 2)
         break
       case 'rect':
-        drawRect(x, y, 0, 0, graphColor, 0)
+        res = drawRect(x, y, 0, 0, graphColor, 0)
         break
       case 'rectH':
-        drawRect(x, y, 0, 0, graphColor, 2)
+        res = drawRect(x, y, 0, 0, graphColor, 2)
         break
       case 'text':
-        drawText(x, y, graphColor, 16)
+        res = drawText(x, y, graphColor, 16)
         break
       default:
         break
     }
     Setkonva('setDrawing', true)
+    return res
   }
 }

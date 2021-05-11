@@ -10,16 +10,28 @@ import { license, SiteDefault } from '@/api/License'
 const state = () => ({
   token: getToken(tokenTableName, storage),
   username: getToken('username', storage),
-  avatar: getToken('avatarimg', 'sessionStorage'),
+  avatar: getToken('avatar', 'sessionStorage'),
+  setlogo: getToken('logo', 'sessionStorage'),
+  setBackgroundimage: getToken('backgroundimage', 'sessionStorage'),
   objectId: getToken('objectId', storage),
 })
 const getters = {
   token: (state) => state.token,
   username: (state) => state.username,
   avatar: (state) => state.avatar,
+  logo: (state) => state.logo,
+  backgroundimage: (state) => state.backgroundimage,
   objectId: (state) => state.objectId,
 }
 const mutations = {
+  setlogo(state, url) {
+    state.logo = url
+    setToken('logo', url, storage)
+  },
+  setBackgroundimage(state, url) {
+    state.backgroundimage = url
+    setToken('backgroundimage', url, storage)
+  },
   /**
    * @description 设置用户登录Id
    * @param {*} state
@@ -54,7 +66,7 @@ const mutations = {
    */
   setAvatar(state, avatar) {
     state.avatar = avatar
-    setToken('avatarimg', avatar, 'sessionStorage')
+    setToken('avatar', avatar, 'sessionStorage')
   },
 }
 const actions = {

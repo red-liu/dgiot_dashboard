@@ -6,7 +6,7 @@
  * @FilePath: \dgiot_dashboard\src\utils\vuex.js
  * @Description: vuex持久化方法
  */
-import { expiresTime } from '@/config'
+import { expiresTime, cookieWhiteList } from '@/config'
 import cookie from 'js-cookie'
 /**
  * @description 获取token

@@ -3,36 +3,36 @@
     <div class="dialog">
       <el-dialog width="100vh" height="500vh" :visible.sync="dialogVisible">
         <el-upload
+          ref="upload"
           class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :on-change="handleChange"
+          action="no"
+          :http-request="handleUpload"
+          :limit="1"
         >
-          <el-button size="small" type="primary">点击上传</el-button>
-          <div slot="tip" class="el-upload__tip">
-            只能上传jpg/png文件，且不超过500kb
-          </div>
+          <el-button size="small" type="success" class="el-icon-upload">
+            点击上传图片
+          </el-button>
         </el-upload>
       </el-dialog>
     </div>
     <div class="personal-center-container">
       <el-row :gutter="20">
-        <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
+        <el-col :lg="12" :md="12" :sm="24" :xl="8" :xs="24">
           <el-card shadow="hover">
             <div class="personal-center-user-info">
               <el-avatar
                 :size="100"
                 :src="avatar"
-                @click.native="uploadCkick"
+                @click.native="uploadCkick('avatar')"
               />
-
               <ul class="personal-center-user-info-list">
                 <li>
                   <vab-icon icon="user-2-line" />
-                  {{ userinfo.username }}
+                  {{ username }}
                 </li>
                 <li>
                   <vab-icon icon="user-3-line" />
-                  {{ userinfo.nick }}
+                  {{ nick }}
                 </li>
                 <li>
                   <vab-icon icon="women-line" />
@@ -50,21 +50,26 @@
             </div>
           </el-card>
         </el-col>
-        <el-col :lg="16" :md="12" :sm="24" :xl="16" :xs="24">
+        <el-col :lg="12" :md="12" :sm="24" :xl="16" :xs="24">
           <el-card shadow="hover">
             <el-tabs v-model="activeName">
               <el-tab-pane label="个人信息" name="first">
-                <el-col :lg="12" :md="16" :sm="24" :xl="12" :xs="24">
-                  <el-form ref="userinfo" label-width="80px" :model="userinfo">
+                <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
+                  <el-form
+                    ref="userinfo"
+                    :rules="registerRules"
+                    label-width="80px"
+                    :model="userinfo"
+                  >
                     <el-form-item label="姓名">
-                      <el-input v-model="userinfo.username" />
+                      <el-input v-model="username" />
                     </el-form-item>
                     <el-form-item label="昵称">
-                      <el-input v-model="userinfo.nick" />
+                      <el-input v-model="nick" />
                     </el-form-item>
-                    <el-form-item label="objectId">
+                    <!-- <el-form-item label="objectId">
                       <el-input v-model="userinfo.objectId" disabled />
-                    </el-form-item>
+                    </el-form-item> -->
                     <el-form-item label="性别">
                       <el-select v-model="userinfo.sex" style="width: 100%">
                         <el-option label="保密" value="保密" />
@@ -72,7 +77,7 @@
                         <el-option label="女" value="女" />
                       </el-select>
                     </el-form-item>
-                    <el-form-item label="绑定手机">
+                    <el-form-item label="绑定手机" prop="phone">
                       <el-input v-model="userinfo.phone" />
                     </el-form-item>
                     <el-form-item label="个人简介">
@@ -91,68 +96,81 @@
               </el-tab-pane>
               <el-tab-pane label="平台设置" name="second">
                 <div class="personal-center-item">
-                  <vab-icon icon="community-fill" style="color: #3492ed" />
-                  <div class="personal-center-item-content">
-                    <div>企业名称</div>
-                    <div class="personal-center-item-content-second"></div>
-                  </div>
-                  <el-link type="primary">更换绑定</el-link>
+                  <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
+                    <el-form
+                      ref="companyinfo"
+                      label-width="120px"
+                      :model="userinfo"
+                    >
+                      <el-form-item label="企业名称">
+                        <el-input v-model="userinfo.name">
+                          <template slot="prepend">
+                            <vab-icon
+                              icon="community-fill"
+                              style="color: #3492ed"
+                            />
+                          </template>
+                        </el-input>
+                      </el-form-item>
+                      <el-form-item label="企业logo">
+                        <el-input v-model="userinfo.logo">
+                          <template slot="prepend">
+                            <vab-icon
+                              icon="remixicon-fill"
+                              style="color: #3492ed"
+                            />
+                          </template>
+                          <template slot="append">
+                            <vab-icon
+                              icon="chat-upload-fill"
+                              style="color: #3492ed"
+                              @click="uploadCkick('logo')"
+                            />
+                          </template>
+                        </el-input>
+                      </el-form-item>
+                      <el-form-item label="登录提示欢迎语">
+                        <el-input v-model="userinfo.title">
+                          <template slot="prepend">
+                            <vab-icon icon="text" style="color: #3492ed" />
+                          </template>
+                        </el-input>
+                      </el-form-item>
+                      <el-form-item label="企业版权信息">
+                        <el-input v-model="userinfo.Copyright">
+                          <template slot="prepend">
+                            <vab-icon
+                              icon="copyright-fill"
+                              style="color: #3492ed"
+                            />
+                          </template>
+                        </el-input>
+                      </el-form-item>
+                      <el-form-item label="首页背景图">
+                        <el-input v-model="userinfo.backgroundimage">
+                          <template slot="prepend">
+                            <vab-icon
+                              icon="bank-card-line"
+                              style="color: #3492ed"
+                            />
+                          </template>
+                          <template slot="append">
+                            <vab-icon
+                              icon="chat-upload-fill"
+                              style="color: #3492ed"
+                              @click="uploadCkick('backgroundimage')"
+                            />
+                          </template>
+                        </el-input>
+                      </el-form-item>
+                      <el-form-item>
+                        <el-button type="primary" @click="onSubmit">
+                          保存
+                        </el-button>
+                      </el-form-item>
+                    </el-form>
+                  </el-col>
                 </div>
-                <el-divider />
-                <div class="personal-center-item">
-                  <vab-icon icon="remixicon-fill" style="color: #4daf29" />
-                  <div class="personal-center-item-content">
-                    <div>企业logo</div>
-                    <div class="personal-center-item-content-second"></div>
-                  </div>
-                  <el-link type="primary">更换绑定</el-link>
-                </div>
-                <el-divider />
-                <div class="personal-center-item">
-                  <vab-icon icon="text" style="color: #1476fe" />
-                  <div class="personal-center-item-content">
-                    <div>登录提示欢迎语</div>
-                    <div class="personal-center-item-content-second"></div>
-                  </div>
-                  <el-link type="primary">更换绑定</el-link>
-                </div>
-                <el-divider />
-                <div class="personal-center-item">
-                  <vab-icon icon="copyright-fill" style="color: #ffd440" />
-                  <div class="personal-center-item-content">
-                    <div>企业版权信息</div>
-                    <div class="personal-center-item-content-second"></div>
-                  </div>
-                  <el-link type="primary">更换绑定</el-link>
-                </div>
-                <el-divider />
-                <div class="personal-center-item">
-                  <vab-icon icon="bank-card-line" />
-                  <div class="personal-center-item-content">
-                    <div>首页背景图</div>
-                    <div class="personal-center-item-content-second"></div>
-                  </div>
-                  <el-link type="primary">更换绑定</el-link>
-                </div>
-                <el-divider />
-                <div class="personal-center-item">
-                  <vab-icon icon="qq-fill" style="color: #012e85" />
-                  <div class="personal-center-item-content">
-                    <div>绑定qq</div>
-                    <div class="personal-center-item-content-second"></div>
-                  </div>
-                  <el-link type="primary">更换绑定</el-link>
-                </div>
-                <el-divider />
-                <div class="personal-center-item">
-                  <vab-icon icon="wechat-fill" style="color: #012e85" />
-                  <div class="personal-center-item-content">
-                    <div>绑定微信</div>
-                    <div class="personal-center-item-content-second"></div>
-                  </div>
-                  <el-link type="primary">更换绑定</el-link>
-                </div>
-                <el-divider />
               </el-tab-pane>
             </el-tabs>
           </el-card>
@@ -163,46 +181,127 @@
 </template>
 <script>
   var editor
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapMutations } from 'vuex'
+  import { isPhone } from '@/utils/validate'
+  import { UploadImg } from '@/api/File'
+  import { putUser } from '@/api/User'
   export default {
     name: 'Userinfo',
     data() {
+      const validatePhone = (rule, value, callback) => {
+        if (value && !isPhone(value)) {
+          callback(new Error(this.$translateTitle('请输入正确的手机号')))
+        } else {
+          callback()
+        }
+      }
       return {
+        registerRules: {
+          phone: [
+            {
+              required: false,
+              trigger: 'blur',
+              message: this.$translateTitle('请输入手机号'),
+            },
+            { validator: validatePhone, trigger: 'blur' },
+          ],
+        },
+        filetype: '',
+        objectId: '',
         dialogVisible: false,
         activeName: 'first',
         userinfo: {
-          objectId: '',
           sex: '女',
-          description: unescape(
-            '\u5bcc\u5728\u672f\u6570\uff0c\u4e0d\u5728\u52b3\u8eab\uff1b\u5229\u5728\u52bf\u5c45\uff0c\u4e0d\u5728\u529b\u8015\u3002'
-          ),
-          phone: '',
+          description: '',
         },
-        userid: '',
-        roles: [],
+        username: '',
+        nick: '',
+        phone: '',
+        companyinfo: {
+          name: '',
+          logo: '',
+          title: '',
+          Copyright: '',
+          backgroundimage: '',
+        },
       }
     },
     computed: {
       ...mapGetters({
         avatar: 'user/avatar',
+        token: 'user/token',
+        token: 'user/token',
+        token: 'user/token',
       }),
     },
     mounted() {
       this.queryUserInfo()
     },
     methods: {
-      onSubmit() {
-        this.$baseMessage(
-          '模拟保存成功',
-          'success',
-          false,
-          'vab-hey-message-success'
-        )
+      ...mapMutations({
+        setAvatar: 'user/setAvatar',
+        setlogo: 'user/setlogo',
+        setBackgroundimage: 'user/setBackgroundimage',
+      }),
+      //上传操作调用的函数
+      async handleUpload(file) {
+        var formData = new FormData()
+        formData.append('file', file.file)
+        formData.append('output', 'json')
+        formData.append('filename', this.objectId + this.filetype + '.jpg')
+        formData.append('path', 'group1')
+        formData.append('auth_token', this.token) // 下面是
+        const { url } = await UploadImg(formData)
+        console.log(url)
+        if (url) {
+          this.dialogVisible = !this.dialogVisible
+          switch (this.filetype) {
+            case 'avatar':
+              this.setAvatar(url)
+              break
+            case 'logo':
+              this.userinfo.logo = url
+              this.setlogo(url)
+              break
+            case 'backgroundimage':
+              this.userinfo.backgroundimage = url
+              this.setBackgroundimage(url)
+              break
+            default:
+              console.log('type', this.filetype)
+              break
+          }
+          this.$nextTick(() => {
+            this.$refs.upload.clearFiles()
+          })
+        }
       },
-      handleChange(file) {
-        console.log('file文件對象', file.raw)
+      async onSubmit() {
+        let isflag = true
+        console.log(this.userinfo.phone.length)
+        if (this.userinfo.phone.length != 0 && !isPhone(this.userinfo.phone)) {
+          this.$refs['userinfo'].validateField('phone')
+          isflag = this.$refs['userinfo'].validateField('phone')
+          return
+        }
+        console.log(isflag)
+        let pamams = {
+          tag: { companyinfo: this.companyinfo, userinfo: this.userinfo },
+          nick: this.nick,
+          username: this.username,
+          phone: this.phone,
+        }
+        const res = await putUser(this.objectId, pamams)
+        if (res)
+          this.$baseMessage(
+            '保存成功',
+            'success',
+            false,
+            'vab-hey-message-success'
+          )
       },
-      uploadCkick() {
+      uploadCkick(type) {
+        this.filetype = type
         this.dialogVisible = !this.dialogVisible
         // console.log(this.$refs['uploadBox'].$refs.upload.$refs['upload-inner'])
         // this.$refs['uploadBox'].$refs.upload.$refs[
@@ -210,15 +309,23 @@
         // ].$refs.input.click()
       },
       async queryUserInfo() {
-        const { username, nick, objectId, ACL, phone } = await this.$get_object(
-          '_User',
-          this.$route.params.userid
-        )
-        this.userinfo.objectId = objectId
-        this.userinfo.username = username
-        this.userinfo.nick = nick
-        this.userinfo.objectId = objectId
-        this.userinfo.phone = phone
+        const {
+          username,
+          nick,
+          phone,
+          objectId,
+          tag = {
+            companyinfo: {},
+            userinfo: {},
+          },
+        } = await this.$get_object('_User', this.$route.params.userid)
+        this.userinfo = tag.userinfo
+        this.objectId = objectId
+        this.username = username
+        this.nick = nick
+        this.phone = phone
+        this.userinfo.phone = this.phone
+        this.companyinfo = tag.companyinfo
       },
     },
   }
@@ -228,7 +335,9 @@
   #{$base}-container {
     padding: 0 !important;
     background: $base-color-background !important;
-
+    i {
+      cursor: pointer;
+    }
     #{$base}-user-info {
       padding: $base-padding;
       text-align: center;
@@ -280,10 +389,6 @@
 
     #{$base}-item {
       display: flex;
-
-      i {
-        font-size: 40px;
-      }
 
       &-content {
         box-sizing: border-box;

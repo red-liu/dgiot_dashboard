@@ -16,3 +16,15 @@ export function Upload({ file }) {
     },
   })
 }
+
+export function UploadImg(param) {
+  return request({
+    url: 'group1/upload',
+    method: 'post',
+    headers: {
+      proxy: 'group1',
+      'Content-Type': 'multipart/form-data',
+    },
+    data: param,
+  })
+}

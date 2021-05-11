@@ -231,7 +231,7 @@ export default {
     product: {
       share: '分享',
       config: '配置',
-      dict: '词典',
+      dict: '字典',
       edit: '设备',
       myproduct: '我的产品',
       createproduct: '创建产品',

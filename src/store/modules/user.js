@@ -13,6 +13,13 @@ const state = () => ({
   avatar: getToken('avatar', 'sessionStorage'),
   setlogo: getToken('logo', 'sessionStorage'),
   setBackgroundimage: getToken('backgroundimage', 'sessionStorage'),
+  avatar: getToken('avatar', storage),
+  Copyright: getToken('Copyright', storage),
+  logo:
+    getToken('logo', storage) || 'http://www.iotn2n.com/favicon.ico?1558342112',
+  backgroundimage:
+    getToken('backgroundimage', storage) ||
+    'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/login_images/background.jpg',
   objectId: getToken('objectId', storage),
 })
 const getters = {
@@ -22,8 +29,13 @@ const getters = {
   logo: (state) => state.logo,
   backgroundimage: (state) => state.backgroundimage,
   objectId: (state) => state.objectId,
+  Copyright: (state) => state.Copyright,
 }
 const mutations = {
+  setCopyright(state, Copyright) {
+    state.Copyright = Copyright
+    setToken('logo', Copyright, storage)
+  },
   setlogo(state, url) {
     state.logo = url
     setToken('logo', url, storage)
@@ -66,7 +78,7 @@ const mutations = {
    */
   setAvatar(state, avatar) {
     state.avatar = avatar
-    setToken('avatar', avatar, 'sessionStorage')
+    setToken('avatar', avatar, storage)
   },
 }
 const actions = {

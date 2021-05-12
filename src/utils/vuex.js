@@ -92,7 +92,8 @@ function DelCookie(name) {
   var exp = new Date()
   exp.setTime(exp.getTime() - 1)
   var cval = GetCookie(name)
-  document.cookie = name + '=' + cval + '; expires=' + exp.toGMTString()
+  if (cookieWhiteList.indexOf(name) < -1)
+    document.cookie = name + '=' + cval + '; expires=' + exp.toGMTString()
 }
 function GetCookie(name) {
   var arg = name + '='
@@ -113,8 +114,9 @@ export function clearCookie() {
   var keys = document.cookie.match(/[^ =;]+(?=\=)/g)
   if (keys) {
     for (var i = keys.length; i--; )
-      document.cookie =
-        keys[i] + '=0; expire=' + date.toGMTString() + '; path=/'
+      if (cookieWhiteList.indexOf(keys[i]) < -1)
+        document.cookie =
+          keys[i] + '=0; expire=' + date.toGMTString() + '; path=/'
   }
   foreach()
 }

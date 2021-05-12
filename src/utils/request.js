@@ -97,13 +97,13 @@ const instance = axios.create({
  */
 instance.interceptors.request.use(
   (config) => {
-    const { NODE_ENV = '', group1 } = process.env
+    const { NODE_ENV = '' } = process.env
     const token = store.getters['user/token']
     const { path = '/' } = router.history.current
     let { headers = {}, baseURL, url } = config
-    if (headers['proxy'] == 'group1') {
+    if (headers['proxy'] == true) {
       if (NODE_ENV == 'production') {
-        config.baseURL = group1
+        config.baseURL = headers.url
         console.log(config, 'proxy')
       } else {
         config.baseURL = 'group1/'

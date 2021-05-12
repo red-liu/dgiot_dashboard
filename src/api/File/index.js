@@ -22,7 +22,8 @@ export function UploadImg(param) {
     url: 'group1/upload',
     method: 'post',
     headers: {
-      proxy: 'group1',
+      proxy: true, // 是否开启代理
+      url: '/dgiotproxy/shuwa_file/group1/upload', // 开启代理后的真实上传路径
       'Content-Type': 'multipart/form-data',
     },
     data: param,

@@ -230,8 +230,6 @@
       ...mapGetters({
         avatar: 'user/avatar',
         token: 'user/token',
-        token: 'user/token',
-        token: 'user/token',
       }),
     },
     mounted() {
@@ -267,6 +265,9 @@
               this.userinfo.backgroundimage = url
               this.setBackgroundimage(url)
               break
+            case 'backgroundimage':
+              this.userinfo.backgroundimage = url
+              break
             default:
               console.log('type', this.filetype)
               break
@@ -277,6 +278,8 @@
         }
       },
       async onSubmit() {
+        this.setlogo(this.userinfo.logo)
+        this.setBackgroundimage(this.userinfo.backgroundimage)
         let isflag = true
         console.log(this.userinfo.phone.length)
         if (this.userinfo.phone.length != 0 && !isPhone(this.userinfo.phone)) {
@@ -289,12 +292,12 @@
           tag: { companyinfo: this.companyinfo, userinfo: this.userinfo },
           nick: this.nick,
           username: this.username,
-          phone: this.phone,
+          phone: this.userinfo.phone,
         }
         const res = await putUser(this.objectId, pamams)
         if (res)
           this.$baseMessage(
-            '保存成功',
+            this.$translateTitle('保存成功'),
             'success',
             false,
             'vab-hey-message-success'
@@ -315,7 +318,15 @@
           phone,
           objectId,
           tag = {
-            companyinfo: {},
+            companyinfo: {
+              backgroundimage:
+                'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/login_images/background.jpg',
+              name: 'dg_iot',
+              logo: 'http://www.iotn2n.com/favicon.ico?1558342112',
+              title: '欢迎登录dgiot平台',
+              Copyright:
+                '© 2017-2021 数蛙科技 Corporation, All Rights Reserved',
+            },
             userinfo: {},
           },
         } = await this.$get_object('_User', this.$route.params.userid)

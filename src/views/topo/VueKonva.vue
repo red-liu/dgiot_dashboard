@@ -7,7 +7,7 @@
     </div>
     <div
       :style="{
-        display: headevisible ? 'block' : 'block',
+        display: headevisible ? 'block' : 'none',
       }"
       class="_header"
     >

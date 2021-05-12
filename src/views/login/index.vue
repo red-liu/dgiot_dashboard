@@ -17,7 +17,7 @@
           label-position="left"
         >
           <div v-if="Default.title" class="title-tips">
-            {{ $translateTitle('欢迎来到') }}
+            {{ $translateTitle('登录') }}
           </div>
           <el-form-item prop="username" style="margin-top: 40px">
             <el-input

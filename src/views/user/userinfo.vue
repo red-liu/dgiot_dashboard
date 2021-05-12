@@ -100,10 +100,10 @@
                     <el-form
                       ref="companyinfo"
                       label-width="120px"
-                      :model="userinfo"
+                      :model="companyinfo"
                     >
                       <el-form-item label="企业名称">
-                        <el-input v-model="userinfo.name">
+                        <el-input v-model="companyinfo.name">
                           <template slot="prepend">
                             <vab-icon
                               icon="community-fill"
@@ -113,7 +113,7 @@
                         </el-input>
                       </el-form-item>
                       <el-form-item label="企业logo">
-                        <el-input v-model="userinfo.logo">
+                        <el-input v-model="companyinfo.logo">
                           <template slot="prepend">
                             <vab-icon
                               icon="remixicon-fill"
@@ -130,14 +130,14 @@
                         </el-input>
                       </el-form-item>
                       <el-form-item label="登录提示欢迎语">
-                        <el-input v-model="userinfo.title">
+                        <el-input v-model="companyinfo.title">
                           <template slot="prepend">
                             <vab-icon icon="text" style="color: #3492ed" />
                           </template>
                         </el-input>
                       </el-form-item>
                       <el-form-item label="企业版权信息">
-                        <el-input v-model="userinfo.Copyright">
+                        <el-input v-model="companyinfo.Copyright">
                           <template slot="prepend">
                             <vab-icon
                               icon="copyright-fill"
@@ -147,7 +147,7 @@
                         </el-input>
                       </el-form-item>
                       <el-form-item label="首页背景图">
-                        <el-input v-model="userinfo.backgroundimage">
+                        <el-input v-model="companyinfo.backgroundimage">
                           <template slot="prepend">
                             <vab-icon
                               icon="bank-card-line"
@@ -182,7 +182,7 @@
 <script>
   var editor
   import { mapGetters, mapMutations } from 'vuex'
-  import { isPhone } from '@/utils/validate'
+  import { isPhone, isUrl } from '@/utils/validate'
   import { UploadImg } from '@/api/File'
   import { putUser } from '@/api/User'
   export default {
@@ -240,13 +240,18 @@
         setAvatar: 'user/setAvatar',
         setlogo: 'user/setlogo',
         setBackgroundimage: 'user/setBackgroundimage',
+        setname: 'user/setname',
+        setcopyright: 'user/setCopyright',
       }),
       //上传操作调用的函数
       async handleUpload(file) {
         var formData = new FormData()
         formData.append('file', file.file)
         formData.append('output', 'json')
-        formData.append('filename', this.objectId + this.filetype + '.jpg')
+        formData.append(
+          'filename',
+          Mock.mock('@string') + this.objectId + this.filetype + '.jpg'
+        )
         formData.append('path', 'group1')
         formData.append('auth_token', this.token) // 下面是
         const { url } = await UploadImg(formData)
@@ -255,18 +260,16 @@
           this.dialogVisible = !this.dialogVisible
           switch (this.filetype) {
             case 'avatar':
-              this.setAvatar(url)
+              this.userinfo.avatar = url
+              this.setAvatar(this.userinfo.avatar)
               break
             case 'logo':
-              this.userinfo.logo = url
-              this.setlogo(url)
+              this.companyinfo.logo = url
+              this.setlogo(this.companyinfo.logo)
               break
             case 'backgroundimage':
-              this.userinfo.backgroundimage = url
-              this.setBackgroundimage(url)
-              break
-            case 'backgroundimage':
-              this.userinfo.backgroundimage = url
+              this.companyinfo.backgroundimage = url
+              this.setBackgroundimage(this.companyinfo.backgroundimage)
               break
             default:
               console.log('type', this.filetype)
@@ -278,16 +281,40 @@
         }
       },
       async onSubmit() {
-        this.setlogo(this.userinfo.logo)
-        this.setBackgroundimage(this.userinfo.backgroundimage)
-        let isflag = true
-        console.log(this.userinfo.phone.length)
+        this.setlogo(this.companyinfo.logo)
+        this.setBackgroundimage(this.companyinfo.backgroundimage)
+        this.setAvatar(this.userinfo.avatar)
+        this.setname(this.companyinfo.name)
+        this.setcopyright(this.companyinfo.Copyright)
         if (this.userinfo.phone.length != 0 && !isPhone(this.userinfo.phone)) {
           this.$refs['userinfo'].validateField('phone')
-          isflag = this.$refs['userinfo'].validateField('phone')
           return
         }
-        console.log(isflag)
+        if (
+          this.companyinfo.logo.length != 0 &&
+          !isUrl(this.companyinfo.logo)
+        ) {
+          this.$baseMessage(
+            this.$translateTitle('logo链接地址非url类型'),
+            'error',
+            false,
+            'vab-hey-message-error'
+          )
+          return
+        }
+        if (
+          this.companyinfo.backgroundimage.length != 0 &&
+          !isUrl(this.companyinfo.backgroundimage)
+        ) {
+          this.$baseMessage(
+            this.$translateTitle('背景图链接地址非url类型'),
+            'error',
+            false,
+            'vab-hey-message-error'
+          )
+          return
+        }
+
         let pamams = {
           tag: { companyinfo: this.companyinfo, userinfo: this.userinfo },
           nick: this.nick,
@@ -311,6 +338,7 @@
         //   'upload-inner'
         // ].$refs.input.click()
       },
+
       async queryUserInfo() {
         const {
           username,
@@ -337,6 +365,7 @@
         this.phone = phone
         this.userinfo.phone = this.phone
         this.companyinfo = tag.companyinfo
+        console.log('this.companyinfo', tag.companyinfo)
       },
     },
   }

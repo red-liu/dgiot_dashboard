@@ -9,8 +9,8 @@ import { resetRouter } from '@/router'
 import { license, SiteDefault } from '@/api/License'
 const state = () => ({
   token: getToken(tokenTableName, storage),
+  name: getToken('name', storage),
   username: getToken('username', storage),
-  avatar: getToken('avatar', 'sessionStorage'),
   setlogo: getToken('logo', 'sessionStorage'),
   setBackgroundimage: getToken('backgroundimage', 'sessionStorage'),
   avatar: getToken('avatar', storage),
@@ -30,8 +30,13 @@ const getters = {
   backgroundimage: (state) => state.backgroundimage,
   objectId: (state) => state.objectId,
   Copyright: (state) => state.Copyright,
+  name: (state) => state.name,
 }
 const mutations = {
+  setname(state, name) {
+    state.name = name
+    setToken('name', name, storage)
+  },
   setCopyright(state, Copyright) {
     state.Copyright = Copyright
     setToken('logo', Copyright, storage)
@@ -98,11 +103,36 @@ const actions = {
   async login({ commit }, userInfo) {
     const data = await login(userInfo)
     const token = data[tokenName]
-    const { nick, objectId, roles } = data
-    Cookies.set('roles', roles)
+    const { nick } = data
     if (nick) commit('setUsername', nick)
-    if (objectId) commit('setObejectId', objectId)
     const page_title = getToken('title', 'sessionStorage') || title
+    const {
+      objectId,
+      roles,
+      tag = {
+        companyinfo: {
+          title: `欢迎${nick}您登录${page_title}`,
+          Copyright: '© 2017-2021 数蛙科技 Corporation, All Rights Reserved',
+          name: 'dg-iot',
+          logo: 'http://www.iotn2n.com/favicon.ico?1558342112',
+        },
+        userinfo: {
+          avatar:
+            'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3290107827,2759304074&fm=26&gp=0.jpg',
+        },
+      },
+    } = data
+    console.log(tag.companyinfo.title, 'tag info')
+    const { title, Copyright, name, logo } = tag.companyinfo
+    const { avatar } = tag.userinfo
+    commit('setAvatar', avatar)
+    Cookies.set('roles', roles)
+    Cookies.set('copyright', Copyright)
+    Cookies.set('title', title)
+    Cookies.set('name', name)
+    Cookies.set('logo', logo)
+    Cookies.set('avatar', avatar)
+    if (objectId) commit('setObejectId', objectId)
     if (token) {
       commit('setToken', token)
       const hour = new Date().getHours()
@@ -116,10 +146,7 @@ const actions = {
           : hour < 18
           ? '下午好'
           : '晚上好'
-      Vue.prototype.$baseNotify(
-        `欢迎${nick}您登录${page_title}`,
-        `${thisTime}！`
-      )
+      Vue.prototype.$baseNotify(title, `${thisTime}！`)
     } else {
       Vue.prototype.$baseMessage(
         `登录接口异常，未正确返回${tokenName}...`,
@@ -197,7 +224,6 @@ const actions = {
     // console.log(copyright, dashboard, logo, objectId, title)
     const { copyright, logo, objectId, title } = Default
     if (title) dispatch('settings/setTitle', title, { root: true })
-    if (logo) commit('setAvatar', logo)
     const res = { copyright, logo, objectId, title }
     if (copyright) dispatch('acl/setCopyright', copyright, { root: true })
     if (Default) dispatch('acl/setDefault', res, { root: true })
@@ -247,6 +273,9 @@ const actions = {
   },
   setAvatar({ commit }, avatar) {
     commit('setAvatar', avatar)
+  },
+  setname({ commit }, name) {
+    commit('setname', name)
   },
 }
 export default { state, getters, mutations, actions }

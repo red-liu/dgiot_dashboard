@@ -35,7 +35,7 @@
         <el-button size="mini" type="primary" @click="clearImg()">
           {{ isVisible ? '隐藏' : '显示' }}背景
         </el-button> -->
-        <el-form
+        <!-- <el-form
           style="color: black"
           size="mini"
           label-width="80px"
@@ -69,13 +69,23 @@
               {{ $translateTitle('developer.json') }}
             </el-button>
           </el-form-item>
+        </el-form> -->
+        <el-form v-if="Shapeconfig.className">
+          <el-form-item>
+            <vue-json-editor
+              v-if="showJson"
+              v-model="Shapeconfig"
+              :mode="'code'"
+              lang="zh"
+            />
+            <el-button type="primary" @click="saveKonvaitem(Shapeconfig)">
+              {{ $translateTitle('developer.determine') }}
+            </el-button>
+            <el-button type="primary" @click="showJson = !showJson">
+              {{ $translateTitle('developer.json') }}
+            </el-button>
+          </el-form-item>
         </el-form>
-        <vue-json-editor
-          v-show="showJson"
-          v-model="Shapeconfig"
-          :mode="'code'"
-          lang="zh"
-        />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -106,7 +116,7 @@
         hideLable: ['draggable'],
         ShowItem: ['container'],
         isVisible: true,
-        showJson: false,
+        showJson: true,
         fileList: [
           {
             name: 'food.jpeg',

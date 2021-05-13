@@ -476,12 +476,12 @@
                       <span v-else>否</span>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="readonly" label="是否只读">
-                    <template slot-scope="scope">
-                      <span v-if="scope.row.readonly">是</span>
-                      <span v-else>否</span>
-                    </template>
-                  </el-table-column>
+                  <!--                  <el-table-column prop="readonly" label="是否只读">-->
+                  <!--                    <template slot-scope="scope">-->
+                  <!--                      <span v-if="scope.row.readonly">是</span>-->
+                  <!--                      <span v-else>否</span>-->
+                  <!--                    </template>-->
+                  <!--                  </el-table-column>-->
                   <el-table-column label="操作" width="160" align="center">
                     <template slot-scope="scope">
                       <el-button
@@ -597,6 +597,39 @@
           </el-row>
           <el-row :gutter="24">
             <el-col :span="12">
+              <el-form-item label="协议类型">
+                <el-select
+                  v-model="tempparams.protocol"
+                  placeholder="请选择"
+                  style="width: 100%"
+                >
+                  <el-option
+                    v-for="(item, index) in ['normal', 'modbus']"
+                    :key="index"
+                    :label="item"
+                    :value="item"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col v-show="tempparams.protocol == 'modbus'" :span="12">
+              <el-form-item label="字节序" prop="byteorder">
+                <el-select v-model="tempparams.byteorder" placeholder="请选择">
+                  <el-option
+                    v-for="item in [
+                      { value: 'big', label: '大端' },
+                      { value: 'little', label: '小端' },
+                    ]"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row v-show="tempparams.protocol == 'modbus'" :gutter="24">
+            <el-col :span="12">
               <el-form-item label="数据地址" prop="dis">
                 <el-input v-model="tempparams.address" placeholder="数据地址" />
               </el-form-item>
@@ -611,6 +644,11 @@
             </el-col>
           </el-row>
           <el-row :gutter="24">
+            <el-col v-show="tempparams.protocol == 'modbus'" :span="12">
+              <el-form-item label="从机地址">
+                <el-input v-model="tempparams.slaveid" auto-complete="off" />
+              </el-form-item>
+            </el-col>
             <el-col :span="12">
               <el-form-item label="必填">
                 <el-radio v-model="tempparams.required" :label="true" border>
@@ -621,16 +659,16 @@
                 </el-radio>
               </el-form-item>
             </el-col>
-            <el-col :span="12">
-              <el-form-item label="只读">
-                <el-radio v-model="tempparams.readonly" :label="true" border>
-                  是
-                </el-radio>
-                <el-radio v-model="tempparams.readonly" :label="false" border>
-                  否
-                </el-radio>
-              </el-form-item>
-            </el-col>
+            <!--            <el-col :span="12">-->
+            <!--              <el-form-item label="只读">-->
+            <!--                <el-radio v-model="tempparams.readonly" :label="true" border>-->
+            <!--                  是-->
+            <!--                </el-radio>-->
+            <!--                <el-radio v-model="tempparams.readonly" :label="false" border>-->
+            <!--                  否-->
+            <!--                </el-radio>-->
+            <!--              </el-form-item>-->
+            <!--            </el-col>-->
           </el-row>
           <el-form-item
             v-if="tempparams.type != 'Enum'"

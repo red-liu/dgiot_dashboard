@@ -4559,8 +4559,9 @@
       // 保存
       onSaveTap(index) {
         const leftPos = this.editableTabs[index].leftItemPos
-        this.productdetail.thing.properties[leftPos].dataForm.collection =
-          this.editorList[index].getValue()
+        this.productdetail.thing.properties[
+          leftPos
+        ].dataForm.collection = this.editorList[index].getValue()
         const params = {
           thing: this.productdetail.thing,
         }

@@ -11,7 +11,7 @@
           highlight-current-row
           @row-click="getDetailmenu"
         >
-          <el-table-column label="名称" align="center">
+          <el-table-column :label="$translateTitle('user.name')" align="center">
             <template slot-scope="scope">
               <span>{{ scope.row.data.name }}</span>
               <span>( {{ scope.row.key }} )</span>
@@ -29,7 +29,8 @@
                 type="primary"
                 @click.stop="exportRoletemp(scope.row)"
               >
-                更新模版
+                <!-- 更新模版 -->
+                {{ $translateTitle('equipment.Updatetemplate') }}
               </el-button>
               <el-button
                 size="small"
@@ -38,7 +39,8 @@
                   handleDelete(scope.$index, scope.row, roletempList)
                 "
               >
-                删除
+                <!-- 删除 -->
+                {{ $translateTitle('task.Delete') }}
               </el-button>
             </template>
           </el-table-column>
@@ -53,7 +55,10 @@
               <span class="svg-container">
                 <vab-icon icon="role_group" />
               </span>
-              <span>分配权限</span>
+              <span>
+                <!-- 分配权限 -->
+                {{ $translateTitle('user.assignroles1') }}
+              </span>
             </p>
             <div class="rolecontrol">
               <el-tree
@@ -80,7 +85,10 @@
               <span class="svg-container">
                 <vab-icon icon="menu_group" />
               </span>
-              <span>菜单分配</span>
+              <span>
+                <!-- 菜单分配 -->
+                {{ $translateTitle('user.assignmenu') }}
+              </span>
             </p>
             <div class="menucontrol" style="margin-top: 30px">
               <el-tree
@@ -108,17 +116,20 @@
             <span class="svg-container">
               <vab-icon icon="role_group" />
             </span>
-            <span>标签信息</span>
+            <span>
+              <!-- 标签信息 -->
+              {{ $translateTitle('user.labelinformation') }}
+            </span>
           </p>
         </div>
         <div class="tags">
-          <el-form ref="form" :rules="Rule" :model="form" label-width="120px">
+          <el-form ref="form" :rules="Rule" :model="form" label-width="170px">
             <!-- <el-form-item label="平台">
                     <el-select v-model="form.product" placeholder="请选择平台"  style="width:80%">
                       <el-option v-for="(item,index) in selectapp" :key="index" :label="item.attributes.subtitle" :value="item.id"></el-option>
                    </el-select>
               </el-form-item>-->
-            <el-form-item label="访问密钥">
+            <el-form-item :label="$translateTitle('application.Accesskey')">
               <el-input v-model="form.secret" style="width: 80%" readonly>
                 <el-button
                   slot="append"
@@ -127,27 +138,40 @@
                 />
               </el-input>
             </el-form-item>
-            <el-form-item label="Token有效时间">
+            <el-form-item
+              :label="$translateTitle('application.tokeneffectivetime')"
+            >
               <el-input
                 v-model="form.expires"
                 type="number"
                 style="width: 80%"
-                placheholder="请输入应用时间"
+                :placheholder="$translateTitle('product.enterapptime')"
               />
-              <span style="margin-left: 5px">秒</span>
+              <span style="margin-left: 5px">
+                <!-- 秒 -->
+                {{ $translateTitle('task.Seconds') }}
+              </span>
             </el-form-item>
-            <el-form-item label="word预览服务器">
+            <el-form-item :label="$translateTitle('product.Wordpreviewserver')">
               <el-input
                 v-model="form.wordpreview"
                 style="width: 80%"
-                placheholder="请输入word预览服务器地址"
+                :placheholder="
+                  $translateTitle('product.enter1') +
+                  $translateTitle('product.Wordpreviewserver')
+                "
               />
             </el-form-item>
-            <el-form-item label="word生产服务器">
+            <el-form-item
+              :label="$translateTitle('product.Wordproductionserver')"
+            >
               <el-input
                 v-model="form.wordproduct"
                 style="width: 80%"
-                placheholder="请输入word生产服务器地址"
+                :placheholder="
+                  $translateTitle('product.enter1') +
+                  $translateTitle('product.Wordproductionserver')
+                "
               />
             </el-form-item>
             <el-form-item label="文件资源" prop="file">
@@ -206,7 +230,8 @@
     components: {},
     data() {
       const validatorUrl = (rule, value, callback) => {
-        var regStr = /^(((ht|f)tps?):\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/
+        var regStr =
+          /^(((ht|f)tps?):\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/
         if (value === '' || value === null) {
           callback(new Error('请输入url地址'))
         } else if (!regStr.test(value)) {

@@ -18,6 +18,7 @@
 * feat: 检测任务js引入 ([3105358](https://github.com/dgiot/dgiot_dashboard/commit/3105358))
 * feat: 解决编译失败 ([dcc36da](https://github.com/dgiot/dgiot_dashboard/commit/dcc36da))
 * feat: 解决产品字典无法显示的bug ([e86cfbd](https://github.com/dgiot/dgiot_dashboard/commit/e86cfbd))
+* feat: 解决开源平台和开发代理url不一致的问题 ([1605fb3](https://github.com/dgiot/dgiot_dashboard/commit/1605fb3))
 * feat: 解决设备表格因为没有产品名无法显示的问题 ([07fc03f](https://github.com/dgiot/dgiot_dashboard/commit/07fc03f))
 * feat: 解決百度地圖顯示不出 es6 結構 row 的默認值 ([7fb1496](https://github.com/dgiot/dgiot_dashboard/commit/7fb1496))
 * feat: 判断打包环境域名 ([02b6283](https://github.com/dgiot/dgiot_dashboard/commit/02b6283))

@@ -285,20 +285,18 @@
         var tempVal = ''
 
         if (this.categories.image.length > 0) {
-          tempVal =
-            this.categories.image[this.mediaIndex.image]['original']['data'][
-              'src'
-            ]
+          tempVal = this.categories.image[this.mediaIndex.image]['original'][
+            'data'
+          ]['src']
         }
         return tempVal
       },
       currentVideoUrl: function () {
         var tempVal = ''
         if (this.categories.video.length > 0) {
-          tempVal =
-            this.categories.video[this.mediaIndex.video]['original']['data'][
-              'src'
-            ]
+          tempVal = this.categories.video[this.mediaIndex.video]['original'][
+            'data'
+          ]['src']
         }
         return tempVal
       },
@@ -306,10 +304,9 @@
         var tempVal = ''
 
         if (this.categories.audio.length > 0) {
-          tempVal =
-            this.categories.audio[this.mediaIndex.audio]['original']['data'][
-              'src'
-            ]
+          tempVal = this.categories.audio[this.mediaIndex.audio]['original'][
+            'data'
+          ]['src']
         }
 
         return tempVal
@@ -318,10 +315,9 @@
         var tempVal = ''
 
         if (this.categories.file.length > 0) {
-          tempVal =
-            this.categories.file[this.mediaIndex.file]['original']['data'][
-              'src'
-            ]
+          tempVal = this.categories.file[this.mediaIndex.file]['original'][
+            'data'
+          ]['src']
         }
         return tempVal
       },

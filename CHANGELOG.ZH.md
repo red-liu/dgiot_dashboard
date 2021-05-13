@@ -1,4 +1,4 @@
-## 1.0.0 (2021-05-12)
+## 1.0.0 (2021-05-13)
 
 * feat: 保存产品数据 ([914f581](https://github.com/dgiot/dgiot_dashboard/commit/914f581))
 * feat: 报告模板界面api ([5e0015a](https://github.com/dgiot/dgiot_dashboard/commit/5e0015a))
@@ -52,6 +52,7 @@
 * feat: 组件化项目 ([c7a118b](https://github.com/dgiot/dgiot_dashboard/commit/c7a118b))
 * feat: button visible ([b7a12dc](https://github.com/dgiot/dgiot_dashboard/commit/b7a12dc))
 * feat: cdn优化项目 ([421bc3b](https://github.com/dgiot/dgiot_dashboard/commit/421bc3b))
+* feat: changelog ([affce4b](https://github.com/dgiot/dgiot_dashboard/commit/affce4b))
 * feat: codeMirror ([b6a13dc](https://github.com/dgiot/dgiot_dashboard/commit/b6a13dc))
 * feat: css ([f252fa9](https://github.com/dgiot/dgiot_dashboard/commit/f252fa9))
 * feat: deploy ([d70811d](https://github.com/dgiot/dgiot_dashboard/commit/d70811d))

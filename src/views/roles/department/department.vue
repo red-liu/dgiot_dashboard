@@ -174,19 +174,25 @@
                 "
               />
             </el-form-item>
-            <el-form-item label="文件资源" prop="file">
+            <el-form-item
+              :label="$translateTitle('application.fileresources')"
+              prop="file"
+            >
               <el-input
                 v-model="form.file"
                 style="width: 80%"
-                placheholder="请输入url"
+                :placheholder="$translateTitle('product.enter1') + url"
               />
             </el-form-item>
 
-            <el-form-item label="组态资源" prop="topo">
+            <el-form-item
+              :label="$translateTitle('application.Configurationresources')"
+              prop="topo"
+            >
               <el-input
                 v-model="form.topo"
                 style="width: 80%"
-                placheholder="请输入url"
+                :placheholder="$translateTitle('product.enter1') + url"
               />
             </el-form-item>
 
@@ -194,7 +200,7 @@
               <el-input
                 v-model="form.graphql"
                 style="width: 80%"
-                placheholder="请输入url"
+                :placheholder="$translateTitle('product.enter1') + url"
               />
             </el-form-item>
 
@@ -202,7 +208,7 @@
               <el-input
                 v-model="form.rest"
                 style="width: 80%"
-                placheholder="请输入url"
+                :placheholder="$translateTitle('product.enter1') + url"
               />
             </el-form-item>
 
@@ -210,7 +216,10 @@
               <el-input
                 v-model="form.home"
                 style="width: 80%"
-                placheholder="请输入路径"
+                :placheholder="
+                  $translateTitle('product.enter1') +
+                  $translateTitle('developer.path')
+                "
               />
             </el-form-item>
           </el-form>

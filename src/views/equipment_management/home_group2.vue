@@ -542,8 +542,9 @@
         :visible.sync="edit_dict_temp_dialog"
         :title="title_dict_edit_dialog"
         :close-on-click-modal="false"
-        size="mini"
         :before-close="closeDict"
+        width="60%"
+        top="5vh"
         @open="opendialog('tempparams')"
       >
         <el-form
@@ -555,11 +556,8 @@
         >
           <el-row :gutter="24">
             <el-col :span="12">
-              <el-form-item
-                :label="$translateTitle('product.functionname')"
-                prop="name"
-              >
-                <el-input v-model="tempparams.name" />
+              <el-form-item label="序号" prop="order">
+                <el-input v-model.number="tempparams.order" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -573,6 +571,14 @@
             </el-col>
           </el-row>
           <el-row :gutter="24">
+            <el-col :span="12">
+              <el-form-item
+                :label="$translateTitle('product.functionname')"
+                prop="name"
+              >
+                <el-input v-model="tempparams.name" />
+              </el-form-item>
+            </el-col>
             <el-col :span="12">
               <el-form-item label="数据类型" prop="type">
                 <el-select
@@ -589,13 +595,26 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="12">
-              <el-form-item label="序号" prop="order">
-                <el-input v-model.number="tempparams.order" />
-              </el-form-item>
-            </el-col>
           </el-row>
           <el-row :gutter="24">
+            <el-col :span="12">
+              <!-- 单位 -->
+              <el-form-item :label="$translateTitle('product.unit')">
+                <el-select
+                  v-model="tempparams.unit"
+                  style="width: 100%"
+                  :placeholder="$translateTitle('product.unit')"
+                  filterable
+                >
+                  <el-option
+                    v-for="(item, index) in allunit"
+                    :key="index"
+                    :label="item.data.Name + '/' + item.data.Symbol"
+                    :value="item.data.Symbol"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
             <el-col :span="12">
               <el-form-item label="协议类型">
                 <el-select
@@ -610,6 +629,28 @@
                     :value="item"
                   />
                 </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row v-show="tempparams.protocol == 'modbus'" :gutter="24">
+            <el-col :span="12">
+              <el-form-item label="从机地址">
+                <el-input v-model="tempparams.slaveid" auto-complete="off" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="数据地址" prop="dis">
+                <el-input v-model="tempparams.address" placeholder="数据地址" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row v-show="tempparams.protocol == 'modbus'" :gutter="24">
+            <el-col :span="12">
+              <el-form-item label="数据长度">
+                <el-input
+                  v-model.number="tempparams.bytes"
+                  placeholder="数据长度(字节)"
+                />
               </el-form-item>
             </el-col>
             <el-col v-show="tempparams.protocol == 'modbus'" :span="12">
@@ -628,25 +669,68 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row v-show="tempparams.protocol == 'modbus'" :gutter="24">
-            <el-col :span="12">
-              <el-form-item label="数据地址" prop="dis">
-                <el-input v-model="tempparams.address" placeholder="数据地址" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="数据长度">
-                <el-input
-                  v-model.number="tempparams.bytes"
-                  placeholder="数据长度(字节)"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
           <el-row :gutter="24">
-            <el-col v-show="tempparams.protocol == 'modbus'" :span="12">
-              <el-form-item label="从机地址">
-                <el-input v-model="tempparams.slaveid" auto-complete="off" />
+            <el-col :span="12">
+              <el-tooltip
+                style="float: left"
+                effect="dark"
+                placement="right-start"
+              >
+                <div slot="content">
+                  1. 采集值 设备上行数据经采集公式计算后显示 。
+                  <br />
+
+                  公式中的%s为占位符，是固定字段。
+                  <br />
+
+                  如：
+                  <br />
+
+                  加：%s+10
+                  <br />
+
+                  减：%s-10
+                  <br />
+
+                  乘：%s*10
+                  <br />
+
+                  除：%s/10
+                  <br />
+
+                  余数：%s%10
+                  <br />
+
+                  2. 计算值 添加变量按钮,
+                  <br />
+                  复制对应的标识符
+                  <br />
+
+                  例：pressure_out
+                  <br />
+                  加：pressure_out+10
+                  <br />
+
+                  减：pressure_out-10
+                  <br />
+
+                  乘：pressure_out*10
+                  <br />
+
+                  除：pressure_out/10
+                  <br />
+
+                  余数：pressure_out%10
+                  <br />
+                </div>
+                <i class="el-icon-question" />
+              </el-tooltip>
+              <el-form-item label="数据公式">
+                <el-input
+                  v-model="tempparams.collection"
+                  :rows="1"
+                  type="textarea"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -799,6 +883,7 @@
 </template>
 <script>
   import { delProduct, getProduct, putProduct } from '@/api/Product'
+  import { getAllunit, getDictCount } from '@/api/Dict/index'
   import { queryDevice } from '@/api/Device/index'
   import { Roletree } from '@/api/Menu/index'
   import { export_txt_to_zip } from '@/utils/Export2Zip.js'
@@ -811,6 +896,8 @@
     components: { vueJsonEditor },
     data() {
       return {
+        //单位
+        allunit: [],
         productInfo: {},
         category: Category,
         dictOptions: ['String', 'Boolean', 'Number', 'Enum'],
@@ -833,6 +920,7 @@
             },
           ],
           struct: {},
+          unit: '',
         },
         elactiveName: 'Table',
         elactiveName1: 'Table1',
@@ -997,12 +1085,24 @@
       const { project = '' } = this.$route.query
       this.formInline.productname = project
       this.Industry()
+      this.getAllunit()
       this.searchProduct(0)
     },
     beforeDestroy() {
       this.projectName = ''
     },
     methods: {
+      async getAllunit() {
+        this.allunit = []
+        const { results } = await getAllunit('unit', 200)
+        this.allunit = results.concat([])
+        // this.allunit.unshift({
+        //   data: {
+        //     Name: '无',
+        //     Symbol: '',
+        //   },
+        // })
+      },
       submitEnum() {
         if (this.tempparams.type == 'Enum') {
           this.tempparams.specs.map((items) => {
@@ -1133,6 +1233,7 @@
             },
           ],
           struct: {},
+          unit: '',
         }
       },
       onError() {

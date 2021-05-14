@@ -294,7 +294,7 @@
           return
         }
         if (
-          this.companyinfo.logo.length != 0 &&
+          this.companyinfo.logo.length == 0 &&
           !isUrl(this.companyinfo.logo)
         ) {
           this.$baseMessage(
@@ -306,7 +306,7 @@
           return
         }
         if (
-          this.companyinfo.backgroundimage.length != 0 &&
+          this.companyinfo.backgroundimage.length == 0 &&
           !isUrl(this.companyinfo.backgroundimage)
         ) {
           this.$baseMessage(

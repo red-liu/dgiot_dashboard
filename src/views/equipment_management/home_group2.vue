@@ -639,7 +639,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="数据地址" prop="dis">
+              <el-form-item label="数据地址" prop="address">
                 <el-input v-model="tempparams.address" placeholder="数据地址" />
               </el-form-item>
             </el-col>

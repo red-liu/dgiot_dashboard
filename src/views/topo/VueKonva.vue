@@ -165,6 +165,7 @@
         tabsName: 'ShapeJson',
         globalStageid: '',
         value: false,
+        kovaUpType: '',
       }
     },
     computed: {
@@ -278,22 +279,24 @@
       },
       // removeShape
       removeShape(node) {
+        console.log()
         var Layer = this.stage.find('Layer')[0]
         node.remove()
         node.destroy()
         Layer.batchDraw()
         this.setGraphNow('')
+        if (node.attrs.id == this.$refs['operation'].Shapeconfig.attrs.id)
+          this.$refs['operation'].Shapeconfig = []
       },
       // saveKonvaitem
       saveKonvaitem(config) {
         let _this = this
         console.log(_this.stage.find(`#${config.attrs.id}`))
         console.log('config.attrs.id', config.attrs.id)
-
+        let _uptype
         var Text = _this.stage.find('Text')
         var Imgage = _this.stage.find('Imgage')
         var Group = _this.stage.find('Group')
-        var Layer = _this.stage.find('Layer')
         var stage = _this.stage.find(config.attrs.id)
         console.log('stage', stage)
         var tweens = []
@@ -302,6 +305,7 @@
         }
         Imgage.each((shape) => {
           if (shape.attrs.id == config.attrs.id) {
+            _this.kovaUpType = 'Imgage'
             tweens.push(
               new Konva.Tween({
                 node: Object.assign(shape, config),
@@ -314,6 +318,7 @@
         })
         Group.each((shape) => {
           if (shape.attrs.id == config.attrs.id) {
+            _this.kovaUpType = 'Group'
             tweens.push(
               new Konva.Tween({
                 node: Object.assign(shape, config),
@@ -326,6 +331,7 @@
         })
         Text.each((shape) => {
           if (shape.attrs.id == config.attrs.id) {
+            _this.kovaUpType = 'Text'
             tweens.push(
               new Konva.Tween({
                 node: Object.assign(shape, config),
@@ -336,22 +342,16 @@
             )
           }
         })
-        Layer.each((shape) => {
-          if (shape.attrs.id == config.attrs.id) {
-            tweens.push(
-              new Konva.Tween({
-                node: Object.assign(shape, config),
-                Opacity: 0.8,
-                duration: 1,
-                easing: Konva.Easings.ElasticEaseOut,
-              }).play()
-            )
-          }
-        })
-        let toJSON = _this.stage.toJSON()
-        console.log(toJSON)
-        _this.ShapeVisible = false
         _this.stage.batchDraw()
+        if (_this.stage.attrs.id == config.attrs.id) {
+          _this.kovaUpType = 'Layer'
+          _this.stage = config
+        }
+        console.clear()
+        console.info(`updata type is ${_this.kovaUpType}`)
+        let toJSON = _this.stage
+        // console.log(toJSON)
+        _this.ShapeVisible = false
         console.log('konva数据更新成功')
         _this.updataProduct(_this.productid)
         // _this.updataProduct(_this.productid)
@@ -413,12 +413,16 @@
       },
       // 更新产品
       async updataProduct(productid) {
-        if (!this.stage.toJSON()) {
-          return
-        }
         console.log('updatatopo')
         let config = this.productconfig.config
-        config.konva.Stage = JSON.parse(this.stage.toJSON())
+        let stage
+        if (this.kovaUpType != 'Layer') {
+          if (!this.stage.toJSON()) return
+          stage = JSON.parse(this.stage.toJSON())
+        } else {
+          stage = this.stage
+        }
+        config.konva.Stage = stage
         // 提交前需要先对数据进行合并
         // let upconfig = Object.assign(config, this.paramsconfig)
         let params = {
@@ -599,6 +603,7 @@
           })
           _G.on('mouseup', (e) => {
             console.log(e, 'mouseup')
+            _this.headevisible = true
             document.body.style.cursor = 'pointer'
           })
           _G.on('mouseover', (e) => {

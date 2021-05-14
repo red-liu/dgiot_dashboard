@@ -28,6 +28,7 @@
 * feat: 取消订阅mqtt 显示隐藏背景图 ([90114cb](https://github.com/dgiot/dgiot_dashboard/commit/90114cb))
 * feat: 去除框架限制 ([ba1dfbc](https://github.com/dgiot/dgiot_dashboard/commit/ba1dfbc))
 * feat: 去掉basetoken ([9e5bb17](https://github.com/dgiot/dgiot_dashboard/commit/9e5bb17))
+* feat: 全局判断文件上传类型 ([2421817](https://github.com/dgiot/dgiot_dashboard/commit/2421817))
 * feat: 删除多余文件 ([135461c](https://github.com/dgiot/dgiot_dashboard/commit/135461c))
 * feat: 删除多余文件 ([1d044db](https://github.com/dgiot/dgiot_dashboard/commit/1d044db))
 * feat: 删除多余文件 ([6a3eb9d](https://github.com/dgiot/dgiot_dashboard/commit/6a3eb9d))

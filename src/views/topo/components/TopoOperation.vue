@@ -34,7 +34,11 @@
             <el-button type="primary" @click="showJson = !showJson">
               {{ $translateTitle('developer.json') }}
             </el-button>
-            <el-button type="primary" @click="handleModule(wmxdialogVisible)">
+            <el-button
+              type="primary"
+              :disabled="disabledModule"
+              @click="handleModule(wmxdialogVisible)"
+            >
               <!-- {{ $translateTitle('developer.json') }}  -->
               物模型
             </el-button>
@@ -878,6 +882,7 @@
         allunit: {},
         wmxData: [],
         showNewItem: true,
+        disabledModule: false,
         options: [],
         sizeOption: [],
         wmxstart: 1,
@@ -905,34 +910,61 @@
         activeName: 'setting',
       }
     },
-    computed: {},
+    computed: {}, //生命周期 - 销毁完成
+    watch: {
+      Shapeconfig: {
+        deep: true,
+        handler(val) {
+          this.disabledModule = val.className == 'Stage' ? true : false
+        },
+      },
+    },
     mounted() {},
     beforeCreate() {}, //生命周期 - 创建之前
     beforeMount() {}, //生命周期 - 挂载之前
     beforeUpdate() {}, //生命周期 - 更新之前
     updated() {}, //生命周期 - 更新之后
     beforeDestroy() {}, //生命周期 - 销毁之前
-    destroyed() {}, //生命周期 - 销毁完成
+    destroyed() {},
     activated() {},
     methods: {
       handleModule(e) {
         this.wmxdialogVisible = !e
         const { thing = { properties: [] } } = this.productconfig
-        let properties = []
-        console.log(thing)
-        if (thing.properties.length) {
-          properties = thing.properties
-          properties.forEach((item) => {
-            if (item.dataForm.address === this.Shapeconfig.attrs.id) {
-              this.wmxData = item
-            }
+        let properties = thing.properties
+        console.log(properties)
+        console.log(this.Shapeconfig)
+        if (properties.length) {
+          let _fortype = properties.some((e) => {
+            return e.dataForm.address === this.Shapeconfig.attrs.id
           })
+          if (_fortype) {
+            properties.forEach((item) => {
+              if (item.dataForm.address === this.Shapeconfig.attrs.id) {
+                console.log(`物模型存在这个属性`, item)
+                this.wmxData = item
+                this.sizeForm.dis = item.attrs.id
+              }
+            })
+          } else {
+            console.log('物模型不为空，但不存在这个属性', this.Shapeconfig)
+            this.sizeForm.dis = this.Shapeconfig.attrs.id
+            this.wmxData = []
+          }
         } else {
-          console.log(this.Shapeconfig)
+          console.log(`物模型为空`, this.Shapeconfig)
+          this.sizeForm.dis = this.Shapeconfig.attrs.id
           this.wmxData = []
         }
       },
-      wmxhandleClose() {},
+      wmxhandleClose() {
+        this.wmxdialogVisible = false
+        this.Shapeconfig = {}
+      },
+      // 提交
+      submitForm(from) {
+        console.log('from', from)
+      },
       selectStruct() {},
       wmxCurrentChange() {},
       wmxSizeChange() {},
@@ -981,10 +1013,16 @@
 </script>
 <style lang="scss" scoped>
   .operation {
-    height: calc(100vh - #{$base-top-bar-height}* 4 - 25px);
+    height: calc(100vh - #{$base-top-bar-height}* 4 - -25px);
     margin-left: 10px;
     overflow-x: hidden;
     overflow-y: scroll;
     color: wheat;
+  }
+  ::v-deep .jsoneditor-vue {
+    height: calc(100vh - #{$base-top-bar-height}* 5 - 10px);
+  }
+  ::v-deep .json-save-btn {
+    cursor: pointer;
   }
 </style>

@@ -378,17 +378,20 @@
                         :disabled="scope.row.basedata.testStatus == 2"
                         @click.native="editorClient(scope.row)"
                       >
-                        编 辑
+                        <!-- 编辑 -->
+                        {{ $translateTitle('developer.edit') }}
                       </el-dropdown-item>
                       <el-dropdown-item
                         @click.native="deleteClient(scope.row.objectId)"
                       >
-                        删 除
+                        <!-- 删除 -->
+                        {{ $translateTitle('developer.delete') }}
                       </el-dropdown-item>
                       <el-dropdown-item
                         @click.native="examineVerify(scope.row)"
                       >
-                        详 情
+                        <!-- 详情 -->
+                        {{ $translateTitle('product.details') }}
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
@@ -409,13 +412,15 @@
           </div>
         </el-tab-pane>
 
-        <el-tab-pane :label="'审核完成(' + total1 + ')'">
+        <el-tab-pane
+          :label="$translateTitle('product.finishreview') + '(' + total1 + ')'"
+        >
           <el-table :data="taskList.doneData" stripe border>
             <el-table-column type="index" label="id" />
             <!-- <el-table-column label="任务模板" align="center" prop="basedata.inspection_number" /> -->
 
             <el-table-column
-              label="检验/试验编号"
+              :label="$translateTitle('product.Inspectiontestnumber')"
               align="center"
               prop="basedata.inspection_number"
             >
@@ -426,23 +431,27 @@
               </template>
             </el-table-column>
 
-            <el-table-column prop="name" label="任务名称" align="center" />
-
+            <!-- <el-table-column prop="name" label="任务名称" align="center" /> -->
+            <el-table-column
+              prop="name"
+              :label="$translateTitle('protaskduct.Taskname')"
+              align="center"
+            />
             <el-table-column
               prop="basedata.insectionName"
-              label="报告模板"
+              :label="$translateTitle('developer.Reporttemplate')"
               align="center"
             />
 
             <el-table-column
               prop="basedata.bedname"
-              label="测试台体"
+              :label="$translateTitle('product.testplatform')"
               align="center"
               width="150"
             />
 
             <el-table-column
-              label="开始时间"
+              :label="$translateTitle('task.starttime')"
               prop="$timestampToTime(scope.row.basedata.starttime)}"
               align="center"
             >
@@ -454,7 +463,7 @@
             </el-table-column>
 
             <el-table-column
-              label="结束时间"
+              :label="$translateTitle('task.endtime')"
               prop="$timestampToTime(scope.row.basedata.endtime)}"
               align="center"
             >
@@ -465,7 +474,10 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="创建日期" align="center">
+            <el-table-column
+              :label="$translateTitle('application.createtime')"
+              align="center"
+            >
               <template slot-scope="scope">
                 <span>
                   {{ $utc2beijing(scope.row.createdAt).substring(0, 16) }}
@@ -479,17 +491,22 @@
 
                 <span v-if="scope.row.basedata.verifyStatus > 0">
                   {{
-                    ['', '审核通过', '审核不通过'][
-                      scope.row.basedata.verifyStatus
-                    ]
+                    [
+                      '',
+                      $translateTitle('product.Approved'),
+                      $translateTitle('product.notapproved'),
+                    ][scope.row.basedata.verifyStatus]
                   }}
                 </span>
 
                 <span v-else>
                   {{
-                    ['未测试', '正在测试', '测试完成'][
-                      scope.row.basedata.testStatus
-                    ] || '未测试'
+                    [
+                      $translateTitle('product.notstarted'),
+                      $translateTitle('product.testing'),
+                      $translateTitle('product.finishtest'),
+                    ][scope.row.basedata.testStatus] ||
+                    $translateTitle('product.notested')
                   }}
                 </span>
               </template>
@@ -497,7 +514,7 @@
 
             <el-table-column
               v-if="userRoles.org_type != '中心厂家检测员'"
-              label="数据操作"
+              :label="$translateTitle('product.Dataoperation')"
               width="320"
               align="center"
             >
@@ -507,7 +524,8 @@
                   size="mini"
                   @click="deleteClient(scope.row.objectId)"
                 >
-                  删 除
+                  <!-- 删除 -->
+                  {{ $translateTitle('developer.delete') }}
                 </el-button>
 
                 <el-button
@@ -516,7 +534,8 @@
                   size="mini"
                   @click="stepfun(scope.row)"
                 >
-                  导出
+                  <!-- 导出 -->
+                  {{ $translateTitle('product.export') }}
                 </el-button>
               </template>
             </el-table-column>
@@ -762,21 +781,18 @@
       changeReport(index) {
         console.log(index)
         this.selectedInsectionItem = this.reportList[index]
-        this.task_form.basedata.info.testContent.name = this.reportList[
-          index
-        ].name
-        this.task_form.basedata.info.testContent.objectId = this.reportList[
-          index
-        ].objectId
+        this.task_form.basedata.info.testContent.name =
+          this.reportList[index].name
+        this.task_form.basedata.info.testContent.objectId =
+          this.reportList[index].objectId
       },
       changeBed(index) {
         this.selectedBedItem = this.testbedlist[index]
         console.log(this.testbedlist[index])
         this.productId = this.testbedlist[index].product.objectId
         this.task_form.basedata.info.devInfo.name = this.testbedlist[index].name
-        this.task_form.basedata.info.devInfo.objectId = this.testbedlist[
-          index
-        ].objectId
+        this.task_form.basedata.info.devInfo.objectId =
+          this.testbedlist[index].objectId
         console.log(
           '  this.productId ',
           this.productId,

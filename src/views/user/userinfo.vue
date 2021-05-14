@@ -246,6 +246,9 @@
       //上传操作调用的函数
       async handleUpload(file) {
         var formData = new FormData()
+        let filetype = file.file.name.substring(
+          file.file.name.lastIndexOf('.') + 1
+        )
         formData.append('file', file.file)
         formData.append('output', 'json')
         formData.append(
@@ -253,8 +256,8 @@
           Mock.mock('@string') + this.objectId + this.filetype + '.jpg'
         )
         formData.append('path', 'group1')
-        formData.append('auth_token', this.token) // 下面是
-        const { url } = await UploadImg(formData)
+        formData.append('auth_token', this.token)
+        const { url } = await UploadImg(formData, filetype)
         console.log(url)
         if (url) {
           this.dialogVisible = !this.dialogVisible

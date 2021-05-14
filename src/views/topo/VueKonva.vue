@@ -511,7 +511,7 @@
         })
         _this.productconfig = results[0]
         console.log(_this.productconfig)
-
+        _this.$refs['operation'].productconfig = results[0]
         if (message == 'SUCCESS') {
           console.log(data.Stage.attrs.id)
           _this.globalStageid = data.Stage.attrs.id
@@ -528,13 +528,10 @@
         let _this = this
         if (type != 'create') {
           Stage = data
-          background = _this.productconfig.config.konva.background
         } else {
-          background = data.background
           Stage = data.Stage
         }
         console.log(data)
-        _this.$refs['operation'].bachgroundurl = background
         console.log(Stage.attrs.height, Stage.attrs.width, '450')
         Stage.attrs.height = _this.stageConfig.height
         Stage.attrs.width = _this.stageConfig.width
@@ -546,21 +543,13 @@
         console.log('globalStageid', globalStageid)
         console.log(Stage, 'Stage')
         _this.stage = Konva.Node.create(Stage, globalStageid)
-        // 2 create layer
-        _this.stage.find('Image').each((node) => {
-          const img = new Image()
-          img.src = node.getAttr('source')
-          _this.backgroundImage = img.src
-          this.$refs['operation'].bachgroundurl = img.src
-          img.onload = () => {
-            node.image(img)
-            _this.stage.batchDraw()
-          }
-        })
         _this.stage.on('click', (e) => {
           var node = e.target
-          _this.setGraphNow(e.target)
+
           console.log(node.toJSON())
+          if (_this.isDevice) return
+          _this.setGraphNow(e.target)
+
           _this.$refs['operation'].Shapeconfig = JSON.parse(node.toJSON())
           if (!_this.flag) {
             return
@@ -598,12 +587,13 @@
             var node = e.target
             console.log(e)
             _this.setGraphNow(e.target)
-            if (!_this.rightrow) _this.rightrow = 6
+            if (!_this.rightrow && !_this.isDevice) _this.rightrow = 6
             // _this.$refs['operation'].Shapeconfig = node.toJSON()
           })
           _G.on('mouseup', (e) => {
             console.log(e, 'mouseup')
-            _this.headevisible = true
+            if (!_this.isDevice && _this.productid) _this.headevisible = true
+
             document.body.style.cursor = 'pointer'
           })
           _G.on('mouseover', (e) => {

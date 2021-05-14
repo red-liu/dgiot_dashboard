@@ -482,7 +482,8 @@ export default {
       appid: 'Application ID ',
       appsecret: 'Application secret',
       fullkey: 'Full key',
-      aaab: 'The token when calling the API is used to verify the validity of the request. Please keep it confidential',
+      aaab:
+        'The token when calling the API is used to verify the validity of the request. Please keep it confidential',
       TheonlyapplicationIDintheSDKcallingprocess:
         'The only application ID in the SDK calling process',
       Wordpreviewserver: 'Word preview server',
@@ -761,7 +762,8 @@ export default {
       installationlocation: 'Install Location',
       createdAt: 'createdAt',
       addbatch: 'Add Batch',
-      text: 'After the device is created, you can use the identity information issued by the platform to connect to the platform',
+      text:
+        'After the device is created, you can use the identity information issued by the platform to connect to the platform',
       ipaddress: 'IP Address',
       macaddress: 'MAC Address',
       subordinatenode: 'Subordinate Node',

@@ -38,6 +38,7 @@
 * feat: 删除多余文件 ([7bf72e5](https://github.com/dgiot/dgiot_dashboard/commit/7bf72e5))
 * feat: 设备云 ([687142a](https://github.com/dgiot/dgiot_dashboard/commit/687142a))
 * feat: 设备字段 ([0867e12](https://github.com/dgiot/dgiot_dashboard/commit/0867e12))
+* feat: 设置图片 ([577c74b](https://github.com/dgiot/dgiot_dashboard/commit/577c74b))
 * feat: 设置konva ([8644656](https://github.com/dgiot/dgiot_dashboard/commit/8644656))
 * feat: 设置konva 可拖动属性 ([c601efd](https://github.com/dgiot/dgiot_dashboard/commit/c601efd))
 * feat: 設備指令bug修復 ([62a2b2e](https://github.com/dgiot/dgiot_dashboard/commit/62a2b2e))

@@ -549,19 +549,98 @@
           console.log('drawParams', _this.drawParams)
           var color = _this.graphColor
           var type = _this.flag
-          var params = _this.drawParams
+          var params = _this.DrawParams
           console.log('params', params)
-          var _group = _this.stage.find('Group')[0]
-          console.log(e.evt)
-          const { offsetX, offsetY } = e.evt
-          var state = createState(type, offsetX, offsetY, color, params)
-          _group.add(state)
-          Layer.draw()
-          Layer.batchDraw()
-          _this.setFlag('')
-          _this.setDraw(false)
+          if (params) {
+            var _group = _this.stage.find('Group')[0]
+            console.log(e, 'eeeeeeeeeeeeeeeeeeee')
+            const { offsetX, offsetY } = e.evt
+            var state = createState(type, offsetX, offsetY, color, params)
+            _group.add(state)
+            Layer.draw()
+            Layer.batchDraw()
+            _this.setFlag('')
+            _this.setDraw(false)
+          }
         })
         var Group = _this.stage.find('Group')
+        var Text = _this.stage.find('Text')
+        console.log(Text, 'Text')
+        Text.each(function (_G) {
+          _G.on('mouseenter', function () {
+            _this.stage.container().style.cursor = 'move'
+          })
+
+          _G.on('mouseleave', function () {
+            _this.stage.container().style.cursor = 'default'
+          })
+          _G.on('dblclick', function (e) {
+            _this.stage.find('Transformer').destroy()
+            // 在画布上创建具有绝对位置的textarea
+
+            // 首先，我们需要为textarea找到位置
+
+            // 首先，让我们找到文本节点相对于舞台的位置:
+            let textPosition = this.getAbsolutePosition()
+
+            // 然后让我们在页面上找到stage容器的位置
+            let stageBox = _this.stage.container().getBoundingClientRect()
+
+            // 因此textarea的位置将是上面位置的和
+            console.log('eeeeeeeeeeeeeeeee', e)
+            let areaPosition = {
+              x: stageBox.left + textPosition.x,
+              y: stageBox.top + textPosition.y,
+              color: e.target.attrs.fill,
+              text: e.target.attrs.text,
+            }
+
+            // 创建textarea并设置它的样式
+            let textarea = document.createElement('textarea')
+            document.body.appendChild(textarea)
+            let T = this.text()
+            if (T === '双击编辑文字') {
+              textarea.value = ''
+              textarea.setAttribute('placeholder', '请输入文字')
+            } else {
+              textarea.value = T
+            }
+            textarea.style.position = 'absolute'
+            textarea.style.top = areaPosition.y + 'px'
+            textarea.style.left = areaPosition.x + 'px'
+            textarea.style.background = 'none'
+            textarea.style.border = '1px dashed #000'
+            textarea.style.outline = 'none'
+            textarea.style.color = areaPosition.color
+            textarea.focus()
+
+            this.setAttr('text', '')
+            Layer.draw()
+
+            // 确定输入的文字
+            let confirm = (val) => {
+              this.text(val ? val : '双击编辑文字')
+              Layer.draw()
+              // 隐藏在输入
+              if (textarea) document.body.removeChild(textarea)
+            }
+            // 回车键
+            let keydown = (e) => {
+              if (e.keyCode === 13) {
+                textarea.removeEventListener('blur', blur)
+                confirm(textarea.value)
+              }
+            }
+            // 鼠标失去焦点
+            let blur = () => {
+              textarea.removeEventListener('keydown', keydown)
+              confirm(textarea.value)
+            }
+
+            textarea.addEventListener('keydown', keydown)
+            textarea.addEventListener('blur', blur)
+          })
+        })
         // 设置页面是从设备界面进入 则不添加以下事件
         if (_this.isDevice && _this.productconfig) {
           _this.konvaClass.push('isDevice')
@@ -600,7 +679,7 @@
             document.body.style.cursor = 'pointer'
           })
           _G.on('mouseout', (e) => {
-            _this.stage.find('Transformer').destroy()
+            // _this.stage.find('Transformer').destroy() // 禁用后 无法拖动
             const id = e.target.id()
             const item = _this.stage.find((i) => i.id === id)
             item.x = e.target.x()

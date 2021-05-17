@@ -19,12 +19,13 @@
         :value="value"
         @messageData="set_mqttflag"
         @removeShape="removeShape"
+        @ImageTable="ImageTable"
       />
     </div>
     <div class="_mian">
       <el-row :gutter="gutter" class="_row">
         <transition name="fade">
-          <!-- <el-col :span="leftrow">
+          <el-col v-show="showTable" :span="leftrow">
             <div class="_left">
               <topo-allocation
                 @fatherMousedown="mousedown"
@@ -32,7 +33,7 @@
                 @fatherMouseup="mouseup"
               />
             </div>
-          </el-col> -->
+          </el-col>
         </transition>
 
         <el-col :span="gutter - leftrow - rightrow" class="_konvarow">
@@ -166,45 +167,19 @@
         globalStageid: '',
         value: false,
         kovaUpType: '',
+        showTable: false,
       }
     },
     computed: {
-      ...mapState({
-        // graphColor: 'konva/graphColor',
-        // drawing: 'konva/drawing',
-        //   graphNow: 'konva/graphNow',
+      ...mapGetters({
+        graphColor: 'konva/graphColor',
+        drawing: 'konva/drawing',
+        graphNow: 'konva/graphNow',
         pointStart: 'konva/pointStart',
         draw: 'konva/draw',
-        //   flag: 'konva/flag',
+        flag: 'konva/flag',
+        drawParams: 'konva/drawParams',
       }),
-      flag: {
-        get() {
-          return this.$store.state.konva.flag
-        },
-      },
-      graphColor: {
-        get() {
-          return this.$store.state.konva.graphColor
-        },
-        set(val) {
-          this.$store.commit('konva/setGraphColor', val)
-        },
-      },
-      draw: {
-        get() {
-          return this.$store.state.konva.draw
-        },
-      },
-      graphNow: {
-        get() {
-          return this.$store.state.konva.graphNow
-        },
-      },
-      drawing: {
-        get() {
-          return this.$store.state.konva.drawing
-        },
-      },
       stageConfig() {
         let el = document.getElementsByClassName('konva')
         return {
@@ -234,6 +209,7 @@
         setFlag: 'konva/setFlag',
         setGraphNow: 'konva/setGraphNow',
         setGraphColor: 'konva/setGraphColor',
+        setDrawParams: 'konva/setDrawParams',
       }),
       // @click//单击
       // @mousedown//按下
@@ -246,9 +222,9 @@
       // @mouseover//在
       mousedown(item) {
         console.log(item)
-        var _center = document.querySelectorAll('._center')[0]
-        let oElement = document.querySelectorAll(`.${item}`)[0]
-        console.log(Position(oElement))
+        // var _center = document.querySelectorAll('._center')[0]
+        // let oElement = document.querySelectorAll(`.${item}`)[0]
+        // console.log(Position(oElement))
 
         // dragBox(
         //   document.querySelectorAll(`.${item}`)[0],
@@ -265,13 +241,14 @@
         // console.log(Position(oElement))
       },
       mouseup(item) {
+        console.log(item)
         // dragBox(
         //   document.querySelectorAll(`.${item}`)[0],
         //   document.querySelectorAll('.konvajs-content')[0]
         // )
-        var _center = document.querySelectorAll('._center')[0]
-        let oElement = document.querySelectorAll(`.${item}`)[0]
-        console.log(Position(oElement))
+        // var _center = document.querySelectorAll('._center')[0]
+        // let oElement = document.querySelectorAll(`.${item}`)[0]
+        // console.log(Position(oElement))
       },
       // set_mqttflag
       set_mqttflag(v) {
@@ -281,12 +258,18 @@
       removeShape(node) {
         console.log()
         var Layer = this.stage.find('Layer')[0]
+        this.stage.find('Transformer').destroy()
         node.remove()
         node.destroy()
         Layer.batchDraw()
         this.setGraphNow('')
         if (node.attrs.id == this.$refs['operation'].Shapeconfig.attrs.id)
           this.$refs['operation'].Shapeconfig = []
+      },
+      // ImageTable
+      ImageTable(type) {
+        this.leftrow = type ? 3 : 0
+        this.showTable = type
       },
       // saveKonvaitem
       saveKonvaitem(config) {
@@ -383,7 +366,7 @@
         if (type == 'rightrow') {
           this.rightrow = this.rightrow == 6 ? 0 : 6
         } else {
-          // this.leftrow = this.leftrow == 3 ? 0 : 3
+          this.leftrow = this.leftrow == 3 ? 0 : 3
         }
       },
       clearImg(isVisible) {
@@ -563,9 +546,11 @@
           console.log('类型', _this.flag)
           console.log('this.draw', _this.draw)
           console.log('color', _this.graphColor)
+          console.log('drawParams', _this.drawParams)
           var color = _this.graphColor
           var type = _this.flag
-          var params
+          var params = _this.drawParams
+          console.log('params', params)
           var _group = _this.stage.find('Group')[0]
           console.log(e.evt)
           const { offsetX, offsetY } = e.evt
@@ -615,6 +600,7 @@
             document.body.style.cursor = 'pointer'
           })
           _G.on('mouseout', (e) => {
+            _this.stage.find('Transformer').destroy()
             const id = e.target.id()
             const item = _this.stage.find((i) => i.id === id)
             item.x = e.target.x()

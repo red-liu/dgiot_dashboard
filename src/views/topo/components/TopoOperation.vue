@@ -45,6 +45,8 @@
           </el-form-item>
         </el-form>
       </el-tab-pane>
+      <el-tab-pane label="样式" name="styles">样式</el-tab-pane>
+      <el-tab-pane label="行为" name="function">行为</el-tab-pane>
       <div class="TopoArom">
         <el-dialog
           :title="wmxSituation + '自定义属性'"

@@ -5,6 +5,7 @@ const state = () => ({
   graphNow: null,
   draw: [],
   flag: null,
+  drawParams: {},
 })
 const getters = {
   graphColor: (state) => state.graphColor,
@@ -13,6 +14,7 @@ const getters = {
   draw: (state) => state.draw,
   graphNow: (state) => state.graphNow,
   flag: (state) => state.flag,
+  drawParams: (state) => state.drawParams,
 }
 const mutations = {
   setGraphColor(state, color) {
@@ -33,6 +35,9 @@ const mutations = {
   setFlag(state, flag) {
     state.flag = flag
   },
+  setDrawParams(state, params) {
+    state.drawParams = params
+  },
 }
 const actions = {
   setGraphColor({ commit }, color) {
@@ -52,6 +57,9 @@ const actions = {
   },
   setFlag({ commit }, flag) {
     commit('setFlag', flag)
+  },
+  setDrawParams({ commit }, params) {
+    commit('setDrawParams', params)
   },
 }
 export default { state, getters, mutations, actions }

@@ -37,6 +37,7 @@
 * feat: 设备云 ([687142a](https://github.com/dgiot/dgiot_dashboard/commit/687142a))
 * feat: 设备字段 ([0867e12](https://github.com/dgiot/dgiot_dashboard/commit/0867e12))
 * feat: 设置konva ([8644656](https://github.com/dgiot/dgiot_dashboard/commit/8644656))
+* feat: 设置konva 可拖动属性 ([c601efd](https://github.com/dgiot/dgiot_dashboard/commit/c601efd))
 * feat: 設備指令bug修復 ([62a2b2e](https://github.com/dgiot/dgiot_dashboard/commit/62a2b2e))
 * feat: 設備指令bug修復 ([e62740b](https://github.com/dgiot/dgiot_dashboard/commit/e62740b))
 * feat: 私有化部署 ([c2c04ff](https://github.com/dgiot/dgiot_dashboard/commit/c2c04ff))

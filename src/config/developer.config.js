@@ -3,5 +3,5 @@
  */
 module.exports = {
   group1: 'http://132.232.12.21:1250',
-  proxyUrl: 'http://132.232.12.21/',
+  proxyUrl: 'http://132.232.12.21',
 }

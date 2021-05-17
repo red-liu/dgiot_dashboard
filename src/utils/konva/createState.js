@@ -52,7 +52,7 @@ function createState(type, offsetX, offsetY, color, params) {
       break
     case 'text':
       state = new Konva.Text({
-        text: '双击编辑文字',
+        text: params.text,
         id: `text_${Mock.mock('@string')}`,
         x: offsetX,
         y: offsetY,
@@ -63,22 +63,24 @@ function createState(type, offsetX, offsetY, color, params) {
       })
       break
     case 'image':
-      let imgsrc =
-        'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2234238213,2776120128&fm=26&gp=0.jpg'
+      let imgsrc = params.imgurl
       var imageObj = new Image()
+      var image = new Image()
+      image.src = imgsrc
       state = new Konva.Image({
         x: offsetX,
         y: offsetY,
         source: imgsrc,
         id: `image_${Mock.mock('@string')}`,
         image: imageObj,
-        width: 106,
-        height: 118,
+        width: image.width,
+        height: image.height,
         draggable: true,
       })
-
       imageObj.src = imgsrc
       imageObj.crossOrigin = 'Anonymous'
+      // imageObj.src = imgsrc
+      // imageObj.crossOrigin = 'Anonymous'
       // alternative API:
       break
     default:

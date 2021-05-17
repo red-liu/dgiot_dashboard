@@ -57,7 +57,7 @@
     data() {
       return {
         imgHost:
-          'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/dgiot_release/topo/',
+          'https://dgiot-1253666439.file.myqcloud.com/dgiot_release/topo/',
         icon: '24-hours-fill',
         layout: 'total, prev, next',
         total: 0,

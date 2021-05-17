@@ -67,7 +67,8 @@ var result = localHost.some((i) => {
   return hostname.indexOf(i) > -1
 })
 if (result) {
-  _scokethost = process.env.VUE_APP_URL.split(':')[1]
+  console.log(process.env.VUE_APP_URL)
+  _scokethost = process.env.VUE_APP_URL.split('//')[1]
 } else {
   _scokethost = ''
 }

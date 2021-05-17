@@ -543,9 +543,15 @@
         console.log('globalStageid', globalStageid)
         console.log(Stage, 'Stage')
         _this.stage = Konva.Node.create(Stage, globalStageid)
+        var Layer = _this.stage.find('Layer')[0]
         _this.stage.on('click', (e) => {
           var node = e.target
-
+          // 如果点击空白处 移除图形选择框
+          // 移除图形选择框
+          if (node == _this.stage) {
+            _this.stage.find('Transformer').destroy()
+            Layer.draw()
+          }
           console.log(node.toJSON())
           if (_this.isDevice) return
           _this.setGraphNow(e.target)
@@ -561,7 +567,6 @@
           var type = _this.flag
           var params
           var _group = _this.stage.find('Group')[0]
-          var Layer = _this.stage.find('Layer')[0]
           console.log(e.evt)
           const { offsetX, offsetY } = e.evt
           var state = createState(type, offsetX, offsetY, color, params)
@@ -582,6 +587,16 @@
         }
         Group.each(function (_G) {
           _G.on('click', (e) => {
+            // 创建图形选框事件
+            const tr = new Konva.Transformer({
+              borderStroke: '#000', // 虚线颜色
+              borderStrokeWidth: 1, //虚线大小
+              borderDash: [5], // 虚线间距
+              keepRatio: false, // 不等比缩放
+            })
+            Layer.add(tr)
+            tr.attachTo(e.target)
+            Layer.draw()
             // _this.ShapeVisible = true
             console.log(`#${e.target.attrs.id}`)
             var node = e.target

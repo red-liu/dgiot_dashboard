@@ -1,4 +1,4 @@
-## 1.0.0 (2021-05-14)
+## 1.0.0 (2021-05-17)
 
 * feat: 保存产品数据 ([914f581](https://github.com/dgiot/dgiot_dashboard/commit/914f581))
 * feat: 报告模板界面api ([5e0015a](https://github.com/dgiot/dgiot_dashboard/commit/5e0015a))
@@ -24,6 +24,7 @@
 * feat: 解决设备表格因为没有产品名无法显示的问题 ([07fc03f](https://github.com/dgiot/dgiot_dashboard/commit/07fc03f))
 * feat: 解決百度地圖顯示不出 es6 結構 row 的默認值 ([7fb1496](https://github.com/dgiot/dgiot_dashboard/commit/7fb1496))
 * feat: 判断打包环境域名 ([02b6283](https://github.com/dgiot/dgiot_dashboard/commit/02b6283))
+* feat: 判断物模型是否存在 ([729d2a2](https://github.com/dgiot/dgiot_dashboard/commit/729d2a2))
 * feat: 判断code 状态码 ([33ebbdb](https://github.com/dgiot/dgiot_dashboard/commit/33ebbdb))
 * feat: 取消订阅mqtt 显示隐藏背景图 ([90114cb](https://github.com/dgiot/dgiot_dashboard/commit/90114cb))
 * feat: 去除框架限制 ([ba1dfbc](https://github.com/dgiot/dgiot_dashboard/commit/ba1dfbc))
@@ -87,6 +88,7 @@
 * feat(home_index.vue): auth ([c32fca0](https://github.com/dgiot/dgiot_dashboard/commit/c32fca0))
 * feat(homegroup2.vue): 字典 ([53b2e01](https://github.com/dgiot/dgiot_dashboard/commit/53b2e01))
 * feat(index.vue): auth ([d8c49e0](https://github.com/dgiot/dgiot_dashboard/commit/d8c49e0))
+* feat(proddetail.vue): 物模型修改 ([8fc7fd8](https://github.com/dgiot/dgiot_dashboard/commit/8fc7fd8))
 * feat(src): build error ([81a9474](https://github.com/dgiot/dgiot_dashboard/commit/81a9474))
 * feat(src/views/roles/menu.vue): 解決菜單頁面無法顯示 ([f292e39](https://github.com/dgiot/dgiot_dashboard/commit/f292e39))
 * feat(vuekonvz): 绘制底图 ([d0ac540](https://github.com/dgiot/dgiot_dashboard/commit/d0ac540))

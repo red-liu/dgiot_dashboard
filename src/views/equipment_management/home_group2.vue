@@ -1678,6 +1678,40 @@
                 ACL: setAcl,
                 topics: [],
                 dynamicReg: false,
+                config: {
+                  konva: {
+                    Stage: {
+                      attrs: {
+                        x: 14,
+                        y: 29,
+                        id: 'container',
+                        width: 1868,
+                        height: 469,
+                        draggable: true,
+                      },
+                      children: [
+                        {
+                          attrs: {
+                            id: 'Layer_' + Mock.mock('@string'),
+                          },
+                          children: [
+                            {
+                              attrs: {
+                                id: 'Group_' + Mock.mock('@string'),
+                                width: 2000,
+                                height: 2000,
+                              },
+                              children: [],
+                              className: 'Group',
+                            },
+                          ],
+                          className: 'Layer',
+                        },
+                      ],
+                      className: 'Stage',
+                    },
+                  },
+                },
               }
               params = Object.assign(initparams, addparams)
               this.createProduct(params)

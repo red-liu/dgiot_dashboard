@@ -6,3 +6,11 @@ export async function _getTopo(params) {
     params: params,
   })
 }
+
+export async function get_wmxdetail(params) {
+  return request({
+    url: '/wmxdetail',
+    method: 'get',
+    params: params,
+  })
+}

@@ -63,22 +63,20 @@ function createState(type, offsetX, offsetY, color, params) {
       })
       break
     case 'image':
-      let imgsrc = params.imgurl
       var imageObj = new Image()
-      var image = new Image()
-      image.src = imgsrc
       state = new Konva.Image({
         x: offsetX,
         y: offsetY,
-        source: imgsrc,
         id: `image_${Mock.mock('@string')}`,
         image: imageObj,
-        width: image.width,
-        height: image.height,
+        source: params.src,
+        width: params.width,
+        height: params.height,
         draggable: true,
       })
-      imageObj.src = imgsrc
+      imageObj.src = params.src
       imageObj.crossOrigin = 'Anonymous'
+
       // imageObj.src = imgsrc
       // imageObj.crossOrigin = 'Anonymous'
       // alternative API:

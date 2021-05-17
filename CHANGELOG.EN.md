@@ -24,6 +24,7 @@
 * feat: 解决开源平台和开发代理url不一致的问题 ([1605fb3](https://github.com/dgiot/dgiot_dashboard/commit/1605fb3))
 * feat: 解决设备表格因为没有产品名无法显示的问题 ([07fc03f](https://github.com/dgiot/dgiot_dashboard/commit/07fc03f))
 * feat: 解決百度地圖顯示不出 es6 結構 row 的默認值 ([7fb1496](https://github.com/dgiot/dgiot_dashboard/commit/7fb1496))
+* feat: 解決mqtt聯係不正闋 ([d32c92e](https://github.com/dgiot/dgiot_dashboard/commit/d32c92e))
 * feat: 判断打包环境域名 ([02b6283](https://github.com/dgiot/dgiot_dashboard/commit/02b6283))
 * feat: 判断物模型是否存在 ([729d2a2](https://github.com/dgiot/dgiot_dashboard/commit/729d2a2))
 * feat: 判断code 状态码 ([33ebbdb](https://github.com/dgiot/dgiot_dashboard/commit/33ebbdb))

@@ -70,6 +70,7 @@
           pageSize: 30,
           title: '',
         },
+        imgParams: {},
         activeNames: '1',
       }
     },
@@ -122,13 +123,20 @@
         this.fetchData()
       },
       handleIcon(item) {
-        this.setFlag('image')
-        this.setDrawParams({
-          imgurl: this.imgHost + item + '?' + new Date().getTime(),
-        })
+        var img = new Image()
+        let _this = this
+        img.src = this.imgHost + item + '?' + new Date().getTime()
+        img.onload = function () {
+          _this.$set(_this.imgParams, 'width', img.width)
+          _this.$set(_this.imgParams, 'height', img.height)
+          _this.$set(_this.imgParams, 'src', img.src)
+        }
+
+        _this.setDrawParams(_this.imgParams)
+        _this.setFlag('image')
         // this.icon = item
         // this.queryForm.title = item
-        this.$emit('handle-icon', item)
+        _this.$emit('handle-icon', item)
       },
     }, //如果页面有keep-alive缓存功能，这个函数会触发
   }

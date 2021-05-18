@@ -6,8 +6,8 @@
         ref="upload"
         action=""
         class="upload-demo"
-        :http-request="beforeUpload"
-        :before-upload="beforeUpload"
+        :before-upload="FileRequest"
+        :accept="accept"
         drag
         :auto-upload="false"
         :on-exceed="handleExceed"
@@ -43,7 +43,7 @@
       title="提示"
       :visible="dialogVisible"
       width="30%"
-      :modal-append-to-body="false"
+      :append-to-body="true"
     >
       <span>文件上传成功</span>
       <span slot="footer" class="dialog-footer">
@@ -54,13 +54,14 @@
 </template>
 
 <script>
-  import { upload } from '@/api/Proxy/index'
+  import { UploadImg } from '@/api/File'
   export default {
     name: 'UploadFile',
     props: {
-      url: {
+      accept: {
         type: String,
-        default: '',
+        default:
+          '.jpg,.jpeg,.png,.gif,.bmp,.pdf,.JPG,.JPEG,.PBG,.GIF,.BMP,.PDF',
       },
     },
     data() {
@@ -71,9 +72,37 @@
         dialogVisible: false,
       }
     },
+    computed: {},
     methods: {
-      beforeUpload(file) {
-        console.log(file)
+      //http-request的钩子
+      FileRequest(file) {
+        let config = {
+          onUploadProgress: (progressEvent) => {
+            //progressEvent.loaded:已上传文件大小
+            //progressEvent.total:被上传文件的总大小
+            let complete =
+              (progressEvent.loaded / progressEvent.total).toFixed(2) * 100
+            this.percentage = complete
+            // if (this.percentage >= 100) {
+            //   this.dialogVisible = true
+            // }
+          },
+          headers: {
+            proxy: true, // 是否开启代理
+            url: '/dgiotproxy/shuwa_file/', // 开启代理后的真实上传路径
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+        UploadImg(file, config)
+          .then((res) => {
+            this.loading = false
+            this.$emit('fileInfo', res)
+            console.log('上传成功的回调', res)
+          })
+          .catch((e) => {
+            this.loading = false
+            console.log('出错了', e)
+          })
       },
       handleExceed() {},
       submitUpload() {

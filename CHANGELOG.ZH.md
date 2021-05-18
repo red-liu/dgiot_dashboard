@@ -4,6 +4,7 @@
 * feat: 报告模板界面api ([5e0015a](https://github.com/dgiot/dgiot_dashboard/commit/5e0015a))
 * feat: 采用后端数据渲染组件 ([67a5032](https://github.com/dgiot/dgiot_dashboard/commit/67a5032))
 * feat: 产品 ([5f42719](https://github.com/dgiot/dgiot_dashboard/commit/5f42719))
+* feat: 产品上传图片 ([a42746d](https://github.com/dgiot/dgiot_dashboard/commit/a42746d))
 * feat: 厂家设备切换查询 ([60097e6](https://github.com/dgiot/dgiot_dashboard/commit/60097e6))
 * feat: 存儲 roles ([e105e04](https://github.com/dgiot/dgiot_dashboard/commit/e105e04))
 * feat: 代理 ([8d1ed17](https://github.com/dgiot/dgiot_dashboard/commit/8d1ed17))

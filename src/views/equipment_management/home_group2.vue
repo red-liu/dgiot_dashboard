@@ -213,7 +213,7 @@
     <div class="prodialog">
       <!-- 创建产品对话框 ###-->
       <el-dialog
-        :title="$translateTitle('product.createproduct')"
+        :title="moduleTitle"
         :visible.sync="dialogFormVisible"
         :close-on-click-modal="false"
         :before-close="handleClose"
@@ -261,15 +261,12 @@
 
               <!--  :label="item.attributes.desc"
               :value="item.attributes.name"-->
-              <el-form-item
-                v-show="custom_status == 'add'"
-                label="所属应用"
-                prop="relationApp"
-              >
+              <el-form-item label="所属应用" prop="relationApp">
                 <el-input
                   v-model="form.relationApp"
                   placeholder="请选择所属应用"
                   readonly
+                  :disabled="custom_status == 'edit'"
                   @focus="showTree = !showTree"
                 />
                 <div v-if="showTree">
@@ -332,27 +329,9 @@
                   v-else
                   v-loading="loading"
                   class="el-icon-plus avatar-uploader-icon"
+                  @click="uploadCkick"
                 />
-                <form
-                  ref="uploadform"
-                  method="POST"
-                  enctype="multipart/form-data"
-                  style="position: absolute"
-                >
-                  <input
-                    type="file"
-                    style="
-                      position: relative;
-                      top: -100px;
-                      z-index: 5;
-                      width: 100px;
-                      height: 100px;
-                      cursor: pointer;
-                      opacity: 0;
-                    "
-                    @change="upload($event)"
-                  />
-                </form>
+                <upload ref="uploadFinish" @fileInfo="fileInfo" />
                 <el-button
                   v-if="imageUrl"
                   type="danger"
@@ -392,7 +371,7 @@
           <el-button type="primary" @click="submitForm()">
             {{ $translateTitle('developer.determine') }}
           </el-button>
-          <el-button @click="dialogFormVisible = false">
+          <el-button @click="handleCloseDialogForm()">
             {{ $translateTitle('developer.cancel') }}
           </el-button>
         </div>
@@ -882,6 +861,7 @@
   </div>
 </template>
 <script>
+  import Upload from '@/components/UploadFile/input'
   import { mapGetters } from 'vuex'
   import { delProduct, getProduct, putProduct } from '@/api/Product'
   import { getAllunit, getDictCount } from '@/api/Dict/index'
@@ -896,10 +876,10 @@
   import Category from '@/api/Mock/Category'
   import { uuid } from '@/utils'
   export default {
-    components: { vueJsonEditor },
+    components: { vueJsonEditor, Upload },
     data() {
       return {
-        //单位
+        moduleTitle: this.$translateTitle('product.createproduct'),
         allunit: [],
         productInfo: {},
         category: Category,
@@ -1099,6 +1079,18 @@
       this.projectName = ''
     },
     methods: {
+      uploadCkick() {
+        this.loading = true
+        // 触发子组件的点击事件
+        this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
+          new MouseEvent('click')
+        )
+      },
+      fileInfo(info) {
+        console.log('info', info)
+        this.imageUrl = info.url
+        this.loading = false
+      },
       async getAllunit() {
         this.allunit = []
         const { results } = await getAllunit('unit', 200)
@@ -1366,40 +1358,6 @@
         event.stopPropagation()
         this.imageUrl = ''
       },
-      upload(event) {
-        this.loading = true
-        if (event) {
-          var file = event.target.files[0] // name: "dangqi1.png" || type: "image/png"
-          var name = file.name
-          var testmsg = event.target.files[0].type
-          var type = file.type.split('/')[0]
-          var extension =
-            testmsg === 'image/jpeg' ||
-            testmsg === 'image/JPEG' ||
-            testmsg === 'image/png' ||
-            testmsg === 'image/PNG' ||
-            testmsg === 'image/bpm' ||
-            testmsg === 'image/BPM'
-          if (!extension) {
-            // 将图片img转化为base64
-            this.$message({
-              message: '请上传图片',
-              type: 'error',
-            })
-            this.loading = false
-            return false // 必须加上return false; 才能阻止
-          } else {
-            var reader = new FileReader()
-            reader.readAsDataURL(file)
-            var that = this
-            reader.onloadend = function () {
-              var dataURL = reader.result
-              var blob = that.dataURItoBlob(dataURL)
-              that.uploadFile(file) // 执行上传接口
-            }
-          }
-        }
-      },
       dataURItoBlob(dataURI) {
         // base64 解码
         var byteString = atob(dataURI.split(',')[1])
@@ -1412,26 +1370,6 @@
         return new Blob([ab], {
           type: mimeString,
         })
-      },
-      uploadFile(file) {
-        console.log('imgUrl, name', file)
-        var formData = new FormData()
-        let filetype = file.name.substring(file.name.lastIndexOf('.') + 1)
-        formData.append('file', file)
-        formData.append('output', 'json')
-        formData.append('filename', uuid(8) + '.jpg')
-        // formData.append('path', 'product')
-        formData.append('auth_token', this.token)
-        // 此处必须设置为  multipart/form-data
-        UploadImg(formData, filetype)
-          .then((res) => {
-            this.imageUrl = res.url
-            this.loading = false
-          })
-          .catch((e) => {
-            this.loading = false
-            console.log('出错了', e)
-          })
       },
       submitUpload() {
         // this.uploadAction = Cookies.get('apiserver') + '/product?appid=' + Cookies.get("appids");
@@ -1501,7 +1439,7 @@
           order: '-updatedAt',
           limit: this.length,
           skip: this.start,
-          keys: 'updatedAt,category,desc,name,devType,netType,nodeType',
+          keys: 'updatedAt,category,desc,name,devType,netType,nodeType,icon',
           where: {
             category: 'IotHub',
           },
@@ -1534,8 +1472,18 @@
       handleClose() {
         this.dialogFormVisible = false
       },
+      // 关闭dialog 事件
+      handleCloseDialogForm() {
+        this.dialogFormVisible = false
+        // 重置表单
+        this.$nextTick(() => {
+          this.$refs['form'].resetFields()
+        })
+      },
       // 添加产品弹窗
       addproduct() {
+        this.moduleTitle = this.$translateTitle('product.createproduct')
+        this.imageUrl = ''
         this.handleNodeClick(this.allApps[0])
         this.form = {
           name: '',
@@ -1604,6 +1552,8 @@
         this.dictVisible = true
       },
       editorProduct(row) {
+        this.imageUrl = ''
+        this.moduleTitle = this.$translateTitle('product.editproduct')
         this.custom_status = 'edit'
         this.custom_row = row
         // this.form.roles = [];
@@ -1624,7 +1574,7 @@
         for (var key in row.ACL.permissionsById) {
           this.form.relationApp = key ? key.substr(5) : ''
         }
-        this.selectApp(this.form.relationApp)
+        // this.selectApp(this.form.relationApp)
       },
       async Industry() {
         const parsms = {

@@ -547,6 +547,7 @@ export default {
       share: 'share',
       myproduct: 'MyProduct',
       createproduct: 'Create Product',
+      editproduct: 'edit Product',
       searchproductname: 'Input Product Name of Search',
       productname: 'ProductName',
       productgrouping: 'Product Grouping',

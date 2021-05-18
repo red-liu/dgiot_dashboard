@@ -422,6 +422,7 @@ export default {
       edit: '设备',
       myproduct: '我的产品',
       createproduct: '创建产品',
+      editproduct: '修改产品',
       searchproductname: '请输入产品名称搜索',
       productname: '产品名称',
       productgrouping: '产品分组',

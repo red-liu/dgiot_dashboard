@@ -9,6 +9,7 @@
 * feat: 存儲 roles ([e105e04](https://github.com/dgiot/dgiot_dashboard/commit/e105e04))
 * feat: 代理 ([8d1ed17](https://github.com/dgiot/dgiot_dashboard/commit/8d1ed17))
 * feat: 动态设置图片 ([3f105c0](https://github.com/dgiot/dgiot_dashboard/commit/3f105c0))
+* feat: 封装上传组件 ([6c6485d](https://github.com/dgiot/dgiot_dashboard/commit/6c6485d))
 * feat: 辅助脚本 ([4ea4546](https://github.com/dgiot/dgiot_dashboard/commit/4ea4546))
 * feat: 格式化代码 ([2bba3da](https://github.com/dgiot/dgiot_dashboard/commit/2bba3da))
 * feat: 个人信息 ([5622945](https://github.com/dgiot/dgiot_dashboard/commit/5622945))

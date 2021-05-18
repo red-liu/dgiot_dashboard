@@ -60,8 +60,7 @@
     props: {
       accept: {
         type: String,
-        default:
-          '.jpg,.jpeg,.png,.gif,.bmp,.pdf,.JPG,.JPEG,.PBG,.GIF,.BMP,.PDF',
+        default: 'image/*',
       },
     },
     data() {

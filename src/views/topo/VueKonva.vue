@@ -117,6 +117,7 @@
   </div>
 </template>
 <script>
+  import { uuid } from '@/utils'
   const context = require.context('./components', true, /\.vue$/)
   let res_components = {}
   context.keys().forEach((fileName) => {
@@ -256,15 +257,17 @@
       },
       // removeShape
       removeShape(node) {
-        console.log()
-        var Layer = this.stage.find('Layer')[0]
-        this.stage.find('Transformer').destroy()
+        let _this = this
+        //  此处不能删除图片 bug
+        console.log('删除的节点', node)
+        _this.stage.find('Transformer').destroy()
         node.remove()
-        node.destroy()
-        Layer.batchDraw()
-        this.setGraphNow('')
-        if (node.attrs.id == this.$refs['operation'].Shapeconfig.attrs.id)
-          this.$refs['operation'].Shapeconfig = []
+        var Layer = _this.stage.find('Layer')[0]
+        Layer.draw()
+        _this.setGraphNow('')
+        if (node.attrs.id == _this.$refs['operation'].Shapeconfig.attrs.id)
+          _this.$refs['operation'].Shapeconfig = []
+        _this.updataProduct(this.productid)
       },
       // ImageTable
       ImageTable(type) {
@@ -278,7 +281,7 @@
         console.log('config.attrs.id', config.attrs.id)
         let _uptype
         var Text = _this.stage.find('Text')
-        var Imgage = _this.stage.find('Imgage')
+        var Image = _this.stage.find('Image')
         var Group = _this.stage.find('Group')
         var stage = _this.stage.find(config.attrs.id)
         console.log('stage', stage)
@@ -286,9 +289,10 @@
         for (var n = 0; n < tweens.length; n++) {
           tweens[n].destroy()
         }
-        Imgage.each((shape) => {
+        Image.each((shape) => {
+          console.log('图片相关', shape)
           if (shape.attrs.id == config.attrs.id) {
-            _this.kovaUpType = 'Imgage'
+            _this.kovaUpType = 'Image'
             tweens.push(
               new Konva.Tween({
                 node: Object.assign(shape, config),
@@ -550,18 +554,21 @@
           var color = _this.graphColor
           var type = _this.flag
           var params = _this.DrawParams
-          console.log('params', params)
-          if (params) {
-            var _group = _this.stage.find('Group')[0]
-            console.log(e, 'eeeeeeeeeeeeeeeeeeee')
-            const { offsetX, offsetY } = e.evt
-            var state = createState(type, offsetX, offsetY, color, params)
-            _group.add(state)
-            Layer.draw()
-            Layer.batchDraw()
-            _this.setFlag('')
-            _this.setDraw(false)
-          }
+          console.log('params', _this.drawParams)
+          var _group = _this.stage.find('Group')[0]
+          const { offsetX, offsetY } = e.evt
+          var state = createState(
+            type,
+            offsetX,
+            offsetY,
+            color,
+            _this.drawParams
+          )
+          _group.add(state)
+          Layer.draw()
+          Layer.batchDraw()
+          _this.setFlag('')
+          _this.setDraw(false)
         })
         var Group = _this.stage.find('Group')
         var Text = _this.stage.find('Text')
@@ -657,6 +664,7 @@
               borderStrokeWidth: 1, //虚线大小
               borderDash: [5], // 虚线间距
               keepRatio: false, // 不等比缩放
+              id: `Transformer_${uuid(6)}`,
             })
             Layer.add(tr)
             tr.attachTo(e.target)
@@ -685,6 +693,20 @@
             item.x = e.target.x()
             item.y = e.target.y()
             document.body.style.cursor = 'default'
+          })
+        })
+        var Imgage = _this.stage.find('Image')
+        console.log('Imgage', Imgage)
+        var _group = _this.stage.find('Group')[0]
+        Imgage.each(function (img) {
+          // 这里会引起内存泄露
+          console.log('无法loadjson 图片,所以使用konva 的api創建', img.attrs)
+          // 图片加载会耗时 需解决
+          Konva.Image.fromURL(img.attrs.source, function (darthNode) {
+            darthNode.setAttrs(img.attrs)
+            _group.add(darthNode)
+            Layer.draw()
+            Layer.batchDraw()
           })
         })
         console.log('绘制完成')

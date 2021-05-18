@@ -91,6 +91,7 @@ module.exports = {
         $: 'jquery',
         ace: 'ace',
         mqtt: 'mqtt',
+        'cos-js-sdk-v5': 'COS',
         'paho-mqtt': 'paho',
         Sortable: 'Sortable',
         vue: 'Vue',

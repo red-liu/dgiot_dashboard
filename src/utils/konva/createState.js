@@ -4,13 +4,15 @@
  * @returns
  */
 // https://konvajs.org/api/Konva.Stage.html
+import { uuid } from '@/utils'
 function createState(type, offsetX, offsetY, color, params) {
+  console.log(params, 'konva create params')
   var state
   switch (type) {
     case 'pencil':
       state = new Konva.Line({
         name: 'line',
-        id: `line_${Mock.mock('@string')}`,
+        id: `line_${uuid(6)}`,
         // points: [5, 70, 140, 23, 250, 60, 300, 20],
         stroke: color,
         strokeWidth: 15,
@@ -24,7 +26,7 @@ function createState(type, offsetX, offsetY, color, params) {
       // 椭圆
       state = new Konva.Ellipse({
         name: 'ellipse',
-        id: `ellipse_${Mock.mock('@string')}`,
+        id: `ellipse_${uuid(6)}`,
         x: offsetX,
         y: offsetY,
         radiusX: 20,
@@ -39,7 +41,7 @@ function createState(type, offsetX, offsetY, color, params) {
       state = new Konva.Rect({
         name: 'rect',
         x: offsetX,
-        id: `rect_${Mock.mock('@string')}`,
+        id: `rect_${uuid(6)}`,
         y: offsetY,
         width: 100,
         height: 50,
@@ -53,7 +55,7 @@ function createState(type, offsetX, offsetY, color, params) {
     case 'text':
       state = new Konva.Text({
         text: params.text,
-        id: `text_${Mock.mock('@string')}`,
+        id: `text_${uuid(6)}`,
         x: offsetX,
         y: offsetY,
         fill: color,
@@ -64,10 +66,11 @@ function createState(type, offsetX, offsetY, color, params) {
       break
     case 'image':
       var imageObj = new Image()
+      console.log(params)
       state = new Konva.Image({
         x: offsetX,
         y: offsetY,
-        id: `image_${Mock.mock('@string')}`,
+        id: `image_${uuid(6)}`,
         image: imageObj,
         source: params.src,
         width: params.width,

@@ -272,7 +272,7 @@
       //   this.dev_active_count = dev_active_num.count
       //   this.dev_online_count = dev_online_num.count
       // },
-      async getAllAxios() {
+      getAllAxios() {
         this.$baseColorfullLoading(
           1,
           this.$translateTitle('home.messag_loding')
@@ -293,8 +293,10 @@
             method: 'GET',
             path: '/classes/Product',
             body: {
+              // 这里查product 是导致整个查询变慢的主要原因
               count: 'objectId',
               skip: 0,
+              keys: 'updatedAt,category,desc',
               where: {
                 category: 'IotHub',
                 // category: 'Evidence',
@@ -337,17 +339,21 @@
             },
           },
         ]
-        const res = await batch(params)
-        if (res) {
-          this.dev_count = res[0].success.count
-          this.projectList = res[1].success.results
-          this.product_count = res[1].success.count
-          this.project_count = res[2].success.count
-          this.dev_count = res[3].success.count
-          this.app_count = res[4].success.count
-          this.dev_online_count = res[5].success.count
-        }
-        this.$baseColorfullLoading().close()
+        batch(params)
+          .then((res) => {
+            this.$baseColorfullLoading().close()
+            this.dev_count = res[0].success.count
+            this.projectList = res[1].success.results
+            this.product_count = res[1].success.count
+            this.project_count = res[2].success.count
+            this.dev_count = res[3].success.count
+            this.app_count = res[4].success.count
+            this.dev_online_count = res[5].success.count
+          })
+          .catch((error) => {
+            this.$baseColorfullLoading().close()
+            console.log(error)
+          })
       },
       handleChange() {},
       handleClickVisit(project) {

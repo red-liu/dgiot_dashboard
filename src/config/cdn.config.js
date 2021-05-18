@@ -20,6 +20,7 @@ let staticUrl = {
     'https://unpkg.com/vue@2.6.12/dist/vue.js', // 这里如果使用了min.js 则无法在控制台使用vue-devtools
     'https://unpkg.com/vue-router/dist/vue-router.min.js',
     'https://unpkg.com/vue-i18n@8.24.1/dist/vue-i18n.min.js',
+    'https://unpkg.com/cos-js-sdk-v5@1.2.10/dist/cos-js-sdk-v5.min.js',
     'https://unpkg.com/nprogress@0.2.0/nprogress.js',
     'https://unpkg.com/js-md5@0.7.3/build/md5.min.js',
     'https://unpkg.com/ace-builds@1.4.9/src-min/ace.js',

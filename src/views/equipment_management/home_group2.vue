@@ -117,7 +117,7 @@
                     :underline="false"
                     icon="el-icon-grape"
                     type="success"
-                    @click="editorDict(scope.row)"
+                    @click="editorDict(scope.row.objectId)"
                   >
                     {{ $translateTitle('product.dict') }}
                   </el-button>
@@ -882,6 +882,7 @@
   </div>
 </template>
 <script>
+  import { mapGetters } from 'vuex'
   import { delProduct, getProduct, putProduct } from '@/api/Product'
   import { getAllunit, getDictCount } from '@/api/Dict/index'
   import { queryDevice } from '@/api/Device/index'
@@ -891,7 +892,9 @@
   import { postDict } from '@/api/Dict'
   import { getHashClass } from '@/api/Hash'
   import vueJsonEditor from 'vue-json-editor'
+  import { UploadImg } from '@/api/File'
   import Category from '@/api/Mock/Category'
+  import { uuid } from '@/utils'
   export default {
     components: { vueJsonEditor },
     data() {
@@ -1080,7 +1083,11 @@
         showTree: false,
       }
     },
-    computed: {},
+    computed: {
+      ...mapGetters({
+        token: 'user/token',
+      }),
+    },
     mounted() {
       const { project = '' } = this.$route.query
       this.formInline.productname = project
@@ -1240,6 +1247,7 @@
         this.$message('非Json数据类型')
       },
       handleNodeClick(data) {
+        console.log(data, 'data')
         this.$set(this.form, 'relationApp', data.name)
         this.showTree = !this.showTree
       },
@@ -1378,6 +1386,7 @@
               message: '请上传图片',
               type: 'error',
             })
+            this.loading = false
             return false // 必须加上return false; 才能阻止
           } else {
             var reader = new FileReader()
@@ -1386,7 +1395,7 @@
             reader.onloadend = function () {
               var dataURL = reader.result
               var blob = that.dataURItoBlob(dataURL)
-              that.uploadFile(blob, name) // 执行上传接口
+              that.uploadFile(file) // 执行上传接口
             }
           }
         }
@@ -1404,30 +1413,24 @@
           type: mimeString,
         })
       },
-      uploadFile(imgUrl, name) {
-        var formdata = new FormData()
-        formdata.append('file', imgUrl, name)
-        formdata.append('output', 'json')
-        formdata.append('path', this.form.relationApp)
-        // formdata.append("path", Cookies.get("appids"));
-        formdata.append('auth_token', this.access_token) // 下面是要传递的参数
+      uploadFile(file) {
+        console.log('imgUrl, name', file)
+        var formData = new FormData()
+        let filetype = file.name.substring(file.name.lastIndexOf('.') + 1)
+        formData.append('file', file)
+        formData.append('output', 'json')
+        formData.append('filename', uuid(8) + '.jpg')
+        // formData.append('path', 'product')
+        formData.append('auth_token', this.token)
         // 此处必须设置为  multipart/form-data
-        const config = {
-          headers: {
-            'Content-Type': 'multipart/form-data', // 之前说的以表单传数据的格式来传递fromdata
-          },
-        }
-        this.$http
-          .post(this.fileServer, formdata)
+        UploadImg(formData, filetype)
           .then((res) => {
-            if (res) {
-              this.imageUrl = res.body.url
-              this.loading = false
-            }
-          })
-          .catch((error) => {
+            this.imageUrl = res.url
             this.loading = false
-            this.$message(error.bodyText)
+          })
+          .catch((e) => {
+            this.loading = false
+            console.log('出错了', e)
           })
       },
       submitUpload() {
@@ -1498,6 +1501,7 @@
           order: '-updatedAt',
           limit: this.length,
           skip: this.start,
+          keys: 'updatedAt,category,desc,name,devType,netType,nodeType',
           where: {
             category: 'IotHub',
           },
@@ -1532,16 +1536,17 @@
       },
       // 添加产品弹窗
       addproduct() {
+        this.handleNodeClick(this.allApps[0])
         this.form = {
           name: '',
-          category: [],
+          category: ['IotHub'],
           nodeType: 0,
           desc: '',
           netType: ' ',
           devType: '',
           productSecret: '',
+          relationApp: this.allApps[0].name,
           roles: [],
-          relationApp: '',
         }
         this.custom_status = 'add'
         this.dialogFormVisible = true
@@ -1566,11 +1571,11 @@
           }
         })
       },
-      editorDict(row) {
-        console.log('row', row)
-        const { objectId, config = { basedate: {} } } = row
+      async editorDict(ObjectId) {
+        const row = await getProduct(ObjectId)
+        const { config = { basedate: {} } } = row
         this.productInfo = row
-        this.editDictTempId = objectId
+        this.editDictTempId = ObjectId
         this.dictTempForm = {
           name: '',
           cType: '',
@@ -1602,7 +1607,7 @@
         this.custom_status = 'edit'
         this.custom_row = row
         // this.form.roles = [];
-        this.form.relationApp = ''
+        // this.form.relationApp = ''
         this.dialogFormVisible = true
         this.productid = row.objectId
         this.getIndustryParent(row.category, this.categoryList)
@@ -1639,7 +1644,6 @@
         })
         // this.searchProduct();
         this.categoryListOptions = this.treeData(this.categoryList)
-
         // console.log(results)
       },
       submitForm() {

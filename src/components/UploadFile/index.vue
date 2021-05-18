@@ -55,7 +55,6 @@
 
 <script>
   import { upload } from '@/api/Proxy/index'
-
   export default {
     name: 'UploadFile',
     props: {
@@ -74,35 +73,7 @@
     },
     methods: {
       beforeUpload(file) {
-        let fd = new FormData()
-        fd.append('file', file)
-        let config = {
-          onUploadProgress: (progressEvent) => {
-            //progressEvent.loaded:已上传文件大小
-            //progressEvent.total:被上传文件的总大小
-            let complete =
-              (progressEvent.loaded / progressEvent.total).toFixed(2) * 100
-            this.percentage = complete
-            if (this.percentage >= 100) {
-              this.dialogVisible = true
-            }
-          },
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-        console.log('upload', this.url)
-        upload(fd, this.url)
-          .then((res) => {
-            console.log(res)
-          })
-          .catch((e) => {
-            console.log(e)
-          })
-        // this.$axios
-        //   .post(this.url, fd, config)
-        //   .then((res) => {})
-        //   .catch((err) => {})
+        console.log(file)
       },
       handleExceed() {},
       submitUpload() {
@@ -120,13 +91,13 @@
 
 <style scoped>
   .uploadfile {
-    position: absolute;
+    /* position: absolute;
     top: 50%;
     left: 50%;
     width: 200px;
     height: 200px;
     margin-top: -100px;
-    margin-left: -100px;
+    margin-left: -100px; */
   }
   .loading {
     position: absolute;

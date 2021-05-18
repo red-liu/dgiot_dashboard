@@ -1,4 +1,4 @@
-## 1.0.0 (2021-05-17)
+## 1.0.0 (2021-05-18)
 
 * feat: 保存产品数据 ([914f581](https://github.com/dgiot/dgiot_dashboard/commit/914f581))
 * feat: 报告模板界面api ([5e0015a](https://github.com/dgiot/dgiot_dashboard/commit/5e0015a))
@@ -43,6 +43,7 @@
 * feat: 设置konva 可拖动属性 ([c601efd](https://github.com/dgiot/dgiot_dashboard/commit/c601efd))
 * feat: 設備指令bug修復 ([62a2b2e](https://github.com/dgiot/dgiot_dashboard/commit/62a2b2e))
 * feat: 設備指令bug修復 ([e62740b](https://github.com/dgiot/dgiot_dashboard/commit/e62740b))
+* feat: 双击编辑文字 ([938a08d](https://github.com/dgiot/dgiot_dashboard/commit/938a08d))
 * feat: 私有化部署 ([c2c04ff](https://github.com/dgiot/dgiot_dashboard/commit/c2c04ff))
 * feat: 完成新建报告相关 ([ec76263](https://github.com/dgiot/dgiot_dashboard/commit/ec76263))
 * feat: 完成mqtt绘制 ([eef7b61](https://github.com/dgiot/dgiot_dashboard/commit/eef7b61))
@@ -88,6 +89,7 @@
 * feat: src\views\equipment_management\proddetail.vue ([04934bb](https://github.com/dgiot/dgiot_dashboard/commit/04934bb))
 * feat: statistics 统计功能新增 ([b6113d3](https://github.com/dgiot/dgiot_dashboard/commit/b6113d3))
 * feat(.env): 密钥 ([f90123e](https://github.com/dgiot/dgiot_dashboard/commit/f90123e))
+* feat(home_group2.vue): 产品新增默认组态 ([daea305](https://github.com/dgiot/dgiot_dashboard/commit/daea305))
 * feat(home_index.vue): 授权码修改 ([41b3523](https://github.com/dgiot/dgiot_dashboard/commit/41b3523))
 * feat(home_index.vue): 云寓智慧公寓平台 ([ee26034](https://github.com/dgiot/dgiot_dashboard/commit/ee26034))
 * feat(home_index.vue): auth ([c32fca0](https://github.com/dgiot/dgiot_dashboard/commit/c32fca0))

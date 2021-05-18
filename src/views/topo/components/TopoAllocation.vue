@@ -1,6 +1,11 @@
 <!-- 组件说明 -->
 <template>
   <div class="icon-selector-popper">
+    <div class="dialog">
+      <el-dialog title="" :visible.sync="dialogVisible" width="100vh">
+        <upload-file />
+      </el-dialog>
+    </div>
     <el-collapse v-model="activeNames" accordion>
       <el-collapse-item title="图标" name="1">
         <el-row :gutter="20">
@@ -44,18 +49,54 @@
           </el-col>
         </el-row>
       </el-collapse-item>
+      <el-collapse-item title="素材库" name="2">
+        <el-row :gutter="20">
+          <el-col :span="24">
+            <vab-query-form>
+              <vab-query-form-top-panel>
+                <el-button
+                  type="primary"
+                  icon="el-icon-upload"
+                  @click="dialogVisible = !dialogVisible"
+                />
+              </vab-query-form-top-panel>
+            </vab-query-form>
+          </el-col>
+
+          <el-col v-for="(item, index) in images" :key="index" :span="8">
+            <el-image
+              style="width: 100%; height: 40px; cursor: pointer"
+              :src="imgHost + item"
+              @click.native="handleIcon(item)"
+            />
+          </el-col>
+          <el-col :span="24">
+            <el-pagination
+              :background="background"
+              :current-page="queryForm.pageNo"
+              :layout="layout"
+              :page-size="queryForm.pageSize"
+              :total="total"
+              @current-change="handleCurrentChange"
+              @size-change="handleSizeChange"
+            />
+          </el-col>
+        </el-row>
+      </el-collapse-item>
     </el-collapse>
   </div>
 </template>
 
 <script>
   import { getMaterial } from '@/api/material'
+  import UploadFile from '@/components/UploadFile'
   import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
   export default {
     name: 'Allocation',
-    components: {},
+    components: { UploadFile },
     data() {
       return {
+        dialogVisible: false,
         imgHost:
           'https://dgiot-1253666439.file.myqcloud.com/dgiot_release/topo/',
         icon: '24-hours-fill',
@@ -70,6 +111,7 @@
           pageSize: 30,
           title: '',
         },
+        images: [],
         imgParams: {},
         activeNames: '1',
       }
@@ -111,12 +153,16 @@
         console.log(val)
       },
       handleSizeChange(val) {
-        this.queryForm.pageSize = val
-        this.fetchData()
+        if (activeNames == '1') {
+          this.queryForm.pageSize = val
+          this.fetchData()
+        }
       },
       handleCurrentChange(val) {
-        this.queryForm.pageNo = val
-        this.fetchData()
+        if (activeNames == '1') {
+          this.queryForm.pageNo = val
+          this.fetchData()
+        }
       },
       queryData() {
         this.queryForm.pageNo = 1
@@ -130,10 +176,16 @@
           _this.$set(_this.imgParams, 'width', img.width)
           _this.$set(_this.imgParams, 'height', img.height)
           _this.$set(_this.imgParams, 'src', img.src)
+          console.log('图片加载完成')
+          _this.$baseMessage(
+            _this.$translateTitle('图片加载完成,可双击画图区域填充'),
+            'success',
+            false,
+            'vab-hey-message-success'
+          )
         }
-
-        _this.setDrawParams(_this.imgParams)
         _this.setFlag('image')
+        _this.setDrawParams(_this.imgParams)
         // this.icon = item
         // this.queryForm.title = item
         _this.$emit('handle-icon', item)

@@ -1510,7 +1510,15 @@
       async searchProduct() {
         this.proTableData = []
         this.proTableData1 = []
-        const { results } = await this.$query_object('Product', {})
+        const parsms = {
+          count: 'objectId',
+          order: '-updatedAt',
+          keys: 'updatedAt,category,desc,name,devType,netType,nodeType,icon',
+          where: {
+            category: 'IotHub',
+          },
+        }
+        const { results } = await this.$query_object('Product', parsms)
         this.proTableData = results
         this.proTableData.unshift({
           name: language == 'zh' ? '全部产品' : 'All Products',

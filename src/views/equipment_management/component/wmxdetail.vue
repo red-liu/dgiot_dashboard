@@ -642,24 +642,6 @@
           </el-collapse-item>
           <el-collapse-item name="3">
             <template slot="title">数据来源</template>
-            <el-divider />
-            <div name="dataIdentification">
-              <el-row :gutter="24">
-                <el-col :span="12">
-                  <el-form-item label="数据标识" required prop="dis">
-                    <el-input v-model="sizeForm.dis" placeholder="数据标识" />
-                  </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="数据" required>
-                    <el-input
-                      v-model.number="sizeForm.dinumber"
-                      placeholder="数据个数"
-                    />
-                  </el-form-item>
-                </el-col>
-              </el-row>
-            </div>
             <el-row :gutter="24">
               <el-col :span="12">
                 <el-form-item label="协议类型">
@@ -669,7 +651,12 @@
                     style="width: 100%"
                   >
                     <el-option
-                      v-for="(item, index) in ['normal', 'modbus', 'DLT645']"
+                      v-for="(item, index) in [
+                        'normal',
+                        'modbus',
+                        'DLT645',
+                        'mingcheng',
+                      ]"
                       :key="index"
                       :label="item"
                       :value="item"
@@ -678,22 +665,37 @@
                 </el-form-item>
               </el-col>
               <el-col v-show="sizeForm.protocol == 'modbus'" :span="12">
-                <el-form-item label="字节序" prop="byteorder">
-                  <el-select v-model="sizeForm.byteorder" placeholder="请选择">
-                    <el-option
-                      v-for="item in [
-                        { value: 'big', label: '大端' },
-                        { value: 'little', label: '小端' },
-                      ]"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
-                    />
-                  </el-select>
+                <el-form-item label="从机地址">
+                  <el-input
+                    v-model="sizeForm.slaveid"
+                    placeholder="数据地址(10进制)"
+                    auto-complete="off"
+                  />
                 </el-form-item>
               </el-col>
             </el-row>
-            <el-row v-show="showNewItem" :gutter="24">
+            <el-row
+              v-show="
+                sizeForm.protocol == 'modbus' ||
+                sizeForm.protocol == 'mingcheng'
+              "
+              :gutter="24"
+            >
+              <el-col :span="12">
+                <el-form-item label="数据地址">
+                  <el-input v-model="sizeForm.dis" placeholder="数据地址" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="数据长度">
+                  <el-input
+                    v-model.number="sizeForm.dinumber"
+                    placeholder="数据长度（字节）"
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row v-show="sizeForm.protocol == 'modbus'" :gutter="24">
               <el-col :span="12">
                 <el-form-item label="寄存器状态" prop="byteorder">
                   <el-select
@@ -725,12 +727,12 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-
               <el-col :span="12">
                 <el-form-item label="数据类型">
                   <el-select
                     v-model="sizeForm.originaltype"
                     placeholder="请选择"
+                    style="width: 100%"
                   >
                     <el-option
                       v-for="(item, index) in [
@@ -746,17 +748,31 @@
                         'customizedData',
                       ]"
                       :key="index"
-                      style="width: 100%"
                       :label="item"
                       :value="item"
                     />
                   </el-select>
                 </el-form-item>
               </el-col>
-
-              <el-col :span="10">
-                <el-form-item label="从机地址">
-                  <el-input v-model="sizeForm.slaveid" auto-complete="off" />
+            </el-row>
+            <el-row v-show="sizeForm.protocol == 'modbus'" :gutter="24">
+              <el-col :span="12">
+                <el-form-item label="字节序" prop="byteorder">
+                  <el-select
+                    v-model="sizeForm.byteorder"
+                    placeholder="请选择"
+                    style="width: 100%"
+                  >
+                    <el-option
+                      v-for="item in [
+                        { value: 'big', label: '大端' },
+                        { value: 'little', label: '小端' },
+                      ]"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
                 </el-form-item>
               </el-col>
             </el-row>

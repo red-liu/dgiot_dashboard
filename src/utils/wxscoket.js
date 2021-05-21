@@ -63,15 +63,16 @@ var sendInfo = {
 //   localHost.push('localhost', '127.0.0.1')
 // }
 let _scokethost = ''
-var result = localHost.some((i) => {
-  return hostname.indexOf(i) > -1
-})
-if (result) {
-  console.log(process.env.VUE_APP_URL)
-  _scokethost = process.env.VUE_APP_URL.split('//')[1]
-} else {
-  _scokethost = ''
-}
+_scokethost = globalUrl(hostname, localHost).split('//')[1] || location.hostname
+// var result = localHost.some((i) => {
+//   return hostname.indexOf(i) > -1
+// })
+// if (result) {
+//   console.log(process.env.VUE_APP_URL)
+//   _scokethost = process.env.VUE_APP_URL.split('//')[1]
+// } else {
+//   _scokethost = ''
+// }
 console.log(_scokethost)
 // eslint-disable-next-line no-unused-vars
 var Websocket = {

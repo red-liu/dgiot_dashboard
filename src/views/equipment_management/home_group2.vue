@@ -331,7 +331,25 @@
                   class="el-icon-plus avatar-uploader-icon"
                   @click="uploadCkick"
                 />
-                <upload ref="uploadFinish" @fileInfo="fileInfo" />
+                <form
+                  ref="uploadform"
+                  method="POST"
+                  enctype="multipart/form-data"
+                  style="position: absolute"
+                >
+                  <input
+                    type="file"
+                    style="
+                      position: relative;
+                      z-index: 5;
+                      width: 100px;
+                      height: 100px;
+                      cursor: pointer;
+                      opacity: 0;
+                    "
+                    @change="upload($event)"
+                  />
+                </form>
                 <el-button
                   v-if="imageUrl"
                   type="danger"
@@ -341,6 +359,7 @@
                 >
                   删除
                 </el-button>
+                <br />
               </el-form-item>
               <el-form-item
                 :label="$translateTitle('developer.describe')"
@@ -602,7 +621,7 @@
                   style="width: 100%"
                 >
                   <el-option
-                    v-for="(item, index) in ['normal', 'modbus']"
+                    v-for="(item, index) in ['normal', 'modbus', 'mingcheng']"
                     :key="index"
                     :label="item"
                     :value="item"
@@ -611,20 +630,30 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row v-show="tempparams.protocol == 'modbus'" :gutter="24">
-            <el-col :span="12">
+          <el-row :gutter="24">
+            <el-col v-show="tempparams.protocol == 'modbus'" :span="12">
               <el-form-item label="从机地址">
-                <el-input v-model="tempparams.slaveid" auto-complete="off" />
+                <el-input v-model="tempparams.slaveid" placeholder="从机地址" />
               </el-form-item>
             </el-col>
-            <el-col :span="12">
+            <el-col
+              v-show="
+                tempparams.protocol == 'modbus' ||
+                tempparams.protocol == 'mingcheng'
+              "
+              :span="12"
+            >
               <el-form-item label="数据地址" prop="address">
                 <el-input v-model="tempparams.address" placeholder="数据地址" />
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row v-show="tempparams.protocol == 'modbus'" :gutter="24">
-            <el-col :span="12">
+            <el-col
+              v-show="
+                tempparams.protocol == 'modbus' ||
+                tempparams.protocol == 'mingcheng'
+              "
+              :span="12"
+            >
               <el-form-item label="数据长度">
                 <el-input
                   v-model.number="tempparams.bytes"
@@ -876,7 +905,7 @@
   import Category from '@/api/Mock/Category'
   import { uuid } from '@/utils'
   export default {
-    components: { vueJsonEditor, Upload },
+    components: { vueJsonEditor },
     data() {
       return {
         moduleTitle: this.$translateTitle('product.createproduct'),
@@ -1155,7 +1184,7 @@
       },
       closeDict() {
         this.edit_dict_temp_dialog = !this.edit_dict_temp_dialog
-        this.$refs.tempparams.resetFields()
+        // this.$refs.tempparams.resetFields()
       },
       onJsonSave(formName) {
         // 点击保存触发

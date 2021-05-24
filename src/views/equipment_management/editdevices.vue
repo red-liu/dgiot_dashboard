@@ -255,16 +255,15 @@
                       {{ item.dataType.specs.unit }}
                     </span>
                   </div>
-
                   <div
                     v-if="
-                      item.dataType.type == 'enmu' ||
+                      item.dataType.type == 'enum' ||
                       item.dataType.type == 'bool'
                     "
                     :title="item.dataType.type"
                     class="stla"
                   >
-                    <span>{{ item.value | filterVal }}</span>
+                    <!--                    <span>{{ item.value | filterVal }}</span>-->
                     <span>{{ item.dataType.specs[item.value] }}</span>
                   </div>
 
@@ -289,7 +288,7 @@
                         <span>{{ key.name + ':' }}ee</span>
                         <span>{{ key.value }}aa</span>
                         <span v-if="key.dataType.specs.unit">
-                          {{ key.dataType.specs.unit }}rr
+                          {{ key.dataType.specs.unit }}
                         </span>
                       </div>
                       <div
@@ -753,6 +752,7 @@
   import LineChart from '../dashboard/admin/components/LineChart'
   import { returnLogin } from '@/utils/return'
   import Instruct from '../devicemanage/instruct_manage'
+
   var dataobj = {}
   export default {
     components: {

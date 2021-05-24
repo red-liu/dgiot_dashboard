@@ -1513,7 +1513,7 @@
         const parsms = {
           count: 'objectId',
           order: '-updatedAt',
-          keys: 'updatedAt,category,desc,name,devType,netType,nodeType,icon',
+          keys: 'name',
           where: {
             category: 'IotHub',
           },

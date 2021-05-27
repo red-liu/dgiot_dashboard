@@ -483,11 +483,6 @@
                   >
                     {{ $translateTitle('product.online') }}
                   </span>
-                  <!-- <el-tooltip
-                    v-if="scope.row.status == 'ONLINE'"
-                    content="设备已经上线"
-                    placement="top"
-                  > -->
                   <el-tooltip
                     v-if="scope.row.status == 'ONLINE'"
                     :content="$translateTitle('equipment.thedeviceisonline')"
@@ -495,18 +490,12 @@
                   >
                     <i class="el-icon-question" />
                   </el-tooltip>
-
                   <span
                     v-if="scope.row.status == 'OFFLINE'"
                     :class="scope.row.status"
                   >
                     {{ $translateTitle('product.offline') }}
                   </span>
-                  <!-- <el-tooltip
-                    v-if="scope.row.status == 'OFFLINE'"
-                    content="设备已经离线"
-                    placement="top"
-                  > -->
                   <el-tooltip
                     v-if="scope.row.status == 'OFFLINE'"
                     :content="$translateTitle('equipment.thedeviceisoffline')"
@@ -592,7 +581,7 @@
               </el-table-column>
               <template v-for="(item, index) in dialogtempconfig">
                 <el-table-column
-                  v-if="item.type == 'Boolean'"
+                  v-if="item.type == 'bool'"
                   :key="index"
                   align="center"
                   :label="item.name"
@@ -610,19 +599,30 @@
                   </template>
                 </el-table-column>
                 <el-table-column
-                  v-else-if="item.type == 'Enum'"
+                  v-else-if="item.type == 'enum'"
                   :key="index"
                   align="center"
                   :label="item.name"
-                  :prop="item.identifier"
-                />
+                >
+                  <template slot-scope="scope">
+                    <span>
+                      {{ item.struct[scope.row[item.identifier]] }}
+                    </span>
+                  </template>
+                </el-table-column>
                 <el-table-column
                   v-else
                   :key="index"
                   align="center"
                   :label="item.name"
                   :prop="item.identifier"
-                />
+                >
+                  <template slot-scope="scope">
+                    <span>
+                      {{ scope.row[item.identifier] }} {{ item.unit }}
+                    </span>
+                  </template>
+                </el-table-column>
               </template>
               <el-table-column
                 align="center"
@@ -769,7 +769,6 @@
                       <el-input
                         v-model="deviceform.devaddr"
                         :disabled="equipmentEditor == '编辑'"
-                        :readonly="equipmentEditor == '编辑'"
                       />
                     </el-form-item>
                   </el-col>
@@ -781,7 +780,6 @@
                       <el-select
                         v-model="deviceform.productName"
                         :disabled="equipmentEditor == '编辑'"
-                        :readonly="equipmentEditor == '编辑'"
                         :placeholder="$translateTitle('equipment.entername')"
                         @change="selectChange"
                       >
@@ -861,39 +859,52 @@
                       :label="item.name"
                       :prop="item.identifier"
                       :required="item.required"
-                      :readonly="item.readonly"
                     >
                       <el-select
-                        v-if="item.type == 'Boolean'"
+                        v-if="item.type == 'bool'"
                         v-model="deviceform[item.identifier]"
                         style="width: 100%"
                         class="notauto"
+                        :disabled="item.readonly"
                       >
-                        <!-- <el-option :value="true" label="是" /> -->
                         <el-option
                           :value="true"
                           :label="$translateTitle('product.yes')"
                         />
-                        <!-- <el-option :value="false" label="否" /> -->
                         <el-option
                           :value="false"
                           :label="$translateTitle('product.no')"
                         />
                       </el-select>
                       <el-select
-                        v-else-if="item.type == 'Enum'"
+                        v-else-if="item.type == 'enum'"
                         v-model="deviceform[item.identifier]"
                         style="width: 100%"
                         class="notauto"
+                        :disabled="item.readonly"
                       >
                         <el-option
                           v-for="(spec, index1) in item.specs"
                           :key="index1"
                           :label="spec.attributevalue"
-                          :value="spec.attributevalue"
+                          :value="spec.attribute"
                         />
                       </el-select>
-                      <el-input v-else v-model="deviceform[item.identifier]" />
+                      <!--                      <el-input-->
+                      <!--                        v-else-if="item.unit != ''"-->
+                      <!--                        v-model="deviceform[item.identifier]"-->
+                      <!--                        :disabled="item.readonly"-->
+                      <!--                      />-->
+                      <el-input
+                        v-else-if="item.readonly"
+                        :value="deviceform[item.identifier] + item.unit"
+                        :disabled="item.readonly"
+                      />
+                      <el-input
+                        v-else
+                        v-model="deviceform[item.identifier]"
+                        :disabled="item.readonly"
+                      />
                     </el-form-item>
                   </el-col>
                   <el-col :span="24">
@@ -1105,8 +1116,6 @@
           status: '',
           isEnable: '',
           brand: '',
-          auth: '',
-          yysId: '',
         },
         yysSelect: [],
         rules: {
@@ -1835,7 +1844,7 @@
           if (this.equvalue != 0) {
             this.changeproduct = false
             this.deviceform.productName = this.equvalue
-            this.selectChange(this.equvalue)
+            this.selectChange(this.equvalue, 'add')
           } else {
             this.deviceform.productName = ''
           }
@@ -1868,65 +1877,42 @@
         }
         scope._self.$refs[`popover-${scope.$index}`].doClose()
       },
-      /* device添加表单提交*/
+      /* device表单修改*/
       async editorDevice(row) {
-        this.arrlist = []
-        this.selectChange(row.product.objectId)
-        const {
-          devaddr,
-          detail,
-          ip,
-          isEnable,
-          name,
-          objectId,
-          product,
-          status,
-          updatedAt,
-          basedata = {
-            auth: '',
-            yysId: '',
-          },
-          location = {
-            latitude: '30.307102168533543',
-            longitude: '120.1703918503909',
-          },
-        } = row
-        // 这里再去查询tag
-        // console.log(row)
+        this.selectChange(row.product.objectId, 'edit')
         this.deviceform = {}
-        this.deviceid = objectId
+        // 这里再去查询tag
+        console.log('row', row)
+        this.deviceid = row.objectId
         this.devicedialogVisible = true
         this.deviceform = {
-          devaddr: devaddr,
-          name: name,
-          assetNum: detail.assetNum,
-          devModel: detail.devModel,
-          desc: detail.desc,
-          productid: product.objectId,
-          brand: detail.brand,
-          productName: product.objectId,
-          status: status,
-          isEnable: isEnable,
-          address: detail.address,
-          auth: basedata.auth,
-          yysId: basedata.yysId,
+          devaddr: row.devaddr,
+          name: row.name,
+          assetNum: row.detail.assetNum,
+          devModel: row.detail.devModel,
+          desc: row.detail.desc,
+          productid: row.product.objectId,
+          brand: row.detail.brand,
+          productName: row.product.objectId,
+          status: row.status,
+          isEnable: row.isEnable,
+          address: row.detail.address,
         }
-        for (var key in basedata) {
-          this.deviceform[key] = basedata[key]
+        for (var key in row.basedata) {
+          this.$set(this.deviceform, key, row.basedata[key])
         }
+        console.log('this.deviceform', this.deviceform)
         this.bmapform = {
-          address: detail.address,
+          address: row.detail.address,
         }
-
         this.center = {
           lat: location.latitude,
           lng: location.longitude,
         }
-
         // row.location.latitude +  row.location.longitude
         // this.addresspointer = row.latitude + ',' + row.longitude
         this.addresspointer =
-          detail == undefined
+          row.detail == undefined
             ? ''
             : location == undefined
             ? ''
@@ -1935,7 +1921,6 @@
             : location.longitude
         this.equipmentEditor = '编辑'
         // this.rolesSelect(row.productid)
-
         // this.deviceform.batchId = row.detail.batchId.batch_name
       },
       getBatch() {
@@ -1959,7 +1944,7 @@
       },
       async updateDevice(params) {
         const res = await this.$update_object('Device', this.deviceid, params)
-        if (res.updatedAt) {
+        if (res.updatedAt || res.devaddr) {
           this.initQuery('设备更新成功', 'success')
         } else {
           this.$message({
@@ -1970,7 +1955,6 @@
       },
       async createDevice(params) {
         const res = await this.$create_object('Device', params)
-
         if (res.objectId) {
           this.initQuery('设备创建成功', 'success')
         } else {
@@ -1980,47 +1964,51 @@
           })
         }
       },
-      selectChange(objectId) {
+      selectChange(objectId, flag) {
+        this.arrlist = []
         getProduct(objectId).then((res) => {
           const { config = { basedate: {} } } = res
           if (config.basedate.params.length > 0) {
             this.arrlist = config.basedate.params
-            this.arrlist.map((item) => {
-              if (item.type == 'Boolean') {
-                this.$set(this.deviceform, item.identifier, item.default)
-              } else if (item.type == 'Enum') {
-                this.$set(
-                  this.deviceform,
-                  item.identifier,
-                  item.specs[0].attributevalue
-                )
-              } else {
-                if (item.default) {
+            if (flag == 'add') {
+              this.arrlist.map((item) => {
+                if (item.type == 'bool') {
                   this.$set(this.deviceform, item.identifier, item.default)
+                } else if (item.type == 'enum') {
+                  this.$set(
+                    this.deviceform,
+                    item.identifier,
+                    item.specs[0].attribute
+                  )
                 } else {
-                  this.$set(this.deviceform, item.identifier, '')
+                  if (item.default) {
+                    this.$set(this.deviceform, item.identifier, item.default)
+                  } else {
+                    this.$set(this.deviceform, item.identifier, '')
+                  }
                 }
-              }
-              if (item.required) {
-                if (item.type == 'Boolean') {
-                  this.rules[item.identifier] = [
-                    {
-                      required: true,
-                      message: '请选择' + item.name,
-                      trigger: 'change',
-                    },
-                  ]
-                } else {
-                  this.rules[item.identifier] = [
-                    {
-                      required: true,
-                      message: '请输入' + item.name,
-                      trigger: 'blur',
-                    },
-                  ]
+                if (item.required) {
+                  if (item.type == 'bool') {
+                    this.rules[item.identifier] = [
+                      {
+                        required: true,
+                        message: '请选择' + item.name,
+                        trigger: 'change',
+                      },
+                    ]
+                  } else {
+                    this.rules[item.identifier] = [
+                      {
+                        required: true,
+                        message: '请输入' + item.name,
+                        trigger: 'blur',
+                      },
+                    ]
+                  }
                 }
-              }
-            })
+              })
+            }
+            console.log('afd', this.arrlist)
           }
         })
       },

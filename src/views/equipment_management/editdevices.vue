@@ -266,7 +266,6 @@
                     <!--                    <span>{{ item.value | filterVal }}</span>-->
                     <span>{{ item.dataType.specs[item.value] }}</span>
                   </div>
-
                   <div
                     v-if="item.dataType.type == 'struct'"
                     :title="item.dataType.type"

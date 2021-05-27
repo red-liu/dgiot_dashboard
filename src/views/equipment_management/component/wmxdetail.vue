@@ -464,7 +464,7 @@
                     filterable
                     allow-create
                     default-first-option
-                    placeholder="请选择"
+                    placeholder="请选择生效轮次"
                   >
                     <el-option
                       v-for="item in options"
@@ -854,9 +854,9 @@
       return {
         sizeForm: this.sizeForm1,
         options: [
+          { value: 'all', label: '全部' },
           { value: 'first', label: '第一轮' },
           { value: 'last', label: '最后一轮' },
-          { value: 'all', label: '全部' },
         ],
         wmxData: [],
         allunit: [],

@@ -2423,6 +2423,7 @@
           string: '',
           date: 'String类型的UTC时间戳 (毫秒)',
           specs: {},
+          round: 'all',
           struct: [
             {
               attribute: '',
@@ -3037,8 +3038,8 @@
         var obj = {
           name: sizeForm.name,
           dataForm: {
-            Round: sizeForm.Round,
-            Order: sizeForm.Order,
+            round: sizeForm.round,
+            order: sizeForm.order,
             data: sizeForm.dinumber,
             address: sizeForm.dis,
             quantity: sizeForm.dinumber,
@@ -3181,6 +3182,7 @@
             unit: this.$objGet(rowData, 'dataType.specs.unit'),
             // : rowData.dataForm.
             dis: this.$objGet(rowData, 'dataForm.address'),
+            round: this.$objGet(rowData, 'dataForm.round'),
             dinumber: this.$objGet(rowData, 'dataForm.quantity'),
             rate: this.$objGet(rowData, 'dataForm.rate'),
             offset: this.$objGet(rowData, 'dataForm.offset'),
@@ -3211,7 +3213,7 @@
             startnumber: this.$objGet(rowData, 'dataType.specs.min'),
             step: this.$objGet(rowData, 'dataType.specs.step'),
             unit: this.$objGet(rowData, 'dataType.specs.unit'),
-            // : rowData.dataForm.
+            round: this.$objGet(rowData, 'dataForm.round'),
             dis: this.$objGet(rowData, 'dataForm.address'),
             dinumber: this.$objGet(rowData, 'dataForm.quantity'),
             rate: this.$objGet(rowData, 'dataForm.rate'),
@@ -3247,7 +3249,7 @@
             startnumber: this.$objGet(rowData, 'dataType.specs.min'),
             step: this.$objGet(rowData, 'dataType.specs.step'),
             unit: this.$objGet(rowData, 'dataType.specs.unit'),
-            // : rowData.dataForm.
+            round: this.$objGet(rowData, 'dataForm.round'),
             dis: this.$objGet(rowData, 'dataForm.address'),
             dinumber: this.$objGet(rowData, 'dataForm.quantity'),
             rate: this.$objGet(rowData, 'dataForm.rate'),
@@ -3275,7 +3277,7 @@
             startnumber: this.$objGet(rowData, 'dataType.specs.min'),
             step: this.$objGet(rowData, 'dataType.specs.step'),
             unit: this.$objGet(rowData, 'dataType.specs.unit'),
-            // : rowData.dataForm.
+            round: this.$objGet(rowData, 'dataForm.round'),
             dis: this.$objGet(rowData, 'dataForm.address'),
             dinumber: this.$objGet(rowData, 'dataForm.quantity'),
             rate: this.$objGet(rowData, 'dataForm.rate'),
@@ -3307,7 +3309,7 @@
             startnumber: this.$objGet(rowData, 'dataType.specs.min'),
             step: this.$objGet(rowData, 'dataType.specs.step'),
             unit: this.$objGet(rowData, 'dataType.specs.unit'),
-            // : rowData.dataForm.
+            round: this.$objGet(rowData, 'dataForm.round'),
             dis: this.$objGet(rowData, 'dataForm.address'),
             dinumber: this.$objGet(rowData, 'dataForm.quantity'),
             rate: this.$objGet(rowData, 'dataForm.rate'),
@@ -3336,7 +3338,7 @@
             startnumber: this.$objGet(rowData, 'dataType.specs.min'),
             step: this.$objGet(rowData, 'dataType.specs.step'),
             unit: this.$objGet(rowData, 'dataType.specs.unit'),
-            // : rowData.dataForm.
+            round: this.$objGet(rowData, 'dataForm.round'),
             dis: this.$objGet(rowData, 'dataForm.address'),
             dinumber: this.$objGet(rowData, 'dataForm.quantity'),
             rate: this.$objGet(rowData, 'dataForm.rate'),

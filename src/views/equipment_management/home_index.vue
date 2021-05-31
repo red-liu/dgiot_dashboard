@@ -807,10 +807,22 @@
               <baidu-map
                 :scroll-wheel-zoom="true"
                 class="map"
-                center="杭州"
+                :center="{ lng: 116.404, lat: 39.915 }"
                 style="height: 57vh"
-                :zoom="15"
+                :zoom="sizeZoom"
               >
+                <bm-control>
+                  <el-button @click="sizeZoom = 19">缩放至最大</el-button>
+                  <el-button @click="sizeZoom = 10">还原</el-button>
+                  <el-button @click="sizeZoom = 3">缩放至最小</el-button>
+                  <bm-panorama :offset="{ width: 260, height: 0 }" />
+                  <bm-overview-map :is-open="true" />
+                  <bm-scale :offset="{ width: 200, height: 0 }" />
+                  <bm-map-type
+                    :map-types="['BMAP_HYBRID_MAP', 'BMAP_NORMAL_MAP']"
+                    :offset="{ width: 180, height: 0 }"
+                  />
+                </bm-control>
                 <bm-marker
                   v-for="item in tableData"
                   :key="item.objectId"
@@ -823,23 +835,16 @@
                   animation="BMAP_ANIMATION_BOUNCE"
                 >
                   <bm-label
-                    v-for="i in tableData"
-                    v-show="item.location.longitude"
-                    :key="i.objectId + 'name'"
-                    :content="i.name"
+                    :content="item.name"
                     :label-style="{ color: 'red', fontSize: '24px' }"
                     :offset="{ width: -35, height: 30 }"
-                    @click="deviceToDetail(i)"
+                    @click="deviceToDetail(item)"
                   />
                 </bm-marker>
-                <bm-local-search
-                  :keyword="bmapform.keyword"
-                  :auto-viewport="true"
-                  :location="bmapform.location"
-                  zoom="12.8"
-                  style="display: none"
+                <bm-city-list
+                  anchor="BMAP_ANCHOR_TOP_RIGHT"
+                  :offset="{ width: 100, height: 0 }"
                 />
-                <bm-city-list anchor="BMAP_ANCHOR_TOP_RIGHT" />
                 <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
                 <bm-geolocation
                   :show-address-bar="true"
@@ -1157,6 +1162,11 @@
     BmCityList,
     BmMarker,
     BmLabel,
+    BmControl,
+    BmPanorama,
+    BmOverviewMap,
+    BmMapType,
+    BmScale,
   } from 'vue-baidu-map'
   import { returnLogin } from '@/utils/return'
   import { querycompanyDevice, putDevice } from '@/api/Device'
@@ -1166,6 +1176,11 @@
   var pcdata
   export default {
     components: {
+      BmScale,
+      BmMapType,
+      BmOverviewMap,
+      BmPanorama,
+      BmControl,
       BmLabel,
       BaiduMap,
       BmLocalSearch,
@@ -1189,6 +1204,7 @@
       }
       return {
         isALL: true,
+        sizeZoom: 10,
         activeName: 'first',
         mapDialog: false,
         dialogtempconfig: [],

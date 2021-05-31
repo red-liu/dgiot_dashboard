@@ -39,6 +39,7 @@
 * feat: 删除多余文件 ([6a3eb9d](https://github.com/dgiot/dgiot_dashboard/commit/6a3eb9d))
 * feat: 删除多余文件 ([7bf72e5](https://github.com/dgiot/dgiot_dashboard/commit/7bf72e5))
 * feat: 上传个人信息 ([f03bf2b](https://github.com/dgiot/dgiot_dashboard/commit/f03bf2b))
+* feat: 设备管理地图 ([14a98d6](https://github.com/dgiot/dgiot_dashboard/commit/14a98d6))
 * feat: 设备云 ([687142a](https://github.com/dgiot/dgiot_dashboard/commit/687142a))
 * feat: 设备字段 ([0867e12](https://github.com/dgiot/dgiot_dashboard/commit/0867e12))
 * feat: 设置图片 ([577c74b](https://github.com/dgiot/dgiot_dashboard/commit/577c74b))

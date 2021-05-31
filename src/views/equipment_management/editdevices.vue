@@ -749,7 +749,6 @@
   import { getTdDevice } from '@/api/Device/index.js'
   import { utc2beijing, timestampToTime } from '@/utils/index'
   import LineChart from '../dashboard/admin/components/LineChart'
-  import { returnLogin } from '@/utils/return'
   import Instruct from '../devicemanage/instruct_manage'
 
   var dataobj = {}

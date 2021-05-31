@@ -100,6 +100,7 @@ export default {
     },
     route: {},
     equipment: {
+      location: '位置',
       number: '编号',
       Offtheshelf: '下架',
       Updatetemplate: '更新模版',

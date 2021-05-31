@@ -718,6 +718,7 @@ export default {
     },
     equipment: {
       number: 'Number',
+      location: 'location',
       Offtheshelf: 'Off the shelf',
       Updatetemplate: 'Update template',
       defaultvalue: 'Default value',

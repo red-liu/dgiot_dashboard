@@ -29,6 +29,30 @@
           </el-tree>
         </div>
       </el-dialog>
+      <el-dialog :visible.sync="mapDialog" top="5vh" width="80vh">
+        <baidu-map
+          :center="center"
+          :zoom="zoom"
+          :scroll-wheel-zoom="true"
+          :map-click="false"
+          style="height: 80vh"
+          @ready="handler"
+          @click="mapClick"
+        >
+          <bm-marker
+            :position="center"
+            :dragging="true"
+            animation="BMAP_ANIMATION_BOUNCE"
+          >
+            <bm-label
+              :content="deviceId"
+              :label-style="{ color: 'red', fontSize: '12px' }"
+              :offset="{ width: -25, height: 30 }"
+            />
+          </bm-marker>
+          <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
+        </baidu-map>
+      </el-dialog>
     </div>
     <div class="equtabs">
       <!--tabs第一个标签页-->
@@ -360,7 +384,7 @@
                 </template>
               </el-table-column>
               <el-table-column
-                width="300"
+                width="360"
                 fixed="right"
                 :label="$translateTitle('developer.operation')"
                 align="center"
@@ -371,9 +395,19 @@
                   <el-link
                     :underline="false"
                     type="primary"
+                    style="margin: 0 10px"
                     @click="showTree(scope.row.objectId, scope.row.Company)"
                   >
                     {{ $translateTitle('equipment.move') }}
+                  </el-link>
+                  <vab-icon style="color: #1890ff" icon="map-pin-range-line" />
+                  <el-link
+                    :underline="false"
+                    type="primary"
+                    :disabled="!scope.row.location"
+                    @click="showMap(scope.row.location, scope.row.objectId)"
+                  >
+                    {{ $translateTitle('equipment.location') }}
                   </el-link>
                   <el-link
                     v-if="Company != '云寓智慧公寓平台'"
@@ -1032,6 +1066,8 @@
     BmLocalSearch,
     BmGeolocation,
     BmCityList,
+    BmMarker,
+    BmLabel,
   } from 'vue-baidu-map'
   import { returnLogin } from '@/utils/return'
   import { querycompanyDevice, putDevice } from '@/api/Device'
@@ -1041,11 +1077,13 @@
   var pcdata
   export default {
     components: {
+      BmLabel,
       BaiduMap,
       BmLocalSearch,
       BmNavigation,
       BmGeolocation,
       BmCityList,
+      BmMarker,
     },
     data() {
       const CheckDevaddr = function (rule, value, callback) {
@@ -1062,6 +1100,7 @@
       }
       return {
         isALL: true,
+        mapDialog: false,
         dialogtempconfig: [],
         arrlist: [],
         deviceId: '',
@@ -1284,6 +1323,18 @@
         this.deviceId = objectId
         this.deciceCompany = acl
         this.popoverVisible = !this.popoverVisible
+      },
+      // 显示设备位置
+      showMap(location, objectId) {
+        this.deviceId = objectId
+        const { latitude = 0, longitude = 0 } = location
+        if (Number(latitude) && Number(longitude)) {
+          this.mapDialog = true
+          this.center.lng = longitude
+          this.center.lat = latitude
+        } else {
+          this.$message.error('位置信息获取失败')
+        }
       },
       // 迁移设备
       transferAcl(data) {

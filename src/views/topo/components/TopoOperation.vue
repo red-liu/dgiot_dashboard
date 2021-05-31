@@ -75,6 +75,7 @@
   import { get_wmxdetail } from '@/api/Topo'
 
   import vueJsonEditor from 'vue-json-editor'
+
   export default {
     name: 'Operation',
     components: { vueJsonEditor, wmxdetail },
@@ -94,9 +95,10 @@
     },
     data() {
       return {
+        properties: [],
         wmxSituation: '',
         wmxdialogVisible: false,
-        sizeForm: { name: '1', identifier: '', type: 'int' },
+        sizeForm: {},
         disableLable: ['id'],
         hideLable: ['draggable'],
         ShowItem: ['container'],
@@ -163,10 +165,52 @@
           attributevalue: '',
         })
       },
+      // 重置
+      reset() {
+        this.sizeForm = {
+          name: '',
+          identifier: '',
+          strategy: '20',
+          resource: 1,
+          dis: '',
+          dinumber: '528590',
+          type: 'int',
+          startnumber: '',
+          endnumber: '',
+          step: '',
+          true: '',
+          truevalue: 1,
+          false: '',
+          falsevalue: 0,
+          isread: 'r',
+          unit: '',
+          string: '',
+          date: 'String类型的UTC时间戳 (毫秒)',
+          specs: {},
+          round: 'all',
+          struct: [
+            {
+              attribute: '',
+              attributevalue: '',
+            },
+          ],
+          rate: 1,
+          offset: 0,
+          byteorder: 'big',
+          protocol: 'normal',
+          operatetype: 'holdingRegister',
+          originaltype: 'int16',
+          slaveid: 256,
+          collection: '%s',
+          control: '%q',
+          nobound: [],
+        }
+      },
       handleModule(e) {
         this.wmxdialogVisible = !e
         const { thing = { properties: [] } } = this.productconfig
         let properties = thing.properties
+        this.properties = properties
         console.log(properties)
         console.log(this.Shapeconfig)
         if (properties.length) {
@@ -174,22 +218,267 @@
             return e.dataForm.address === this.Shapeconfig.attrs.id
           })
           if (_fortype) {
-            properties.forEach((item) => {
-              if (item.dataForm.address === this.Shapeconfig.attrs.id) {
-                console.log(`物模型存在这个属性`, item)
-                this.wmxData = item
-                this.sizeForm.dis = item.attrs.id
+            properties.forEach((rowData) => {
+              this.wmxSituation == '修改'
+              if (rowData.identifier === this.Shapeconfig.attrs.id) {
+                console.log(`物模型存在这个属性`, rowData)
+                this.reset()
+                // this.wmxData = item
+                var obj = {}
+                // 提交之前需要先判断类型
+                if (
+                  ['float', 'double', 'int'].indexOf(rowData.dataType.type) !=
+                  -1
+                ) {
+                  obj = {
+                    name: rowData.name,
+                    // rowData.dataType
+                    type: rowData.dataType.type,
+                    endnumber: this.$objGet(rowData, 'dataType.specs.max'),
+                    startnumber: this.$objGet(rowData, 'dataType.specs.min'),
+                    step: this.$objGet(rowData, 'dataType.specs.step'),
+                    unit: this.$objGet(rowData, 'dataType.specs.unit'),
+                    // : rowData.dataForm.
+                    dis: this.$objGet(rowData, 'dataForm.address'),
+                    round: this.$objGet(rowData, 'dataForm.round'),
+                    dinumber: this.$objGet(rowData, 'dataForm.quantity'),
+                    rate: this.$objGet(rowData, 'dataForm.rate'),
+                    offset: this.$objGet(rowData, 'dataForm.offset'),
+                    byteorder: this.$objGet(rowData, 'dataForm.byteorder'),
+                    protocol: this.$objGet(rowData, 'dataForm.protocol'),
+                    operatetype: this.$objGet(rowData, 'dataForm.operatetype'),
+                    originaltype: this.$objGet(
+                      rowData,
+                      'dataForm.originaltype'
+                    ),
+                    slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
+                    collection: '',
+                    control: '',
+                    strategy: '',
+                    required: true,
+                    isread: rowData.accessMode,
+                    identifier: rowData.identifier,
+                  }
+                  if (rowData.dataForm) {
+                    obj.collection = rowData.dataForm.collection
+                    obj.control = rowData.dataForm.control
+                    obj.strategy = rowData.dataForm.strategy
+                  }
+                } else if (rowData.dataType.type == 'bool') {
+                  obj = {
+                    name: rowData.name,
+                    type: rowData.dataType.type,
+                    true: rowData.dataType.specs[1],
+                    false: rowData.dataType.specs[0],
+                    // rowData.dataForm.
+                    startnumber: this.$objGet(rowData, 'dataType.specs.min'),
+                    step: this.$objGet(rowData, 'dataType.specs.step'),
+                    unit: this.$objGet(rowData, 'dataType.specs.unit'),
+                    round: this.$objGet(rowData, 'dataForm.round'),
+                    dis: this.$objGet(rowData, 'dataForm.address'),
+                    dinumber: this.$objGet(rowData, 'dataForm.quantity'),
+                    rate: this.$objGet(rowData, 'dataForm.rate'),
+                    offset: this.$objGet(rowData, 'dataForm.offset'),
+                    byteorder: this.$objGet(rowData, 'dataForm.byteorder'),
+                    protocol: this.$objGet(rowData, 'dataForm.protocol'),
+                    operatetype: this.$objGet(rowData, 'dataForm.operatetype'),
+                    originaltype: this.$objGet(
+                      rowData,
+                      'dataForm.originaltype'
+                    ),
+                    slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
+                    required: false,
+                    isread: rowData.accessMode,
+                    identifier: rowData.identifier,
+                    collection:
+                      rowData.dataForm == undefined
+                        ? ''
+                        : rowData.dataForm.collection,
+                    control:
+                      rowData.dataForm == undefined
+                        ? ''
+                        : rowData.dataForm.control,
+                    strategy:
+                      rowData.dataForm == undefined
+                        ? ''
+                        : rowData.dataForm.strategy,
+                  }
+                } else if (rowData.dataType.type == 'enum') {
+                  var structArray = []
+                  for (const key in rowData.dataType.specs) {
+                    structArray.push({
+                      attribute: key,
+                      attributevalue: rowData.dataType.specs[key],
+                    })
+                  }
+                  obj = {
+                    name: rowData.name,
+                    type: rowData.dataType.type,
+                    specs: rowData.dataType.specs,
+                    struct: structArray,
+                    startnumber: this.$objGet(rowData, 'dataType.specs.min'),
+                    step: this.$objGet(rowData, 'dataType.specs.step'),
+                    unit: this.$objGet(rowData, 'dataType.specs.unit'),
+                    round: this.$objGet(rowData, 'dataForm.round'),
+                    dis: this.$objGet(rowData, 'dataForm.address'),
+                    dinumber: this.$objGet(rowData, 'dataForm.quantity'),
+                    rate: this.$objGet(rowData, 'dataForm.rate'),
+                    offset: this.$objGet(rowData, 'dataForm.offset'),
+                    byteorder: this.$objGet(rowData, 'dataForm.byteorder'),
+                    protocol: this.$objGet(rowData, 'dataForm.protocol'),
+                    operatetype: this.$objGet(rowData, 'dataForm.operatetype'),
+                    originaltype: this.$objGet(
+                      rowData,
+                      'dataForm.originaltype'
+                    ),
+                    slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
+                    required: true,
+                    isread: rowData.accessMode,
+                    identifier: rowData.identifier,
+                    collection:
+                      rowData.dataForm == undefined
+                        ? ''
+                        : rowData.dataForm.collection,
+                    control:
+                      rowData.dataForm == undefined
+                        ? ''
+                        : rowData.dataForm.control,
+                    strategy:
+                      rowData.dataForm == undefined
+                        ? ''
+                        : rowData.dataForm.strategy,
+                  }
+                } else if (rowData.dataType.type == 'struct') {
+                  obj = {
+                    name: rowData.name,
+                    type: rowData.dataType.type,
+                    struct: rowData.dataType.specs,
+                    startnumber: this.$objGet(rowData, 'dataType.specs.min'),
+                    step: this.$objGet(rowData, 'dataType.specs.step'),
+                    unit: this.$objGet(rowData, 'dataType.specs.unit'),
+                    round: this.$objGet(rowData, 'dataForm.round'),
+                    dis: this.$objGet(rowData, 'dataForm.address'),
+                    dinumber: this.$objGet(rowData, 'dataForm.quantity'),
+                    rate: this.$objGet(rowData, 'dataForm.rate'),
+                    offset: this.$objGet(rowData, 'dataForm.offset'),
+                    byteorder: this.$objGet(rowData, 'dataForm.byteorder'),
+                    protocol: this.$objGet(rowData, 'dataForm.protocol'),
+                    operatetype: this.$objGet(rowData, 'dataForm.operatetype'),
+                    originaltype: this.$objGet(
+                      rowData,
+                      'dataForm.originaltype'
+                    ),
+                    slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
+                    required: true,
+                    isread: rowData.accessMode,
+                    collection:
+                      rowData.dataForm == undefined
+                        ? ''
+                        : rowData.dataForm.collection,
+                    control:
+                      rowData.dataForm == undefined
+                        ? ''
+                        : rowData.dataForm.control,
+                    identifier:
+                      rowData.dataForm == undefined ? '' : rowData.identifier,
+                    strategy:
+                      rowData.dataForm == undefined
+                        ? ''
+                        : rowData.dataForm.strategy,
+                  }
+                } else if (rowData.dataType.type == 'string') {
+                  obj = {
+                    name: rowData.name,
+                    type: rowData.dataType.type,
+                    collection:
+                      rowData.dataForm == undefined
+                        ? ''
+                        : rowData.dataForm.collection,
+                    control:
+                      rowData.dataForm == undefined
+                        ? ''
+                        : rowData.dataForm.control,
+                    string: rowData.dataType.size,
+                    startnumber: this.$objGet(rowData, 'dataType.specs.min'),
+                    step: this.$objGet(rowData, 'dataType.specs.step'),
+                    unit: this.$objGet(rowData, 'dataType.specs.unit'),
+                    round: this.$objGet(rowData, 'dataForm.round'),
+                    dis: this.$objGet(rowData, 'dataForm.address'),
+                    dinumber: this.$objGet(rowData, 'dataForm.quantity'),
+                    rate: this.$objGet(rowData, 'dataForm.rate'),
+                    offset: this.$objGet(rowData, 'dataForm.offset'),
+                    byteorder: this.$objGet(rowData, 'dataForm.byteorder'),
+                    protocol: this.$objGet(rowData, 'dataForm.protocol'),
+                    operatetype: this.$objGet(rowData, 'dataForm.operatetype'),
+                    originaltype: this.$objGet(
+                      rowData,
+                      'dataForm.originaltype'
+                    ),
+                    slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
+                    required: true,
+                    isread: rowData.accessMode,
+                    identifier: rowData.identifier,
+                    strategy:
+                      rowData.dataForm == undefined
+                        ? ''
+                        : rowData.dataForm.strategy,
+                  }
+                } else if (rowData.dataType.type == 'date') {
+                  obj = {
+                    name: rowData.name,
+                    type: rowData.dataType.type,
+                    collection:
+                      rowData.dataForm == undefined
+                        ? ''
+                        : rowData.dataForm.collection,
+                    control:
+                      rowData.dataForm == undefined
+                        ? ''
+                        : rowData.dataForm.control,
+                    strategy:
+                      rowData.dataForm == undefined
+                        ? ''
+                        : rowData.dataForm.strategy,
+                    startnumber: this.$objGet(rowData, 'dataType.specs.min'),
+                    step: this.$objGet(rowData, 'dataType.specs.step'),
+                    unit: this.$objGet(rowData, 'dataType.specs.unit'),
+                    round: this.$objGet(rowData, 'dataForm.round'),
+                    dis: this.$objGet(rowData, 'dataForm.address'),
+                    dinumber: this.$objGet(rowData, 'dataForm.quantity'),
+                    rate: this.$objGet(rowData, 'dataForm.rate'),
+                    offset: this.$objGet(rowData, 'dataForm.offset'),
+                    byteorder: this.$objGet(rowData, 'dataForm.byteorder'),
+                    protocol: this.$objGet(rowData, 'dataForm.protocol'),
+                    operatetype: this.$objGet(rowData, 'dataForm.operatetype'),
+                    originaltype: this.$objGet(
+                      rowData,
+                      'dataForm.originaltype'
+                    ),
+                    slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
+                    required: true,
+                    isread: rowData.accessMode,
+                    identifier: rowData.identifier,
+                  }
+                }
+                this.sizeForm = obj
               }
             })
           } else {
+            this.wmxSituation == '新增'
             console.log('物模型不为空，但不存在这个属性', this.Shapeconfig)
-            this.sizeForm.dis = this.Shapeconfig.attrs.id
+            this.reset()
             this.wmxData = []
+            this.sizeForm.name = this.Shapeconfig.attrs.text
+            this.sizeForm.dis = this.Shapeconfig.attrs.id
+            this.sizeForm.isdis = true
           }
         } else {
           console.log(`物模型为空`, this.Shapeconfig)
-          this.sizeForm.dis = this.Shapeconfig.attrs.id
+          this.reset()
           this.wmxData = []
+          this.sizeForm.name = this.Shapeconfig.attrs.text
+          this.sizeForm.dis = this.Shapeconfig.attrs.id
+          this.sizeForm.isdis = true
         }
       },
       wmxhandleClose() {
@@ -197,8 +486,130 @@
         this.Shapeconfig = {}
       },
       // 提交
-      submitForm(from) {
-        console.log('from', from)
+      submitForm(sizeForm) {
+        var obj = {
+          name: sizeForm.name,
+          dataForm: {
+            round: sizeForm.round,
+            order: sizeForm.order,
+            data: sizeForm.dinumber,
+            address: sizeForm.dis,
+            quantity: sizeForm.dinumber,
+            rate: sizeForm.rate,
+            offset: sizeForm.offset,
+            byteorder: sizeForm.byteorder,
+            protocol: sizeForm.protocol,
+            operatetype: sizeForm.operatetype,
+            originaltype: sizeForm.originaltype,
+            slaveid: sizeForm.slaveid,
+            collection: sizeForm.collection,
+            control: sizeForm.control,
+            strategy: sizeForm.strategy,
+          },
+          required: true,
+          accessMode: sizeForm.isread,
+          identifier: sizeForm.identifier,
+        }
+        // 提交之前需要先判断类型
+        if (
+          sizeForm.type == 'float' ||
+          sizeForm.type == 'double' ||
+          sizeForm.type == 'int'
+        ) {
+          var obj1 = {
+            dataType: {
+              type: sizeForm.type.toLowerCase(),
+              specs: {
+                max: sizeForm.endnumber,
+                min: sizeForm.startnumber,
+                step: sizeForm.step,
+                unit: sizeForm.unit == '' ? '' : sizeForm.unit,
+              },
+            },
+          }
+          Object.assign(obj, obj1)
+          // 去除多余的属性
+          if (!this.showNewItem) {
+            delete obj.dataForm.operatetype
+            delete obj.dataForm.originaltype
+            delete obj.dataForm.slaveid
+          }
+        } else if (sizeForm.type == 'bool') {
+          var obj1 = {
+            dataType: {
+              type: sizeForm.type.toLowerCase(),
+              specs: {
+                0: sizeForm.false,
+                1: sizeForm.true,
+              },
+            },
+          }
+          Object.assign(obj, obj1)
+        } else if (sizeForm.type == 'enum') {
+          var specs = {}
+          sizeForm.struct.map((items) => {
+            var newkey = items['attribute']
+            specs[newkey] = items['attributevalue']
+          })
+          var obj1 = {
+            dataType: {
+              type: sizeForm.type.toLowerCase(),
+              specs: specs,
+            },
+          }
+          Object.assign(obj, obj1)
+        } else if (sizeForm.type == 'struct') {
+          var obj1 = {
+            dataType: {
+              type: sizeForm.type.toLowerCase(),
+              specs: sizeForm.struct,
+            },
+          }
+          Object.assign(obj, obj1)
+        } else if (sizeForm.type == 'string') {
+          var obj1 = {
+            dataType: {
+              type: sizeForm.type.toLowerCase(),
+              size: sizeForm.string,
+            },
+          }
+          Object.assign(obj, obj1)
+        } else if (sizeForm.type == 'date') {
+          var obj1 = {
+            dataType: {
+              type: sizeForm.type.toLowerCase(),
+            },
+          }
+          Object.assign(obj, obj1)
+        }
+        // 检测到
+        if (this.wmxSituation == '新增') {
+          // console.log("新增");
+          this.properties.push(obj)
+        } else if (this.wmxSituation == '编辑') {
+          // console.log("编辑" + obj);
+          this.properties.forEach((rowData, index) => {
+            if (rowData.identifier === obj.identifier) {
+              this.propertie[index] = obj
+            }
+          })
+        }
+        const params = {
+          thing: { properties: this.properties },
+        }
+        this.$update_object('Product', this.$route.query.productid, params)
+          .then((resultes) => {
+            if (resultes) {
+              this.$message({
+                type: 'success',
+                message: this.wmxSituation + '成功',
+              })
+              this.wmxdialogVisible = false
+            }
+          })
+          .catch((e) => {
+            console.log(e)
+          })
       },
       selectStruct() {},
       wmxCurrentChange() {},
@@ -248,15 +659,17 @@
 </script>
 <style lang="scss" scoped>
   .operation {
-    height: calc(100vh - #{$base-top-bar-height}* 4 - -25px);
+    height: calc(100vh - #{$base-top-bar-height} * 4 - -25px);
     margin-left: 10px;
     overflow-x: hidden;
     overflow-y: scroll;
     color: wheat;
   }
+
   ::v-deep .jsoneditor-vue {
-    height: calc(100vh - #{$base-top-bar-height}* 5 - 10px);
+    height: calc(100vh - #{$base-top-bar-height} * 5 - 10px);
   }
+
   ::v-deep .json-save-btn {
     cursor: pointer;
   }

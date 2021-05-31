@@ -33,7 +33,23 @@
                   :label="$translateTitle('product.identifier')"
                   prop="identifier"
                 >
-                  <el-input v-model="sizeForm.identifier" />
+                  <el-input
+                    v-show="(sizeForm.nobound.length = 0)"
+                    v-model="sizeForm.identifier"
+                  />
+                  <el-select
+                    v-model="sizeForm.unit"
+                    style="width: 100%"
+                    :placeholder="$translateTitle('product.unit')"
+                    filterable
+                  >
+                    <el-option
+                      v-for="(item, index) in allunit"
+                      :key="index"
+                      :label="item.data.Name + '/' + item.data.Symbol"
+                      :value="item.data.Symbol"
+                    />
+                  </el-select>
                 </el-form-item>
                 <!--type-->
               </el-col>
@@ -664,6 +680,17 @@
                   </el-select>
                 </el-form-item>
               </el-col>
+              <el-col :span="12">
+                <el-form-item label="数据地址">
+                  <el-input
+                    v-model="sizeForm.dis"
+                    :disabled="sizeForm.isdis"
+                    placeholder="数据地址"
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="24">
               <el-col v-show="sizeForm.protocol == 'modbus'" :span="12">
                 <el-form-item label="从机地址">
                   <el-input
@@ -673,20 +700,13 @@
                   />
                 </el-form-item>
               </el-col>
-            </el-row>
-            <el-row
-              v-show="
-                sizeForm.protocol == 'modbus' ||
-                sizeForm.protocol == 'mingcheng'
-              "
-              :gutter="24"
-            >
-              <el-col :span="12">
-                <el-form-item label="数据地址">
-                  <el-input v-model="sizeForm.dis" placeholder="数据地址" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
+              <el-col
+                v-show="
+                  sizeForm.protocol == 'modbus' ||
+                  sizeForm.protocol == 'mingcheng'
+                "
+                :span="12"
+              >
                 <el-form-item label="数据长度">
                   <el-input
                     v-model.number="sizeForm.dinumber"

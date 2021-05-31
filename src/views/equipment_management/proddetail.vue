@@ -2439,6 +2439,7 @@
           slaveid: 256,
           collection: '%s',
           control: '%q',
+          nobound: [],
         }
       },
       changeValue(formName) {
@@ -3163,7 +3164,7 @@
         this.wmxdialogVisible = true
         this.wmxSituation = '新增'
       },
-      // 物模型修改
+      // 物模型修改submitForm
       wmxDataFill(rowData, index) {
         this.modifyIndex = (this.wmxstart - 1) * this.wmxPageSize + index
         // console.log("rowData ", rowData);

@@ -6,6 +6,7 @@ const state = () => ({
   draw: [],
   flag: null,
   drawParams: {},
+  sizeForm: {},
 })
 const getters = {
   graphColor: (state) => state.graphColor,
@@ -15,8 +16,12 @@ const getters = {
   graphNow: (state) => state.graphNow,
   flag: (state) => state.flag,
   drawParams: (state) => state.drawParams,
+  sizeForm: (state) => state.sizeForm,
 }
 const mutations = {
+  setSizeForm(state, form) {
+    state.sizeForm = form
+  },
   setGraphColor(state, color) {
     state.graphColor = color
   },
@@ -40,6 +45,9 @@ const mutations = {
   },
 }
 const actions = {
+  setSizeForm({ commit }, form) {
+    commit('setSizeForm', color)
+  },
   setGraphColor({ commit }, color) {
     commit('setGraphColor', color)
   },

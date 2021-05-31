@@ -14,3 +14,11 @@ export async function get_wmxdetail(params) {
     params: params,
   })
 }
+
+export async function get_konva_thing(params) {
+  return request({
+    url: '/konva_thing',
+    method: 'get',
+    params: params,
+  })
+}

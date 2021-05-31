@@ -1808,6 +1808,8 @@
   </div>
 </template>
 <script>
+  import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
+
   import { getDeviceCountByProduct } from '@/api/Device/index'
   import { queryProduct } from '@/api/Product/index'
   import { getAllunit, getDictCount } from '@/api/Dict/index'
@@ -2017,7 +2019,6 @@
         wmxSituation: '新增',
         // 自定义物模型
         allunit: [],
-        sizeForm: this.getFormOrginalData(),
         sizerule: {
           step: [
             {
@@ -2360,6 +2361,9 @@
           return false
         }
       },
+      ...mapGetters({
+        sizeForm: 'konva/sizeForm',
+      }),
     },
     watch: {
       issub: {
@@ -2397,6 +2401,9 @@
       this.subdialogtimer = null
     },
     methods: {
+      ...mapMutations({
+        setSizeForm: 'konva/setSizeForm',
+      }),
       selectStruct(v) {
         // console.log(v);
       },
@@ -3159,8 +3166,7 @@
           })
       },
       createProperty() {
-        this.sizeForm = this.getFormOrginalData()
-
+        this.setSizeForm(this.getFormOrginalData())
         this.wmxdialogVisible = true
         this.wmxSituation = '新增'
       },
@@ -3354,7 +3360,7 @@
             identifier: rowData.identifier,
           }
         }
-        this.sizeForm = obj
+        this.setSizeForm(obj)
         // console.log('this.sizeForm', this.sizeForm)
       },
       // 物模型结构体
@@ -3884,14 +3890,9 @@
             console.log(e)
           })
       },
-
       wmxhandleClose() {
         this.wmxdialogVisible = false
-
-        this.sizeForm = this.getFormOrginalData()
-
-        /*     this.sizeForm.type = "int";
-              this.$refs["sizeForm"].resetFields(); */
+        this.setSizeForm(this.getFormOrginalData())
       },
       // 协议编辑
       protol() {

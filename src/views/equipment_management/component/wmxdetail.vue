@@ -24,7 +24,22 @@
                   :label="$translateTitle('product.functionname')"
                   prop="name"
                 >
-                  <el-input v-model="sizeForm.name" />
+                  <el-select
+                    v-if="sizeForm.nobound && sizeForm.nobound.length > 0"
+                    v-model="sizeForm.name"
+                    style="width: 100%"
+                    filterable
+                    placeholder="请选择"
+                    @change="changeThing"
+                  >
+                    <el-option
+                      v-for="(item, index) in sizeForm.nobound"
+                      :key="index"
+                      :label="item.name"
+                      :value="item"
+                    />
+                  </el-select>
+                  <el-input v-else v-model="sizeForm.name" />
                 </el-form-item>
               </el-col>
 
@@ -33,23 +48,7 @@
                   :label="$translateTitle('product.identifier')"
                   prop="identifier"
                 >
-                  <el-input
-                    v-show="(sizeForm.nobound.length = 0)"
-                    v-model="sizeForm.identifier"
-                  />
-                  <el-select
-                    v-model="sizeForm.unit"
-                    style="width: 100%"
-                    :placeholder="$translateTitle('product.unit')"
-                    filterable
-                  >
-                    <el-option
-                      v-for="(item, index) in allunit"
-                      :key="index"
-                      :label="item.data.Name + '/' + item.data.Symbol"
-                      :value="item.data.Symbol"
-                    />
-                  </el-select>
+                  <el-input v-model="sizeForm.identifier" />
                 </el-form-item>
                 <!--type-->
               </el-col>
@@ -814,18 +813,10 @@
 
 <script>
   import { getAllunit } from '@/api/Dict/index'
-
+  import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
   export default {
     name: 'Wmxdetail',
     components: {},
-    props: {
-      sizeForm1: {
-        type: Object,
-        default() {
-          return {}
-        },
-      },
-    },
     data() {
       var validminnumber = (rule, value, callback) => {
         // console.log(value);
@@ -872,7 +863,6 @@
         }
       }
       return {
-        sizeForm: this.sizeForm1,
         options: [
           { value: 'all', label: '全部' },
           { value: 'first', label: '第一轮' },
@@ -1004,6 +994,9 @@
       }
     },
     computed: {
+      ...mapGetters({
+        sizeForm: 'konva/sizeForm',
+      }),
       showNewItem() {
         if (this.sizeForm && this.sizeForm.protocol == 'modbus') {
           return true
@@ -1012,14 +1005,7 @@
         }
       },
     },
-    watch: {
-      sizeForm1: {
-        deep: true,
-        handler(val) {
-          this.sizeForm = val
-        },
-      },
-    },
+    watch: {},
     mounted() {
       this.getAllunit()
     },
@@ -1030,6 +1016,187 @@
     beforeDestroy() {}, //生命周期 - 销毁之前
     activated() {},
     methods: {
+      ...mapMutations({
+        setSizeForm: 'konva/setSizeForm',
+      }),
+      changeThing(item) {
+        let that = this
+        console.log('this.sizeFormaaa', that.$refs.sizeForm.model.name)
+        console.log('item', item)
+        var obj = {}
+        // 提交之前需要先判断类型
+        if (['float', 'double', 'int'].indexOf(item.dataType.type) != -1) {
+          obj = {
+            name: item.name,
+            // item.dataType
+            type: item.dataType.type,
+            endnumber: that.$objGet(item, 'dataType.specs.max'),
+            startnumber: that.$objGet(item, 'dataType.specs.min'),
+            step: that.$objGet(item, 'dataType.specs.step'),
+            unit: that.$objGet(item, 'dataType.specs.unit'),
+            // : item.dataForm.
+            round: that.$objGet(item, 'dataForm.round'),
+            dinumber: that.$objGet(item, 'dataForm.quantity'),
+            rate: that.$objGet(item, 'dataForm.rate'),
+            offset: that.$objGet(item, 'dataForm.offset'),
+            byteorder: that.$objGet(item, 'dataForm.byteorder'),
+            protocol: that.$objGet(item, 'dataForm.protocol'),
+            operatetype: that.$objGet(item, 'dataForm.operatetype'),
+            originaltype: that.$objGet(item, 'dataForm.originaltype'),
+            slaveid: that.$objGet(item, 'dataForm.slaveid'),
+            collection: '',
+            control: '',
+            strategy: '',
+            required: true,
+            isread: item.accessMode,
+            identifier: item.identifier,
+          }
+          if (item.dataForm) {
+            obj.collection = item.dataForm.collection
+            obj.control = item.dataForm.control
+            obj.strategy = item.dataForm.strategy
+          }
+        } else if (item.dataType.type == 'bool') {
+          obj = {
+            name: item.name,
+            type: item.dataType.type,
+            true: item.dataType.specs[1],
+            false: item.dataType.specs[0],
+            // item.dataForm.
+            startnumber: that.$objGet(item, 'dataType.specs.min'),
+            step: that.$objGet(item, 'dataType.specs.step'),
+            unit: that.$objGet(item, 'dataType.specs.unit'),
+            round: that.$objGet(item, 'dataForm.round'),
+            dinumber: that.$objGet(item, 'dataForm.quantity'),
+            rate: that.$objGet(item, 'dataForm.rate'),
+            offset: that.$objGet(item, 'dataForm.offset'),
+            byteorder: that.$objGet(item, 'dataForm.byteorder'),
+            protocol: that.$objGet(item, 'dataForm.protocol'),
+            operatetype: that.$objGet(item, 'dataForm.operatetype'),
+            originaltype: that.$objGet(item, 'dataForm.originaltype'),
+            slaveid: that.$objGet(item, 'dataForm.slaveid'),
+            required: false,
+            isread: item.accessMode,
+            identifier: item.identifier,
+            collection:
+              item.dataForm == undefined ? '' : item.dataForm.collection,
+            control: item.dataForm == undefined ? '' : item.dataForm.control,
+            strategy: item.dataForm == undefined ? '' : item.dataForm.strategy,
+          }
+        } else if (item.dataType.type == 'enum') {
+          var structArray = []
+          for (const key in item.dataType.specs) {
+            structArray.push({
+              attribute: key,
+              attributevalue: item.dataType.specs[key],
+            })
+          }
+          obj = {
+            name: item.name,
+            type: item.dataType.type,
+            specs: item.dataType.specs,
+            struct: structArray,
+            startnumber: that.$objGet(item, 'dataType.specs.min'),
+            step: that.$objGet(item, 'dataType.specs.step'),
+            unit: that.$objGet(item, 'dataType.specs.unit'),
+            round: that.$objGet(item, 'dataForm.round'),
+            dinumber: that.$objGet(item, 'dataForm.quantity'),
+            rate: that.$objGet(item, 'dataForm.rate'),
+            offset: that.$objGet(item, 'dataForm.offset'),
+            byteorder: that.$objGet(item, 'dataForm.byteorder'),
+            protocol: that.$objGet(item, 'dataForm.protocol'),
+            operatetype: that.$objGet(item, 'dataForm.operatetype'),
+            originaltype: that.$objGet(item, 'dataForm.originaltype'),
+            slaveid: this.$objGet(item, 'dataForm.slaveid'),
+            required: true,
+            isread: item.accessMode,
+            identifier: item.identifier,
+            collection:
+              item.dataForm == undefined ? '' : item.dataForm.collection,
+            control: item.dataForm == undefined ? '' : item.dataForm.control,
+            strategy: item.dataForm == undefined ? '' : item.dataForm.strategy,
+          }
+        } else if (item.dataType.type == 'struct') {
+          obj = {
+            name: item.name,
+            type: item.dataType.type,
+            struct: item.dataType.specs,
+            startnumber: that.$objGet(item, 'dataType.specs.min'),
+            step: that.$objGet(item, 'dataType.specs.step'),
+            unit: that.$objGet(item, 'dataType.specs.unit'),
+            round: that.$objGet(item, 'dataForm.round'),
+            dinumber: that.$objGet(item, 'dataForm.quantity'),
+            rate: that.$objGet(item, 'dataForm.rate'),
+            offset: that.$objGet(item, 'dataForm.offset'),
+            byteorder: that.$objGet(item, 'dataForm.byteorder'),
+            protocol: that.$objGet(item, 'dataForm.protocol'),
+            operatetype: that.$objGet(item, 'dataForm.operatetype'),
+            originaltype: that.$objGet(item, 'dataForm.originaltype'),
+            slaveid: that.$objGet(item, 'dataForm.slaveid'),
+            required: true,
+            isread: item.accessMode,
+            collection:
+              item.dataForm == undefined ? '' : item.dataForm.collection,
+            control: item.dataForm == undefined ? '' : item.dataForm.control,
+            identifier: item.dataForm == undefined ? '' : item.identifier,
+            strategy: item.dataForm == undefined ? '' : item.dataForm.strategy,
+          }
+        } else if (item.dataType.type == 'string') {
+          obj = {
+            name: item.name,
+            type: item.dataType.type,
+            collection:
+              item.dataForm == undefined ? '' : item.dataForm.collection,
+            control: item.dataForm == undefined ? '' : item.dataForm.control,
+            string: item.dataType.size,
+            startnumber: this.$objGet(item, 'dataType.specs.min'),
+            step: that.$objGet(item, 'dataType.specs.step'),
+            unit: that.$objGet(item, 'dataType.specs.unit'),
+            round: that.$objGet(item, 'dataForm.round'),
+            dinumber: that.$objGet(item, 'dataForm.quantity'),
+            rate: that.$objGet(item, 'dataForm.rate'),
+            offset: that.$objGet(item, 'dataForm.offset'),
+            byteorder: that.$objGet(item, 'dataForm.byteorder'),
+            protocol: that.$objGet(item, 'dataForm.protocol'),
+            operatetype: that.$objGet(item, 'dataForm.operatetype'),
+            originaltype: that.$objGet(item, 'dataForm.originaltype'),
+            slaveid: that.$objGet(item, 'dataForm.slaveid'),
+            required: true,
+            isread: item.accessMode,
+            identifier: item.identifier,
+            strategy: item.dataForm == undefined ? '' : item.dataForm.strategy,
+          }
+        } else if (item.dataType.type == 'date') {
+          obj = {
+            name: item.name,
+            type: item.dataType.type,
+            collection:
+              item.dataForm == undefined ? '' : item.dataForm.collection,
+            control: item.dataForm == undefined ? '' : item.dataForm.control,
+            strategy: item.dataForm == undefined ? '' : item.dataForm.strategy,
+            startnumber: that.$objGet(item, 'dataType.specs.min'),
+            step: that.$objGet(item, 'dataType.specs.step'),
+            unit: that.$objGet(item, 'dataType.specs.unit'),
+            round: that.$objGet(item, 'dataForm.round'),
+            dinumber: that.$objGet(item, 'dataForm.quantity'),
+            rate: that.$objGet(item, 'dataForm.rate'),
+            offset: that.$objGet(item, 'dataForm.offset'),
+            byteorder: that.$objGet(item, 'dataForm.byteorder'),
+            protocol: that.$objGet(item, 'dataForm.protocol'),
+            operatetype: that.$objGet(item, 'dataForm.operatetype'),
+            originaltype: that.$objGet(item, 'dataForm.originaltype'),
+            slaveid: that.$objGet(item, 'dataForm.slaveid'),
+            required: true,
+            isread: item.accessMode,
+            identifier: item.identifier,
+          }
+        }
+        obj.nobound = this.sizeForm.nobound
+        obj.dis = this.sizeForm.dis
+        obj.isdis = this.sizeForm.isdis
+        console.log('obj', obj)
+        that.setSizeForm(obj)
+      },
       wmxCurrentChange(val) {
         this.wmxstart = val
       },
@@ -1069,7 +1236,8 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.$emit('submitForm', this.sizeForm1)
+            console.log(this.sizeForm, 'dsaf')
+            this.$emit('submitForm', this.sizeForm)
             // this.$refs[formName].resetFields()
           } else {
             console.log(valid)

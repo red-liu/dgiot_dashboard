@@ -100,6 +100,8 @@ export default {
     },
     route: {},
     equipment: {
+      list: '设备列表',
+      map: '设备地图',
       location: '位置',
       number: '编号',
       Offtheshelf: '下架',

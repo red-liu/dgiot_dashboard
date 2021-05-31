@@ -717,6 +717,8 @@ export default {
       programinglanguage: 'Programing language',
     },
     equipment: {
+      list: 'table',
+      map: 'map',
       number: 'Number',
       location: 'location',
       Offtheshelf: 'Off the shelf',

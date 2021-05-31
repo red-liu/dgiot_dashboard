@@ -53,6 +53,7 @@
 * feat: 物模型采集 ([361d637](https://github.com/dgiot/dgiot_dashboard/commit/361d637))
 * feat: 物模型相关权限处理 ([b93f9be](https://github.com/dgiot/dgiot_dashboard/commit/b93f9be))
 * feat: 物模型详情组件 ([57a0bff](https://github.com/dgiot/dgiot_dashboard/commit/57a0bff))
+* feat: 显示地理位置信息 ([ab30ad2](https://github.com/dgiot/dgiot_dashboard/commit/ab30ad2))
 * feat: 相关资源整合 ([762cec1](https://github.com/dgiot/dgiot_dashboard/commit/762cec1))
 * feat: 相关il18翻译 &&兼容速科表格 ([67189ff](https://github.com/dgiot/dgiot_dashboard/commit/67189ff))
 * feat: 修复编译报错 ([dcb4968](https://github.com/dgiot/dgiot_dashboard/commit/dcb4968))

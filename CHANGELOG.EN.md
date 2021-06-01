@@ -58,6 +58,7 @@
 * feat: 显示地理位置信息 ([ab30ad2](https://github.com/dgiot/dgiot_dashboard/commit/ab30ad2))
 * feat: 相关资源整合 ([762cec1](https://github.com/dgiot/dgiot_dashboard/commit/762cec1))
 * feat: 相关il18翻译 &&兼容速科表格 ([67189ff](https://github.com/dgiot/dgiot_dashboard/commit/67189ff))
+* feat: 新增echarts 图表组件 ([eea11a6](https://github.com/dgiot/dgiot_dashboard/commit/eea11a6))
 * feat: 修复编译报错 ([dcb4968](https://github.com/dgiot/dgiot_dashboard/commit/dcb4968))
 * feat: 修复订阅的mqtt地址错误 ([61b82a5](https://github.com/dgiot/dgiot_dashboard/commit/61b82a5))
 * feat: 修复路由无法显示 && 重写部分axios ([d486559](https://github.com/dgiot/dgiot_dashboard/commit/d486559))

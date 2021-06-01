@@ -125,6 +125,38 @@
               type="textarea"
               readonly
             />
+            <div class="chartsinfo">
+              <el-row type="flex" class="row-bg" justify="space-start">
+                <el-col :span="6">
+                  <el-date-picker
+                    v-model="datetimerange"
+                    type="datetimerange"
+                    :picker-options="pickerOptions"
+                    :range-separator="$translateTitle('developer.to')"
+                    :start-placeholder="$translateTitle('developer.startTime')"
+                    :end-placeholder="$translateTitle('developer.EndTime')"
+                    align="right"
+                    @change="queryFlag = false"
+                  />
+                </el-col>
+                <el-col :span="16">
+                  <el-button
+                    type="primary"
+                    :disabled="queryFlag"
+                    icon="el-icon-search"
+                    @click="queryChart"
+                  >
+                    {{ $translateTitle('developer.search') }}
+                  </el-button>
+                  <el-button type="primary" icon="el-icon-download">
+                    {{ $translateTitle('developer.download') }}
+                  </el-button>
+                </el-col>
+              </el-row>
+              <div class="chartsmain">
+                <ve-line :data="chartData" />
+              </div>
+            </div>
           </div>
         </el-tab-pane>
         <el-tab-pane
@@ -792,6 +824,50 @@
     },
     data() {
       return {
+        pickerOptions: {
+          shortcuts: [
+            {
+              text: this.$translateTitle('developer.LastWeek'),
+              onClick(picker) {
+                const end = new Date()
+                const start = new Date()
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+                picker.$emit('pick', [start, end])
+              },
+            },
+            {
+              text: this.$translateTitle('developer.LastMonth'),
+              onClick(picker) {
+                const end = new Date()
+                const start = new Date()
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+                picker.$emit('pick', [start, end])
+              },
+            },
+            {
+              text: this.$translateTitle('developer.LastThreeMonths'),
+              onClick(picker) {
+                const end = new Date()
+                const start = new Date()
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+                picker.$emit('pick', [start, end])
+              },
+            },
+          ],
+        },
+        chartData: {
+          columns: ['日期', '访问用户', '下单用户', '下单率'],
+          rows: [
+            { 日期: '1/1', 访问用户: 1393, 下单用户: 1093, 下单率: 0.32 },
+            { 日期: '1/2', 访问用户: 3530, 下单用户: 3230, 下单率: 0.26 },
+            { 日期: '1/3', 访问用户: 2923, 下单用户: 2623, 下单率: 0.76 },
+            { 日期: '1/4', 访问用户: 1723, 下单用户: 1423, 下单率: 0.49 },
+            { 日期: '1/5', 访问用户: 3792, 下单用户: 3492, 下单率: 0.323 },
+            { 日期: '1/6', 访问用户: 4593, 下单用户: 4293, 下单率: 0.78 },
+          ],
+        },
+        queryFlag: true,
+        datetimerange: '',
         width: 0,
         lineChartData: '',
         datafordetail: [],
@@ -879,6 +955,14 @@
       this.timer = null
     },
     methods: {
+      queryChart() {
+        if (this.datetimerange.length) {
+          let endTime = moment(this.datetimerange[1]).valueOf()
+          let startTime = moment(this.datetimerange[0]).valueOf()
+        } else {
+          this.$message.error('请选择查询时间')
+        }
+      },
       print(item) {
         console.log(item)
       },
@@ -1008,6 +1092,10 @@
             vm.properties = JSON.parse(
               JSON.stringify(this.$objGet(resultes, 'product.thing.properties'))
             )
+            console.log(vm.properties, ' vm.properties ')
+            vm.properties.forEach((i) => {
+              vm.chartData.columns.push(i.name)
+            })
             // console.log('vm.properties', vm.properties)
             if (vm.properties) {
               vm.properties.map((items) => {
@@ -1429,6 +1517,9 @@
   }
 </script>
 <style scoped>
+  .chartsinfo {
+    margin-top: 15px;
+  }
   .editdevices {
     box-sizing: border-box;
     width: 100%;

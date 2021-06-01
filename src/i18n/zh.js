@@ -204,6 +204,13 @@ export default {
       powersupply: '供电单位',
     },
     developer: {
+      to: '至',
+      EndTime: '结束时间',
+      startTime: '开始时间',
+      LastWeek: '最近一周',
+      LastMonth: '最近一个月',
+      LastThreeMonths: '最近三个月',
+      download: '下载',
       Unauthorizedcanbeempty: '未授权可为空',
       Servicedeployment: '服务部署',
       Deployment: '部署情况',

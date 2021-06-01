@@ -83,6 +83,7 @@ module.exports = {
       externals: {
         'topology-vue': 'topology',
         konva: 'Konva',
+        VCharts: 'v-charts',
         'vue-count-to': 'CountTo',
         'vue-konva': 'VueKonva',
         mockjs: 'Mock',

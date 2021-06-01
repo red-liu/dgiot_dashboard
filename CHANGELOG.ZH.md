@@ -81,6 +81,7 @@
 * feat: css ([f252fa9](https://github.com/dgiot/dgiot_dashboard/commit/f252fa9))
 * feat: deploy ([d70811d](https://github.com/dgiot/dgiot_dashboard/commit/d70811d))
 * feat: deviceid ([ce53dac](https://github.com/dgiot/dgiot_dashboard/commit/ce53dac))
+* feat: echarts ([e4632b1](https://github.com/dgiot/dgiot_dashboard/commit/e4632b1))
 * feat: env key ([c65a555](https://github.com/dgiot/dgiot_dashboard/commit/c65a555))
 * feat: eslint 修复 ([232fe47](https://github.com/dgiot/dgiot_dashboard/commit/232fe47))
 * feat: eslint fix ([dc1f98f](https://github.com/dgiot/dgiot_dashboard/commit/dc1f98f))

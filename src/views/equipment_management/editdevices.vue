@@ -126,7 +126,7 @@
               readonly
             />
             <div class="chartsinfo">
-              <el-row type="flex" class="row-bg" justify="space-start">
+              <el-row type="flex" class="row-bg" justify="space-center">
                 <el-col :span="6">
                   <el-date-picker
                     v-model="datetimerange"
@@ -135,11 +135,10 @@
                     :range-separator="$translateTitle('developer.to')"
                     :start-placeholder="$translateTitle('developer.startTime')"
                     :end-placeholder="$translateTitle('developer.EndTime')"
-                    align="right"
                     @change="queryFlag = false"
                   />
                 </el-col>
-                <el-col :span="16">
+                <el-col :span="12">
                   <el-button
                     type="primary"
                     :disabled="queryFlag"
@@ -148,13 +147,13 @@
                   >
                     {{ $translateTitle('developer.search') }}
                   </el-button>
-                  <el-button type="primary" icon="el-icon-download">
-                    {{ $translateTitle('developer.download') }}
-                  </el-button>
+                  <!--                  <el-button type="primary" icon="el-icon-download">-->
+                  <!--                    {{ $translateTitle('developer.download') }}-->
+                  <!--                  </el-button>-->
                 </el-col>
               </el-row>
               <div class="chartsmain">
-                <ve-line :data="chartData" />
+                <ve-line :data="chartData" :settings="chartSettings" />
               </div>
             </div>
           </div>
@@ -778,7 +777,7 @@
   </div>
 </template>
 <script>
-  import { getTdDevice } from '@/api/Device/index.js'
+  import { getTdDevice, getDabDevice } from '@/api/Device/index.js'
   import { utc2beijing, timestampToTime } from '@/utils/index'
   import LineChart from '../dashboard/admin/components/LineChart'
   import Instruct from '../devicemanage/instruct_manage'
@@ -856,16 +855,13 @@
           ],
         },
         chartData: {
-          columns: ['日期', '访问用户', '下单用户', '下单率'],
-          rows: [
-            { 日期: '1/1', 访问用户: 1393, 下单用户: 1093, 下单率: 0.32 },
-            { 日期: '1/2', 访问用户: 3530, 下单用户: 3230, 下单率: 0.26 },
-            { 日期: '1/3', 访问用户: 2923, 下单用户: 2623, 下单率: 0.76 },
-            { 日期: '1/4', 访问用户: 1723, 下单用户: 1423, 下单率: 0.49 },
-            { 日期: '1/5', 访问用户: 3792, 下单用户: 3492, 下单率: 0.323 },
-            { 日期: '1/6', 访问用户: 4593, 下单用户: 4293, 下单率: 0.78 },
-          ],
+          identifier: [],
+          columns: [],
+          rows: [],
         },
+        chartSettings: {},
+        chartDataRow: [],
+        chartDataColums: [],
         queryFlag: true,
         datetimerange: '',
         width: 0,
@@ -938,6 +934,7 @@
         dirstart: 1,
         dirlength: 20,
         selectproduct: '',
+        watchNum: 0,
       }
     },
     watch: {
@@ -948,6 +945,7 @@
     },
     mounted() {
       this.getDeviceDetail()
+      this.initChart()
     },
     // 清除定时器
     destroyed() {
@@ -955,10 +953,78 @@
       this.timer = null
     },
     methods: {
-      queryChart() {
+      initChart() {
+        const end = new Date()
+        const start = new Date()
+        start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+        this.datetimerange = [start, end]
+        this.queryFlag = false
+        this.$nextTick(() => {
+          // 当页面加载完后 去请求时序数据
+          this.queryChart()
+        })
+      },
+      async queryChart() {
         if (this.datetimerange.length) {
+          let deviceid = this.$route.query.deviceid
           let endTime = moment(this.datetimerange[1]).valueOf()
           let startTime = moment(this.datetimerange[0]).valueOf()
+          console.log('endTime', endTime)
+          console.log('startTime', startTime)
+          const limit = moment(endTime).diff(moment(startTime), 'days')
+
+          let params = {
+            limit: limit,
+            skip: 0,
+            where: { createdat: { $gte: 'now - 10d' } },
+          }
+          const { results } = await getDabDevice(deviceid, params)
+          console.log('res', results)
+          if (results) {
+            this.properties.forEach((i) => {
+              // 在获取设备数据的时候 先将 name push 进 columns
+              this.chartData.identifier.push(i.identifier) // 数据唯一标识
+              this.chartData.columns.push(i.name)
+            })
+            this.chartData.identifier.unshift('日期')
+            this.chartData.columns.unshift('日期')
+            results.forEach((i, index) => {
+              i['日期'] = moment().subtract(index, 'days').format('YYYY-MM-DD') // 处理时间轴
+              for (var k in i) {
+                for (var d in this.chartData.identifier) {
+                  console.log(this.chartData.identifier[d]) // 处理数据
+                  if (k == this.chartData.identifier[d]) {
+                    i[this.chartData.columns[d]] = i[k]
+                  }
+                }
+              }
+            })
+            // this.chartSettings.xAxisType = this.chartData.identifier
+            this.chartData.rows = results
+          }
+          //   //
+          //   columns.push(item.name)
+          //   this.watchNum++
+          //   let rows = {}
+          //   let columns = []
+          //   if (vm.chartData.columns.indexOf('日期') != -1) {
+          //     rows['日期'] = moment().format('YYYY-MM-DD HH:mm:ss')
+          //   } else {
+          //     columns.unshift('日期')
+          //   }
+          //   rows[`${item.name}`] = item.value ? item.value : 0
+          // }
+          //   vm.chartDataRow = columns.filter(function (item) {
+          //     return item
+          //   })
+          // console.log(vm.chartData, '  vm.chartData')
+          // console.log(' this.watchNum', vm.watchNum)
+          // vm.chartDataRow.push(rows)
+          // vm.chartData.columns = vm.chartDataColums
+          // console.log(rows, 'rowsrows')
+          // console.log('this.chartDataRow', vm.chartDataRow)
+          // vm.chartData.rows = vm.chartDataRow
+          // console.log(this.chartData.rows, '  vm.chartData.rows')
         } else {
           this.$message.error('请选择查询时间')
         }
@@ -1093,9 +1159,6 @@
               JSON.stringify(this.$objGet(resultes, 'product.thing.properties'))
             )
             console.log(vm.properties, ' vm.properties ')
-            vm.properties.forEach((i) => {
-              vm.chartData.columns.push(i.name)
-            })
             // console.log('vm.properties', vm.properties)
             if (vm.properties) {
               vm.properties.map((items) => {

@@ -812,15 +812,24 @@
                 :zoom="sizeZoom"
               >
                 <bm-control>
-                  <el-button @click="sizeZoom = 19">缩放至最大</el-button>
-                  <el-button @click="sizeZoom = 10">还原</el-button>
-                  <el-button @click="sizeZoom = 3">缩放至最小</el-button>
-                  <bm-panorama :offset="{ width: 260, height: 0 }" />
+                  <el-button size="mini" @click="sizeZoom = 19">
+                    缩放至最大
+                  </el-button>
+                  <el-button size="mini" @click="sizeZoom = 10">还原</el-button>
+                  <el-button size="mini" @click="sizeZoom = 3">
+                    缩放至最小
+                  </el-button>
+                  <bm-panorama
+                    anchor="BMAP_ANCHOR_TOP_LEFT"
+                    :offset="{ width: 460, height: 0 }"
+                  />
                   <bm-overview-map :is-open="true" />
                   <bm-scale :offset="{ width: 200, height: 0 }" />
+                  <bm-city-list :offset="{ width: 280, height: 0 }" />
                   <bm-map-type
+                    anchor="BMAP_ANCHOR_TOP_LEFT"
                     :map-types="['BMAP_HYBRID_MAP', 'BMAP_NORMAL_MAP']"
-                    :offset="{ width: 180, height: 0 }"
+                    :offset="{ width: 360, height: 0 }"
                   />
                 </bm-control>
                 <bm-marker
@@ -841,10 +850,6 @@
                     @click="deviceToDetail(item)"
                   />
                 </bm-marker>
-                <bm-city-list
-                  anchor="BMAP_ANCHOR_TOP_RIGHT"
-                  :offset="{ width: 100, height: 0 }"
-                />
                 <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
                 <bm-geolocation
                   :show-address-bar="true"

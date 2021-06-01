@@ -107,6 +107,7 @@
                 ref="operation"
                 @upImg="upProduct"
                 @upconfig="saveKonvaitem"
+                @handleCloseSub="handleCloseSub"
                 @clearImg="clearImg"
               />
             </div>

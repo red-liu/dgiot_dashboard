@@ -73,7 +73,7 @@
 
 <script>
   import wmxdetail from '@/views/equipment_management/component/wmxdetail'
-  import { _getTopo, get_konva_thing } from '@/api/Topo'
+  import { edit_konva_thing, get_konva_thing } from '@/api/Topo'
   import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
   import vueJsonEditor from 'vue-json-editor'
 
@@ -609,8 +609,18 @@
                 type: 'success',
                 message: this.wmxSituation + '成功',
               })
-              this.Shapeconfig.attrs.text = obj.name
-              this.saveKonvaitem(this.Shapeconfig)
+              // this.Shapeconfig.attrs.text = obj.name
+              // this.Shapeconfig.attrs.id = obj.identifier
+              let params = {
+                identifier: obj.identifier,
+                name: obj.name,
+                productid: this.$route.query.productid,
+                shapeid: this.Shapeconfig.attrs.id,
+              }
+              edit_konva_thing(params).then((res) => {
+                console.log(res)
+                this.handleCloseSub()
+              })
               this.wmxdialogVisible = false
             }
           })
@@ -637,6 +647,9 @@
       saveKonvaitem(config) {
         // 触发父组件更新事件
         this.$emit('upconfig', config)
+      },
+      handleCloseSub() {
+        this.$emit('handleCloseSub')
       },
       clearImg() {
         this.isVisible = !this.isVisible

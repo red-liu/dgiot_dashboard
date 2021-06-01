@@ -1,4 +1,4 @@
-## 1.0.0 (2021-05-31)
+## 1.0.0 (2021-06-01)
 
 * feat: 保存产品数据 ([914f581](https://github.com/dgiot/dgiot_dashboard/commit/914f581))
 * feat: 报告模板界面api ([5e0015a](https://github.com/dgiot/dgiot_dashboard/commit/5e0015a))
@@ -43,6 +43,7 @@
 * feat: 设备云 ([687142a](https://github.com/dgiot/dgiot_dashboard/commit/687142a))
 * feat: 设备字段 ([0867e12](https://github.com/dgiot/dgiot_dashboard/commit/0867e12))
 * feat: 设置图片 ([577c74b](https://github.com/dgiot/dgiot_dashboard/commit/577c74b))
+* feat: 设置相关地图控件 ([8d0b9f6](https://github.com/dgiot/dgiot_dashboard/commit/8d0b9f6))
 * feat: 设置konva ([8644656](https://github.com/dgiot/dgiot_dashboard/commit/8644656))
 * feat: 设置konva 可拖动属性 ([c601efd](https://github.com/dgiot/dgiot_dashboard/commit/c601efd))
 * feat: 設備指令bug修復 ([62a2b2e](https://github.com/dgiot/dgiot_dashboard/commit/62a2b2e))
@@ -70,6 +71,7 @@
 * feat: 组件化项目 ([c7a118b](https://github.com/dgiot/dgiot_dashboard/commit/c7a118b))
 * feat: 组态 ([6edaed3](https://github.com/dgiot/dgiot_dashboard/commit/6edaed3))
 * feat: 组态大屏编辑权限 ([3ac4036](https://github.com/dgiot/dgiot_dashboard/commit/3ac4036))
+* feat: 组态修改 ([4a807fc](https://github.com/dgiot/dgiot_dashboard/commit/4a807fc))
 * feat: button visible ([b7a12dc](https://github.com/dgiot/dgiot_dashboard/commit/b7a12dc))
 * feat: cdn优化项目 ([421bc3b](https://github.com/dgiot/dgiot_dashboard/commit/421bc3b))
 * feat: changelog ([affce4b](https://github.com/dgiot/dgiot_dashboard/commit/affce4b))

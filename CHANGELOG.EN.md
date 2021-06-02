@@ -90,6 +90,7 @@
 * feat: eslint 修复 ([232fe47](https://github.com/dgiot/dgiot_dashboard/commit/232fe47))
 * feat: eslint fix ([dc1f98f](https://github.com/dgiot/dgiot_dashboard/commit/dc1f98f))
 * feat: home button ([bc9763a](https://github.com/dgiot/dgiot_dashboard/commit/bc9763a))
+* feat: https://github.com/dgiot/dgiot_dashboard/runs/2725078113?check_suite_focus=true ([462e007](https://github.com/dgiot/dgiot_dashboard/commit/462e007))
 * feat: ico ([c30622b](https://github.com/dgiot/dgiot_dashboard/commit/c30622b))
 * feat: icon 替换 ([d404f64](https://github.com/dgiot/dgiot_dashboard/commit/d404f64))
 * feat: konva 绘图 ([428e874](https://github.com/dgiot/dgiot_dashboard/commit/428e874))

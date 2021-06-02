@@ -1,4 +1,4 @@
-## 1.0.0 (2021-06-01)
+## 1.0.0 (2021-06-02)
 
 * feat: 保存产品数据 ([914f581](https://github.com/dgiot/dgiot_dashboard/commit/914f581))
 * feat: 报告模板界面api ([5e0015a](https://github.com/dgiot/dgiot_dashboard/commit/5e0015a))
@@ -40,6 +40,7 @@
 * feat: 删除多余文件 ([7bf72e5](https://github.com/dgiot/dgiot_dashboard/commit/7bf72e5))
 * feat: 上传个人信息 ([f03bf2b](https://github.com/dgiot/dgiot_dashboard/commit/f03bf2b))
 * feat: 设备管理地图 ([14a98d6](https://github.com/dgiot/dgiot_dashboard/commit/14a98d6))
+* feat: 设备数据图表 ([64f28a7](https://github.com/dgiot/dgiot_dashboard/commit/64f28a7))
 * feat: 设备云 ([687142a](https://github.com/dgiot/dgiot_dashboard/commit/687142a))
 * feat: 设备字段 ([0867e12](https://github.com/dgiot/dgiot_dashboard/commit/0867e12))
 * feat: 设置图片 ([577c74b](https://github.com/dgiot/dgiot_dashboard/commit/577c74b))
@@ -71,6 +72,7 @@
 * feat: 重写konva渲染方法 ([7b7b7dd](https://github.com/dgiot/dgiot_dashboard/commit/7b7b7dd))
 * feat: 组件化项目 ([c7a118b](https://github.com/dgiot/dgiot_dashboard/commit/c7a118b))
 * feat: 组态 ([6edaed3](https://github.com/dgiot/dgiot_dashboard/commit/6edaed3))
+* feat: 组态编辑 ([d4ee241](https://github.com/dgiot/dgiot_dashboard/commit/d4ee241))
 * feat: 组态大屏编辑权限 ([3ac4036](https://github.com/dgiot/dgiot_dashboard/commit/3ac4036))
 * feat: 组态修改 ([4a807fc](https://github.com/dgiot/dgiot_dashboard/commit/4a807fc))
 * feat: button visible ([b7a12dc](https://github.com/dgiot/dgiot_dashboard/commit/b7a12dc))

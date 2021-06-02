@@ -22,7 +22,8 @@ export default {
       pro_count: 'products',
       app_count: 'provider',
       dev_count: 'devices',
-      dev_online: 'online equipment',
+      dev_online: 'online',
+      dev_unline: 'unline',
     },
     // leftbar
     leftbar: {

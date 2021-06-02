@@ -21,6 +21,11 @@ export default {
       app_count: '应用总数',
       dev_count: '设备总数',
       dev_online: '在线设备',
+      dev_unline: '离线设备',
+      max: '缩放至最大',
+      min: '缩放至最小',
+      restore: '还原',
+      info: '信息总览',
     },
     // leftbar
     leftbar: {

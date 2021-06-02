@@ -81,6 +81,7 @@
 * feat: changelog ([affce4b](https://github.com/dgiot/dgiot_dashboard/commit/affce4b))
 * feat: channle ([0ad7522](https://github.com/dgiot/dgiot_dashboard/commit/0ad7522))
 * feat: codeMirror ([b6a13dc](https://github.com/dgiot/dgiot_dashboard/commit/b6a13dc))
+* feat: config ([82cc94c](https://github.com/dgiot/dgiot_dashboard/commit/82cc94c))
 * feat: css ([f252fa9](https://github.com/dgiot/dgiot_dashboard/commit/f252fa9))
 * feat: deploy ([d70811d](https://github.com/dgiot/dgiot_dashboard/commit/d70811d))
 * feat: developer.config.js ([01ed301](https://github.com/dgiot/dgiot_dashboard/commit/01ed301))

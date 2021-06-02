@@ -16,24 +16,22 @@
         <vab-query-form-top-panel>
           <el-form
             :inline="true"
-            label-width="50px"
+            label-width="100px"
             :model="queryForm"
             @submit.native.prevent
           >
-            <el-form-item label="产品">
-              <el-input
-                v-model.trim="queryForm.account"
-                clearable
-                placeholder="请输入账号"
-              />
+            <el-form-item :label="$translateTitle('equipment.products')">
+              <el-input v-model.trim="queryForm.account" readonly clearable />
             </el-form-item>
-            <el-form-item label="部门">
+            <el-form-item :label="$translateTitle('user.department')">
               <el-input
                 ref="workGroupInput"
                 v-model="queryForm.workGroupName"
                 readonly
                 auto-complete="off"
-                @focus="info"
+                @focus="
+                  queryForm.workGroupTreeShow = !queryForm.workGroupTreeShow
+                "
               />
               <div v-if="queryForm.workGroupTreeShow" class="workGroupTreeShow">
                 <el-tree
@@ -57,7 +55,7 @@
                 </el-tree>
               </div>
             </el-form-item>
-            <el-form-item label="周期">
+            <el-form-item :label="$translateTitle('user.createdtime')">
               <el-date-picker
                 v-model="queryForm.searchDate"
                 end-placeholder="结束日期"
@@ -274,6 +272,7 @@
           pageSize: 20,
           workGroupName: '',
           workGroupTreeShow: false,
+          access_token: '',
         },
         roleProps: {
           children: 'children',
@@ -349,9 +348,6 @@
         console.log(results, 'queryProduct')
         this.set_Product(results)
       },
-      info() {
-        this.queryForm.workGroupTreeShow = !this.queryForm.workGroupTreeShow
-      },
       queryData() {
         this.queryForm.pageNo = 1
         this.fetchData()
@@ -370,19 +366,18 @@
       },
       async handleNodeClick(data, node) {
         this.queryForm.workGroupName = data.label
-        this.queryForm.workGroupTreeShow = false
+        this.queryForm.workGroupTreeShow = !this.queryForm.workGroupTreeShow
         if (node.level != 1) {
           // 在这里获取点击厂家的session
           const { access_token = '' } = await getToken(data.name)
-          this.access_token = access_token
+          this.queryForm.access_token = access_token
         } else {
-          this.access_token = store.getters['user/token']
+          this.queryForm.access_token = store.getters['user/token']
         }
         // 点击的公司名
         const { name, objectId } = data
         this.curDepartmentId = objectId
-        // this.Company = name
-        this.getDevices(0)
+        console.log('this.queryForm.access_token', this.queryForm.access_token)
       },
       async getDevices() {
         const { results } = await queryDevice({})
@@ -638,13 +633,6 @@
       font-size: 14px;
       font-weight: bolder;
     }
-    //.card-right p:last-child {
-    //  padding: 5px;
-    //  margin: 0px;
-    //  font-size: 40px;
-    //  font-weight: bolder;
-    //  color: #8b1515;
-    //}
   }
   .text {
     font-size: 14px;

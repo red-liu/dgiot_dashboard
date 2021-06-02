@@ -9,7 +9,7 @@ import { getToken, setToken } from '@/utils/vuex'
 import { storage } from '@/config'
 
 const state = () => ({
-  roleTree: JSON.parse(getToken('roleTree', storage)), // 处理数据类型不匹配
+  roleTree: getToken('roleTree', storage, []), // 处理数据类型不匹配
   _Product: getToken('Product', storage),
 })
 const getters = {

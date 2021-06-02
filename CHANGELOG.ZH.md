@@ -106,6 +106,8 @@
 * feat: shape  from化 ([85db934](https://github.com/dgiot/dgiot_dashboard/commit/85db934))
 * feat: src\views\equipment_management\proddetail.vue ([04934bb](https://github.com/dgiot/dgiot_dashboard/commit/04934bb))
 * feat: statistics 统计功能新增 ([b6113d3](https://github.com/dgiot/dgiot_dashboard/commit/b6113d3))
+* feat: vuex ([f0ce5a5](https://github.com/dgiot/dgiot_dashboard/commit/f0ce5a5))
+* feat: vuex roleTree ([46fd538](https://github.com/dgiot/dgiot_dashboard/commit/46fd538))
 * feat(.env): 密钥 ([f90123e](https://github.com/dgiot/dgiot_dashboard/commit/f90123e))
 * feat(editdevice.vue): 修改卡片不显示 ([dd32bde](https://github.com/dgiot/dgiot_dashboard/commit/dd32bde))
 * feat(home_group2.vue): 产品新增默认组态 ([daea305](https://github.com/dgiot/dgiot_dashboard/commit/daea305))

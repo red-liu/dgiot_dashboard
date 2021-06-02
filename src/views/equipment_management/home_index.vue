@@ -1174,7 +1174,7 @@
   } from 'vue-baidu-map'
   import { returnLogin } from '@/utils/return'
   import { querycompanyDevice, putDevice } from '@/api/Device'
-  import { Roletree, getToken } from '@/api/Menu'
+  import { getToken } from '@/api/Menu'
 
   var language
   var pcdata

@@ -83,6 +83,7 @@
 * feat: codeMirror ([b6a13dc](https://github.com/dgiot/dgiot_dashboard/commit/b6a13dc))
 * feat: css ([f252fa9](https://github.com/dgiot/dgiot_dashboard/commit/f252fa9))
 * feat: deploy ([d70811d](https://github.com/dgiot/dgiot_dashboard/commit/d70811d))
+* feat: developer.config.js ([01ed301](https://github.com/dgiot/dgiot_dashboard/commit/01ed301))
 * feat: deviceid ([ce53dac](https://github.com/dgiot/dgiot_dashboard/commit/ce53dac))
 * feat: echarts ([e4632b1](https://github.com/dgiot/dgiot_dashboard/commit/e4632b1))
 * feat: env key ([c65a555](https://github.com/dgiot/dgiot_dashboard/commit/c65a555))

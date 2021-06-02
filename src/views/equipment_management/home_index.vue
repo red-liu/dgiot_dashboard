@@ -635,7 +635,7 @@
                   </el-table-column>
                   <template v-for="(item, index) in dialogtempconfig">
                     <el-table-column
-                      v-if="item.type == 'bool'"
+                      v-if="item.type == 'bool' && item.isshow"
                       :key="index"
                       align="center"
                       :label="item.name"
@@ -653,7 +653,7 @@
                       </template>
                     </el-table-column>
                     <el-table-column
-                      v-else-if="item.type == 'enum'"
+                      v-else-if="item.type == 'enum' && item.isshow"
                       :key="index"
                       align="center"
                       :label="item.name"
@@ -665,7 +665,7 @@
                       </template>
                     </el-table-column>
                     <el-table-column
-                      v-else
+                      v-else-if="item.isshow"
                       :key="index"
                       align="center"
                       :label="item.name"

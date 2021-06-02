@@ -797,6 +797,18 @@
               </el-form-item>
             </el-col>
           </el-row>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="列表显示">
+                <el-radio v-model="tempparams.isshow" :label="true" border>
+                  是
+                </el-radio>
+                <el-radio v-model="tempparams.isshow" :label="false" border>
+                  否
+                </el-radio>
+              </el-form-item>
+            </el-col>
+          </el-row>
           <el-form-item
             v-if="tempparams.type != 'enum'"
             label="默认值"

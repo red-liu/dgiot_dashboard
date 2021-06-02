@@ -8,7 +8,10 @@
 -->
 <template>
   <div class="platform">
-    <div class="map_header">
+    <div
+      :style="{ height: queryForm.workGroupTreeShow ? '140px' : '40px' }"
+      class="map_header"
+    >
       <vab-query-form>
         <vab-query-form-top-panel>
           <el-form
@@ -28,14 +31,13 @@
               <el-input
                 ref="workGroupInput"
                 v-model="queryForm.workGroupName"
-                auto-complete="off"
-                clearable
                 readonly
-                @focus="queryForm.workGroupTreeShow = true"
-              >
+                auto-complete="off"
+                @focus="info"
+              />
+              <div v-if="queryForm.workGroupTreeShow" class="workGroupTreeShow">
                 <el-tree
-                  v-show="queryForm.workGroupTreeShow"
-                  slot="suffix"
+                  v-if="queryForm.workGroupTreeShow"
                   ref="workGroup"
                   :data="deptTreeData"
                   :props="roleProps"
@@ -43,7 +45,6 @@
                   node-key="index"
                   default-expand-all
                   :expand-on-click-node="false"
-                  @node-click="handleNodeClick"
                 >
                   <div slot-scope="{ node, data }" class="custom-tree-node">
                     <span
@@ -54,7 +55,7 @@
                     </span>
                   </div>
                 </el-tree>
-              </el-input>
+              </div>
             </el-form-item>
             <el-form-item label="周期">
               <el-date-picker
@@ -88,67 +89,6 @@
     </div>
     <el-row :row="24">
       <el-col :span="leftRow" :xs="24">
-        <el-row v-show="false">
-          <el-col
-            v-for="item in projectList"
-            :key="item.id"
-            :xs="24"
-            :sm="24"
-            :md="8"
-            :lg="{ span: '4-8' }"
-          >
-            <el-card class="box-card" shadow="always">
-              <div slot="header" class="clearfix">
-                <span>
-                  {{ item.name }}
-                </span>
-              </div>
-              <div v-if="item.userUnit" class="text item">
-                <span>{{ $translateTitle('home.unit') }}</span>
-                <span>{{ item.userUnit }}</span>
-              </div>
-              <div v-if="item.scale" class="text item">
-                <span>{{ $translateTitle('home.scale') }}：</span>
-                <span>{{ item.scale }}</span>
-              </div>
-              <div class="text item">
-                <span>{{ $translateTitle('home.category') }}：</span>
-                <span>{{ getCategory(item.category) }}</span>
-              </div>
-              <div class="text item">
-                <span>{{ $translateTitle('home.updatedAt') }}：</span>
-                <span>
-                  {{
-                    new Date(item.updatedAt).toLocaleDateString() +
-                    ' ' +
-                    new Date(item.updatedAt).toLocaleTimeString()
-                  }}
-                </span>
-              </div>
-              <div class="text item" style="text-align: center">
-                <el-button-group>
-                  <el-button
-                    style="margin-right: 3px"
-                    size="mini"
-                    type="success"
-                    @click="Gotoproduct(item.name)"
-                  >
-                    {{ $translateTitle('home.preview') }}
-                  </el-button>
-                  <el-button
-                    v-if="NODE_ENV == 'development'"
-                    size="mini"
-                    type="primary"
-                    target="_blank"
-                    @click="handleClickVisit(item)"
-                  >
-                    {{ $translateTitle('home.konva') }}
-                  </el-button>
-                </el-button-group>
-              </div>
-            </el-card>
-          </el-col>
-        </el-row>
         <el-row :span="24">
           <div class="chart_map">
             <baidu-map
@@ -290,6 +230,7 @@
   </div>
 </template>
 <script>
+  import { queryProduct } from '@/api/Product'
   import { mapGetters, mapMutations } from 'vuex'
   import { batch } from '@/api/Batch/index'
   import { queryDevice } from '@/api/Device'
@@ -393,6 +334,7 @@
       this.getAllAxios()
       this.getDevices()
       this.getRoletree()
+      this.getProduct()
     },
     activated() {
       console.log('keep-alive生效')
@@ -400,7 +342,16 @@
     methods: {
       ...mapMutations({
         setRoleTree: 'global/setRoleTree',
+        set_Product: 'global/set_Product',
       }),
+      async getProduct() {
+        const { results } = await queryProduct({})
+        console.log(results, 'queryProduct')
+        this.set_Product(results)
+      },
+      info() {
+        this.queryForm.workGroupTreeShow = !this.queryForm.workGroupTreeShow
+      },
       queryData() {
         this.queryForm.pageNo = 1
         this.fetchData()
@@ -418,7 +369,7 @@
         this.deptTreeData = this.roleTree
       },
       async handleNodeClick(data, node) {
-        this.queryForm.workGroupName = node.label
+        this.queryForm.workGroupName = data.label
         this.queryForm.workGroupTreeShow = false
         if (node.level != 1) {
           // 在这里获取点击厂家的session
@@ -442,16 +393,6 @@
           }
         })
         this.tableData = results
-      },
-      getCategory(key) {
-        console.log(key)
-        let name = ''
-        this.category.filter((item) => {
-          if (item.type == key) {
-            name = item.data.CategoryName
-          }
-        })
-        return name
       },
       // async getAllAxios() {
       //   console.log(process.env)
@@ -658,6 +599,10 @@
   .platform {
     .map_header {
       height: 40px;
+      .workGroupTreeShow {
+        height: 100px;
+        overflow: auto;
+      }
     }
     box-sizing: border-box;
     width: 100%;

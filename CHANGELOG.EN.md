@@ -1,5 +1,6 @@
 ## 1.0.0 (2021-06-03)
 
+* build: 更新swagger文件及部署脚本 ([a60c9f2](https://github.com/dgiot/dgiot_dashboard/commit/a60c9f2))
 * ci: publish Release ([d861dc8](https://github.com/dgiot/dgiot_dashboard/commit/d861dc8))
 * feat: 保存产品数据 ([914f581](https://github.com/dgiot/dgiot_dashboard/commit/914f581))
 * feat: 报告模板界面api ([5e0015a](https://github.com/dgiot/dgiot_dashboard/commit/5e0015a))

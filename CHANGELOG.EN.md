@@ -1,4 +1,4 @@
-## 1.0.0 (2021-06-02)
+## 1.0.0 (2021-06-03)
 
 * feat: 保存产品数据 ([914f581](https://github.com/dgiot/dgiot_dashboard/commit/914f581))
 * feat: 报告模板界面api ([5e0015a](https://github.com/dgiot/dgiot_dashboard/commit/5e0015a))
@@ -35,6 +35,7 @@
 * feat: 去除框架限制 ([ba1dfbc](https://github.com/dgiot/dgiot_dashboard/commit/ba1dfbc))
 * feat: 去掉basetoken ([9e5bb17](https://github.com/dgiot/dgiot_dashboard/commit/9e5bb17))
 * feat: 全局判断文件上传类型 ([2421817](https://github.com/dgiot/dgiot_dashboard/commit/2421817))
+* feat: 全局product ([e684bc2](https://github.com/dgiot/dgiot_dashboard/commit/e684bc2))
 * feat: 删除多余文件 ([135461c](https://github.com/dgiot/dgiot_dashboard/commit/135461c))
 * feat: 删除多余文件 ([1d044db](https://github.com/dgiot/dgiot_dashboard/commit/1d044db))
 * feat: 删除多余文件 ([6a3eb9d](https://github.com/dgiot/dgiot_dashboard/commit/6a3eb9d))
@@ -109,6 +110,7 @@
 * feat: shell ([ae421fd](https://github.com/dgiot/dgiot_dashboard/commit/ae421fd))
 * feat: src\views\equipment_management\proddetail.vue ([04934bb](https://github.com/dgiot/dgiot_dashboard/commit/04934bb))
 * feat: statistics 统计功能新增 ([b6113d3](https://github.com/dgiot/dgiot_dashboard/commit/b6113d3))
+* feat: vuex ([e538c0f](https://github.com/dgiot/dgiot_dashboard/commit/e538c0f))
 * feat: vuex ([f0ce5a5](https://github.com/dgiot/dgiot_dashboard/commit/f0ce5a5))
 * feat: vuex 持久化 ([0abc193](https://github.com/dgiot/dgiot_dashboard/commit/0abc193))
 * feat: vuex roleTree ([46fd538](https://github.com/dgiot/dgiot_dashboard/commit/46fd538))

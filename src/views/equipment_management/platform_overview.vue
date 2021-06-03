@@ -21,7 +21,19 @@
             @submit.native.prevent
           >
             <el-form-item :label="$translateTitle('equipment.products')">
-              <el-input v-model.trim="queryForm.account" readonly clearable />
+              <el-select
+                v-model="queryForm.account"
+                class="selectdetail"
+                size="small"
+                @change="selectProdChange"
+              >
+                <el-option
+                  v-for="(item, index) in _Product"
+                  :key="index"
+                  :label="item.name"
+                  :value="item.objectId"
+                />
+              </el-select>
             </el-form-item>
             <el-form-item :label="$translateTitle('user.department')">
               <el-input
@@ -71,14 +83,19 @@
                 type="primary"
                 @click="queryData"
               >
-                查询
+                {{ $translateTitle('concentrator.search') }}
               </el-button>
               <el-button
                 :icon="leftRow == 18 ? 'el-icon-s-unfold' : 'el-icon-s-fold'"
                 type="primary"
                 @click="leftRow == 18 ? (leftRow = 24) : (leftRow = 18)"
               >
-                显示/关闭右侧
+                {{
+                  leftRow == 18
+                    ? $translateTitle('konva.hide')
+                    : $translateTitle('konva.show')
+                }}
+                {{ $translateTitle('konva.right') }}
               </el-button>
             </el-form-item>
           </el-form>
@@ -327,10 +344,13 @@
     computed: {
       ...mapGetters({
         roleTree: 'global/roleTree',
+        _Product: 'global/_Product',
+        language: 'settings/language',
+        token: 'user/token',
       }),
     },
     mounted() {
-      this.getAllAxios()
+      this.getAllAxios({}, this.token, false)
       this.getDevices()
       this.getRoletree()
       this.getProduct()
@@ -344,13 +364,28 @@
         set_Product: 'global/set_Product',
       }),
       async getProduct() {
-        const { results } = await queryProduct({})
-        console.log(results, 'queryProduct')
+        const params = {
+          count: 'objectId',
+          order: '-updatedAt',
+          keys: 'name',
+          where: {
+            category: 'IotHub',
+          },
+        }
+        const { results } = await queryProduct(params)
+        results.unshift({
+          name: this.language == 'zh' ? '全部产品' : 'All Products',
+          objectId: '0',
+        })
         this.set_Product(results)
+        this.queryForm.account =
+          this.language == 'zh' ? '全部产品' : 'All Products'
+      },
+      selectProdChange(objectId) {
+        console.log(objectId)
       },
       queryData() {
-        this.queryForm.pageNo = 1
-        this.fetchData()
+        this.getAllAxios({}, this.queryForm.access_token, true)
       },
       async getRoletree() {
         await Roletree()
@@ -358,6 +393,7 @@
             console.log(res)
             this.setRoleTree(res.results)
             this.handleNodeClick(res.results[0], 0)
+            this.queryForm.workGroupTreeShow = false
           })
           .catch((e) => {
             console.log(e)
@@ -372,7 +408,8 @@
           const { access_token = '' } = await getToken(data.name)
           this.queryForm.access_token = access_token
         } else {
-          this.queryForm.access_token = store.getters['user/token']
+          console.log(node.level, '登录的token', this.token)
+          this.queryForm.access_token = this.token
         }
         // 点击的公司名
         const { name, objectId } = data
@@ -450,7 +487,17 @@
       //   this.dev_active_count = dev_active_num.count
       //   this.dev_online_count = dev_online_num.count
       // },
-      async getAllAxios() {
+      async getAllAxios(data, token, flag) {
+        let product
+        if (this.queryForm.account != '' || this.queryForm.account != 0) {
+          product = this.queryForm.account
+        } else {
+          this.queryForm.account = '*'
+        }
+        this.chartData = {
+          columns: [],
+          rows: [],
+        }
         var rows = {}
         this.chartData.columns.push(
           '日期',
@@ -505,7 +552,14 @@
           {
             method: 'GET',
             path: '/classes/Device',
-            body: _queryParams,
+            body: {
+              count: 'objectId',
+              limit: 1,
+              skip: 0,
+              where: {
+                product: product,
+              },
+            },
           },
           {
             method: 'GET',
@@ -516,6 +570,7 @@
               skip: 0,
               where: {
                 status: 'ACTIVE',
+                product: product,
               },
             },
           },
@@ -528,11 +583,13 @@
               skip: 0,
               where: {
                 status: 'ONLINE',
+                product: product,
               },
             },
           },
         ]
-        await batch(params)
+        data = params
+        await batch(data, token, flag)
           .then((res) => {
             let columnsdata = []
             this.$baseColorfullLoading().close()

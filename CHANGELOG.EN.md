@@ -51,6 +51,7 @@
 * feat: 设置konva 可拖动属性 ([c601efd](https://github.com/dgiot/dgiot_dashboard/commit/c601efd))
 * feat: 設備指令bug修復 ([62a2b2e](https://github.com/dgiot/dgiot_dashboard/commit/62a2b2e))
 * feat: 設備指令bug修復 ([e62740b](https://github.com/dgiot/dgiot_dashboard/commit/e62740b))
+* feat: 首页token 切换 ([202ae4e](https://github.com/dgiot/dgiot_dashboard/commit/202ae4e))
 * feat: 首頁echarts ([3da34f6](https://github.com/dgiot/dgiot_dashboard/commit/3da34f6))
 * feat: 双击编辑文字 ([938a08d](https://github.com/dgiot/dgiot_dashboard/commit/938a08d))
 * feat: 私有化部署 ([c2c04ff](https://github.com/dgiot/dgiot_dashboard/commit/c2c04ff))

@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "99acd26a0abde6441d69b70983a61780",
+    "revision": "92c12d45a3d50b00078c31964e88fddd",
     "url": "index.html"
   },
   {
@@ -16,7 +16,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "static/css/app~1f98f4b9.69b0b2f8.css"
   },
   {
-    "revision": "58d02a46d8a4a4c764ab",
+    "revision": "93b246db774fb6f29a32",
     "url": "static/css/app~c2ebc294.621ec69a.css"
   },
   {
@@ -80,7 +80,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "static/css/dgiot-libs~d7ac9e7b.53ce9ab9.css"
   },
   {
-    "revision": "4cf9165bbb607ec1bfe0",
+    "revision": "3bab17be652de1dfc3c0",
     "url": "static/css/dgiot-libs~f6e880b5.43ba7a2f.css"
   },
   {
@@ -120,16 +120,16 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "static/js/app~1f98f4b9.be52a43b.js"
   },
   {
-    "revision": "58d02a46d8a4a4c764ab",
-    "url": "static/js/app~c2ebc294.f96c2437.js"
+    "revision": "93b246db774fb6f29a32",
+    "url": "static/js/app~c2ebc294.2659c724.js"
   },
   {
     "revision": "a110d2f582d883a47ba1",
     "url": "static/js/app~c714bc7b.ad6ea666.js"
   },
   {
-    "revision": "8c1a47dd6952c0b07d52",
-    "url": "static/js/app~e2e93592.b2720a09.js"
+    "revision": "a951ab6ef63b3c5c60bc",
+    "url": "static/js/app~e2e93592.71e36102.js"
   },
   {
     "revision": "bcb0013adbe3e89c33ac",
@@ -160,8 +160,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "static/js/chunk-421113b8.6f53fea8.js"
   },
   {
-    "revision": "34d4b7b7f970f633097c",
-    "url": "static/js/chunk-5f6b6b97.3753efd7.js"
+    "revision": "91d3adc7c88ef7f3645e",
+    "url": "static/js/chunk-5f6b6b97.f1125415.js"
   },
   {
     "revision": "7945e09d6bacb463d486",
@@ -212,7 +212,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "static/js/dgiot-libs~d7ac9e7b.4043fba9.js"
   },
   {
-    "revision": "4cf9165bbb607ec1bfe0",
-    "url": "static/js/dgiot-libs~f6e880b5.0e9e8e2f.js"
+    "revision": "3bab17be652de1dfc3c0",
+    "url": "static/js/dgiot-libs~f6e880b5.c8bb9fe0.js"
   }
 ]);

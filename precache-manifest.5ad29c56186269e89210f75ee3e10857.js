@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "bc26440f596cf919717ebd3d72f68e0c",
+    "revision": "5a1f46d5e7837f3a46a0e37b340b1c2b",
     "url": "index.html"
   },
   {
@@ -16,7 +16,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "static/css/app~1f98f4b9.74b90319.css"
   },
   {
-    "revision": "4eda65c2028f040f54de",
+    "revision": "c5cb479d3d8832f7c9e7",
     "url": "static/css/app~c2ebc294.621ec69a.css"
   },
   {
@@ -80,7 +80,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "static/css/dgiot-libs~d7ac9e7b.53ce9ab9.css"
   },
   {
-    "revision": "cb81441bc8296bf80274",
+    "revision": "e25706b9f27a8d29208b",
     "url": "static/css/dgiot-libs~f6e880b5.43ba7a2f.css"
   },
   {
@@ -120,20 +120,20 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "static/js/app~1f98f4b9.be52a43b.js"
   },
   {
-    "revision": "4eda65c2028f040f54de",
-    "url": "static/js/app~c2ebc294.8ed528ad.js"
+    "revision": "c5cb479d3d8832f7c9e7",
+    "url": "static/js/app~c2ebc294.3e50d0f1.js"
   },
   {
     "revision": "dcd7a7407162b5d1675d",
     "url": "static/js/app~c714bc7b.33dc3157.js"
   },
   {
-    "revision": "1687d9373f6e12460ff6",
-    "url": "static/js/app~e2e93592.3ff01e2c.js"
+    "revision": "15d419f8927123642da3",
+    "url": "static/js/app~e2e93592.d731068e.js"
   },
   {
-    "revision": "7294dc7037268faf46cb",
-    "url": "static/js/chunk-0e1d4131.4ac560df.js"
+    "revision": "aee36fdc78cd8f4789a7",
+    "url": "static/js/chunk-0e1d4131.4d7d5f1a.js"
   },
   {
     "revision": "2cab53a7bc510e53eaa1",
@@ -212,7 +212,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "static/js/dgiot-libs~d7ac9e7b.4043fba9.js"
   },
   {
-    "revision": "cb81441bc8296bf80274",
-    "url": "static/js/dgiot-libs~f6e880b5.bb8201e8.js"
+    "revision": "e25706b9f27a8d29208b",
+    "url": "static/js/dgiot-libs~f6e880b5.16ddd413.js"
   }
 ]);

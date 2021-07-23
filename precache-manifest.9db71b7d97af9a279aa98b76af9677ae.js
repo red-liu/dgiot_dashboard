@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "0e1596dfb1c558d050cc642b04da4913",
+    "revision": "cdee4dad5abccfcc8d98b5cbd4d16c51",
     "url": "index.html"
   },
   {
@@ -20,7 +20,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "static/css/app~5a62f1f5.689861ad.css"
   },
   {
-    "revision": "f845ff378ab8a1aeef6b",
+    "revision": "f1b8d2f380deb27dc590",
     "url": "static/css/app~c2ebc294.621ec69a.css"
   },
   {
@@ -88,7 +88,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "static/css/dgiot-libs~ec8c427e.f8ce92c0.css"
   },
   {
-    "revision": "cb9fc2a444025ec38ea4",
+    "revision": "44ca07ed6307a8c3d45b",
     "url": "static/css/dgiot-libs~f6e880b5.43ba7a2f.css"
   },
   {
@@ -132,16 +132,16 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "static/js/app~5a62f1f5.a543e304.js"
   },
   {
-    "revision": "f845ff378ab8a1aeef6b",
-    "url": "static/js/app~c2ebc294.f536f42f.js"
+    "revision": "f1b8d2f380deb27dc590",
+    "url": "static/js/app~c2ebc294.827997cd.js"
   },
   {
     "revision": "bbf752747fda220682f0",
     "url": "static/js/app~c714bc7b.7ddf6934.js"
   },
   {
-    "revision": "6d0006799ddbe4e57fbe",
-    "url": "static/js/app~e2e93592.3b712e61.js"
+    "revision": "85f4b9bf4b24be9f468d",
+    "url": "static/js/app~e2e93592.4af06487.js"
   },
   {
     "revision": "2eee17a082bc50f423e4",
@@ -164,8 +164,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "static/js/chunk-3637a4f4.480af692.js"
   },
   {
-    "revision": "93e9e83c4ed4146b836d",
-    "url": "static/js/chunk-497729ee.024a3690.js"
+    "revision": "e1d081ee8bf9ce219c86",
+    "url": "static/js/chunk-497729ee.770559ba.js"
   },
   {
     "revision": "455ff8b3c3f1c22297a1",
@@ -188,8 +188,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "static/js/dgiot-element-ui~793f9119.0f27eaaf.js"
   },
   {
-    "revision": "c9bb67bcafd768bcf363",
-    "url": "static/js/dgiot-libs~253ae210.67b4c771.js"
+    "revision": "d2a690b8c82336b0b3d5",
+    "url": "static/js/dgiot-libs~253ae210.8f1778e1.js"
   },
   {
     "revision": "53cb71e533bbda66666d",
@@ -228,7 +228,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "static/js/dgiot-libs~ec8c427e.3ffb04f9.js"
   },
   {
-    "revision": "cb9fc2a444025ec38ea4",
-    "url": "static/js/dgiot-libs~f6e880b5.cb97d9e6.js"
+    "revision": "44ca07ed6307a8c3d45b",
+    "url": "static/js/dgiot-libs~f6e880b5.eca590f6.js"
   }
 ]);

@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "3fe5161b33e6c1f46023814209c81a2f",
+    "revision": "ee2e5e16ab24d7dbf3b07b630ffb14f8",
     "url": "index.html"
   },
   {
@@ -20,11 +20,11 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "static/css/app~5a62f1f5.88481ac6.css"
   },
   {
-    "revision": "bae87dfa9bdff7b08677",
+    "revision": "425fefae4b67a2d4aa88",
     "url": "static/css/app~c2ebc294.621ec69a.css"
   },
   {
-    "revision": "226f46d250fb2d472591",
+    "revision": "5289b139998b2479a673",
     "url": "static/css/app~c714bc7b.88ed2dcf.css"
   },
   {
@@ -32,8 +32,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "static/css/chunk-087a57cf.49c16af6.css"
   },
   {
-    "revision": "324139bd6ade25028213",
-    "url": "static/css/chunk-11eed8a2.96a6ca4c.css"
+    "revision": "967fb70e44d614d7afde",
+    "url": "static/css/chunk-108f9bd0.91b68aeb.css"
   },
   {
     "revision": "77552cb553479563a264",
@@ -44,16 +44,16 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "static/css/chunk-3637a4f4.17f68694.css"
   },
   {
-    "revision": "dfe5ab16cb2446b939bf",
-    "url": "static/css/chunk-4167f616.ddb2c6d5.css"
-  },
-  {
-    "revision": "0a588a70881958af8c0b",
-    "url": "static/css/chunk-423d2639.74afdeec.css"
-  },
-  {
     "revision": "2e60d0d67d1919730864",
     "url": "static/css/chunk-710a8cac.99b1dcdd.css"
+  },
+  {
+    "revision": "ce65e4004a92b1d6cabb",
+    "url": "static/css/chunk-73697e7a.c5ac5f69.css"
+  },
+  {
+    "revision": "366d0941a73b3b64ca73",
+    "url": "static/css/chunk-bd07a1d0.de93cb5a.css"
   },
   {
     "revision": "30063cc948e1dcc4c57f",
@@ -84,7 +84,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "static/css/dgiot-libs~d7ac9e7b.53ce9ab9.css"
   },
   {
-    "revision": "8bbef266864f85ec1627",
+    "revision": "2d15e2505f599cc80d72",
     "url": "static/css/dgiot-libs~f6e880b5.43ba7a2f.css"
   },
   {
@@ -128,24 +128,24 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "static/js/app~5a62f1f5.54f06984.js"
   },
   {
-    "revision": "bae87dfa9bdff7b08677",
-    "url": "static/js/app~c2ebc294.63647867.js"
+    "revision": "425fefae4b67a2d4aa88",
+    "url": "static/js/app~c2ebc294.016251d7.js"
   },
   {
-    "revision": "226f46d250fb2d472591",
-    "url": "static/js/app~c714bc7b.e9762332.js"
+    "revision": "5289b139998b2479a673",
+    "url": "static/js/app~c714bc7b.38973870.js"
   },
   {
-    "revision": "0df654b330db2cf5c94d",
-    "url": "static/js/app~e2e93592.0b3b03ea.js"
+    "revision": "3646d06d5cbced5d7a95",
+    "url": "static/js/app~e2e93592.a71eaf06.js"
   },
   {
     "revision": "c2afe53574918da06eb8",
     "url": "static/js/chunk-087a57cf.7187f9a2.js"
   },
   {
-    "revision": "324139bd6ade25028213",
-    "url": "static/js/chunk-11eed8a2.15c69e07.js"
+    "revision": "967fb70e44d614d7afde",
+    "url": "static/js/chunk-108f9bd0.4d0aa51c.js"
   },
   {
     "revision": "77552cb553479563a264",
@@ -156,20 +156,20 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "static/js/chunk-3637a4f4.23ad077b.js"
   },
   {
-    "revision": "dfe5ab16cb2446b939bf",
-    "url": "static/js/chunk-4167f616.73809467.js"
-  },
-  {
-    "revision": "0a588a70881958af8c0b",
-    "url": "static/js/chunk-423d2639.a59c6e2f.js"
-  },
-  {
-    "revision": "c8781b6f44f68240f744",
-    "url": "static/js/chunk-6bbd0548.a674f69c.js"
+    "revision": "66e7d334bedba7aaa48b",
+    "url": "static/js/chunk-6bbd0548.8e58d875.js"
   },
   {
     "revision": "2e60d0d67d1919730864",
     "url": "static/js/chunk-710a8cac.ca4967d4.js"
+  },
+  {
+    "revision": "ce65e4004a92b1d6cabb",
+    "url": "static/js/chunk-73697e7a.0877d468.js"
+  },
+  {
+    "revision": "366d0941a73b3b64ca73",
+    "url": "static/js/chunk-bd07a1d0.62db108a.js"
   },
   {
     "revision": "30063cc948e1dcc4c57f",
@@ -220,7 +220,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "static/js/dgiot-libs~d7ac9e7b.4043fba9.js"
   },
   {
-    "revision": "8bbef266864f85ec1627",
-    "url": "static/js/dgiot-libs~f6e880b5.b036bc97.js"
+    "revision": "2d15e2505f599cc80d72",
+    "url": "static/js/dgiot-libs~f6e880b5.060e0c1b.js"
   }
 ]);
